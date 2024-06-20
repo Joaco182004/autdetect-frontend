@@ -5,7 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {fontFamily: {
+      playwrite: ['"Playwrite PL"', 'serif'],
+      montserrat: ['"Montserrat"', 'sans-serif']
+    }},
   },
   plugins: [],
 }
