@@ -61,21 +61,22 @@ function Login() {
     return errors;
   };
   return (
-    <section className="bg-[rgb(240,243,250)] w-screen h-screen flex flex-row">
-      <div className=" w-[50%] h-full relative flex items-center flex-col justify-around">
+    <section className="bg-[rgb(120,155,234)] w-screen h-screen flex justify-center items-center">
+       <section className="bg-[rgb(240,243,250)] w-screen h-screen max-w-[1500px] rounded-md max-h-[800px] flex flex-row ">
+       <div className=" w-[50%] h-full relative flex items-center flex-col justify-around">
         <div className="text-center">
           <h1 className="font-black font-playwrite text-4xl mb-1">
             ¡Bienvenido a <span className="text-blue-500">AutDetect</span>!
           </h1>
           <p className="font-montserrat mt-4">
-            Crea un usuario para empezar con los diagnósticos
+            Crea un usuario para iniciar los diagnósticos de pacientes
           </p>
         </div>
 
         <img className="w-[500px] h-[420px]" src={img_login}></img>
       </div>
       <div className="w-[50%] h-full flex items-center justify-center">
-        <div className="bg-white w-[420px] h-auto rounded-md p-4">
+        <div className="bg-white w-[420px] h-auto rounded-md p-4 pb-1">
           <h2 className="font-montserrat font-semibold mb-3 text-3xl">
             Registro de Usuario
           </h2>
@@ -120,16 +121,15 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               error={errors.password}
             />
-            <Input
-              width={widthInput}
-              type="password"
-              label="Confirmar contraseña"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              error={errors.confirmPassword}
-            />
             <Button
+            type={"primary"}
               description={"Registrarme"}
+              width={widthInput}
+              height={40}
+              onClick={handleSubmit}
+            ></Button>
+            <Button
+              description={"Iniciar Sesión"}
               width={widthInput}
               height={40}
               onClick={handleSubmit}
@@ -137,6 +137,7 @@ function Login() {
           </form>
         </div>
       </div>
+       </section>
     </section>
   );
 }
