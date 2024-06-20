@@ -90,7 +90,7 @@ function Login() {
             />
             <Input
               width={widthInput}
-              type="text"
+              type="number"
               label="Número de DNI"
               value={dni}
               onChange={(e) => setDni(e.target.value)}
@@ -98,7 +98,7 @@ function Login() {
             />
             <Input
               width={widthInput}
-              type="text"
+              type="number"
               label="Número de colegiatura"
               value={numeroColegiatura}
               onChange={(e) => setNumeroColegiatura(e.target.value)}
