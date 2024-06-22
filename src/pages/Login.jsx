@@ -2,27 +2,60 @@ import React, { useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import img_login from "../assets/under-il.svg";
+import { useNavigate } from "react-router-dom";
 function Login() {
+  let navigate = useNavigate();
   const [name, setName] = useState("");
   const [dni, setDni] = useState("");
   const [numeroColegiatura, setNumeroColegiatura] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [widthInput,setWidthInput] = useState(380)
+  const [widthInput, setWidthInput] = useState(380);
+  const [viewLogin, setViewLogin] = useState(true);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [errorLogin, setErrorLogin] = useState(false);
+  const [textErrorLogin,setTextErrorLogin] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length === 0) {
-      saveUser();
+    if (viewLogin) {
+      validateLogin();
+      console.log("Hola");
     } else {
-      setErrors(validationErrors);
+      const validationErrors = validate();
+      if (Object.keys(validationErrors).length === 0) {
+        saveUser();
+        setDni("");
+        setEmail("");
+        setNumeroColegiatura("")
+        setPassword("");
+        setName("")
+      } else {
+        setErrors(validationErrors);
+      }
+  
     }
-    console.log(validationErrors);
+  };
+  const changeView = (e) => {
+    e.preventDefault();
+    setViewLogin(!viewLogin);
   };
   const saveUser = () => {
     console.log("Usuario registrado con éxito");
+    setViewLogin(true)
+  };
+  const validateLogin = () => {
+    if(loginEmail == "joaquindiazchau@gmail.com" && loginPassword == "universo2004"){
+      setErrorLogin(false)
+      setTextErrorLogin("!Bienvenido a la plataforma Autdetect!.");
+      navigate('/home');
+    }
+    else{
+      setErrorLogin(true)
+      setTextErrorLogin("Las creedenciales ingresadas son incorrectas.");
+    }
+    
   };
   const validate = () => {
     let errors = {};
@@ -52,92 +85,129 @@ function Login() {
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
       errors.password = "La contraseña debe tener un carácter especial";
     }
-    if(!confirmPassword){
-        errors.confirmPassword = "El campo es obligatorio";
-    }
-    else if (password !== confirmPassword) {
-      errors.confirmPassword = "Las contraseñas no coinciden";
-    }
+    
     return errors;
   };
+
   return (
     <section className="bg-[rgb(120,155,234)] w-screen h-screen flex justify-center items-center">
-       <section className="bg-[rgb(240,243,250)] w-screen h-screen max-w-[1500px] rounded-md max-h-[800px] flex flex-row ">
-       <div className=" w-[50%] h-full relative flex items-center flex-col justify-around">
-        <div className="text-center">
-          <h1 className="font-black font-playwrite text-4xl mb-1">
-            ¡Bienvenido a <span className="text-blue-500">AutDetect</span>!
-          </h1>
-          <p className="font-montserrat mt-4">
-            Crea un usuario para iniciar los diagnósticos de pacientes
-          </p>
-        </div>
+      <section className="bg-[rgb(240,243,250)] w-screen h-screen max-w-[1500px] rounded-md max-h-[800px] flex flex-row ">
+        <div className=" w-[50%] h-full relative flex items-center flex-col justify-around">
+          <div className="text-center">
+            <h1 className="font-black font-playwrite text-4xl mb-1">
+              ¡Bienvenido a <span className="text-blue-500">AutDetect</span>!
+            </h1>
+            <p className="font-montserrat mt-4">
+              Crea un usuario para iniciar los diagnósticos de pacientes
+            </p>
+          </div>
 
-        <img className="w-[500px] h-[420px]" src={img_login}></img>
-      </div>
-      <div className="w-[50%] h-full flex items-center justify-center">
-        <div className="bg-white w-[420px] h-auto rounded-md p-4 pb-1">
-          <h2 className="font-montserrat font-semibold mb-3 text-3xl">
-            Registro de Usuario
-          </h2>
-          <form className="w-full flex flex-col justify-center items-center">
-            <Input
-              width={widthInput}
-              type="text"
-              label="Nombre completo"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              error={errors.name}
-            />
-            <Input
-              width={widthInput}
-              type="number"
-              label="Número de DNI"
-              value={dni}
-              onChange={(e) => setDni(e.target.value)}
-              error={errors.dni}
-            />
-            <Input
-              width={widthInput}
-              type="number"
-              label="Número de colegiatura"
-              value={numeroColegiatura}
-              onChange={(e) => setNumeroColegiatura(e.target.value)}
-              error={errors.numeroColegiatura}
-            />
-            <Input
-              width={widthInput}
-              type="email"
-              label="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              error={errors.email}
-            />
-            <Input
-              width={widthInput}
-              type="password"
-              label="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              error={errors.password}
-            />
-            <Button
-            type={"primary"}
-              description={"Registrarme"}
-              width={widthInput}
-              height={40}
-              onClick={handleSubmit}
-            ></Button>
-            <Button
-              description={"Iniciar Sesión"}
-              width={widthInput}
-              height={40}
-              onClick={handleSubmit}
-            ></Button>
-          </form>
+          <img className="w-[500px] h-[420px] select-none" src={img_login}></img>
         </div>
-      </div>
-       </section>
+        <div className="w-[50%] h-full flex items-center justify-center">
+          <div className="bg-white w-[420px] h-auto rounded-md p-4 pb-1">
+            {!viewLogin && (
+              <>
+                <h2 className="font-montserrat font-semibold mb-3 text-3xl">
+                  Registro de Usuario
+                </h2>
+                <form className="w-full flex flex-col justify-center items-center">
+                  <Input
+                    width={widthInput}
+                    type="text"
+                    label="Nombre completo"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    error={errors.name}
+                  />
+                  <Input
+                    width={widthInput}
+                    type="number"
+                    label="Número de DNI"
+                    value={dni}
+                    onChange={(e) => setDni(e.target.value)}
+                    error={errors.dni}
+                  />
+                  <Input
+                    width={widthInput}
+                    type="number"
+                    label="Número de colegiatura"
+                    value={numeroColegiatura}
+                    onChange={(e) => setNumeroColegiatura(e.target.value)}
+                    error={errors.numeroColegiatura}
+                  />
+                  <Input
+                    width={widthInput}
+                    type="email"
+                    label="Correo electrónico"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={errors.email}
+                  />
+                  <Input
+                    width={widthInput}
+                    type="password"
+                    label="Contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={errors.password}
+                  />
+                  <Button
+                    type={"primary"}
+                    description={"Registrarme"}
+                    width={widthInput}
+                    height={40}
+                    onClick={handleSubmit}
+                  ></Button>
+                  <Button
+                    description={"Iniciar Sesión"}
+                    width={widthInput}
+                    height={40}
+                    onClick={changeView}
+                  ></Button>
+                </form>
+              </>
+            )}
+            {viewLogin && (
+              <>
+                <h1 className="font-montserrat font-semibold mb-3 text-3xl">
+                  Iniciar Sesión
+                </h1>
+                <form className="w-full flex flex-col justify-center items-center">
+                  <Input
+                    width={widthInput}
+                    type="email"
+                    label="Correo electrónico"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                  />
+                  <Input
+                    width={widthInput}
+                    type="password"
+                    label="Contraseña"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                  />
+                  <p  className={` text-xm mb-4 font-medium ${errorLogin ? 'text-red-500' : 'text-green-400'}`} >{textErrorLogin}</p>
+                  <Button
+                    type={"primary"}
+                    description={"Iniciar Sesión"}
+                    width={widthInput}
+                    height={40}
+                    onClick={handleSubmit}
+                  ></Button>
+                  <Button
+                    description={"Registrarme"}
+                    width={widthInput}
+                    height={40}
+                    onClick={changeView}
+                  ></Button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
     </section>
   );
 }
