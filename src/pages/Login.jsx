@@ -49,7 +49,7 @@ function Login() {
     if(loginEmail == "joaquindiazchau@gmail.com" && loginPassword == "universo2004"){
       setErrorLogin(false)
       setTextErrorLogin("!Bienvenido a la plataforma Autdetect!.");
-      navigate('/home');
+      navigate('/dashboard');
     }
     else{
       setErrorLogin(true)
