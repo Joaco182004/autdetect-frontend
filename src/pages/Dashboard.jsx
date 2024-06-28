@@ -15,6 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import "../pages/style.css"
+import Home from "./Home";
 export default function Dashboard() {
   return (
     <section className="bg-[rgb(244,244,244)] w-screen h-screen flex items-center">
@@ -22,30 +23,30 @@ export default function Dashboard() {
         <img src="https://freepngimg.com/save/32196-pepsi-logo-transparent/686x670" className="h-[60px] w-[60px] ml-[10px] mt-[10px]"></img>
 
         <ul className="flex flex-col items-center w-full mt-5">
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2">
+          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <HomeIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <HomeIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
-            <p className="ml-2 text-[rgb(39,42,48)]">Home</p>
+            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Home</p>
           </li>
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2">
+          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <ClipboardDocumentListIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <ClipboardDocumentListIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
-            <p className="ml-2 text-[rgb(39,42,48)]">Evaluación</p>
+            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Evaluación</p>
           </li>
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2">
+          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <UserGroupIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <UserGroupIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
-            <p className="ml-2 text-[rgb(39,42,48)]">Lista de Pacientes</p>
+            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Lista de Pacientes</p>
           </li>
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2">
+          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <UserCircleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <UserCircleIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
-            <p className="ml-2 text-[rgb(39,42,48)]">Perfil</p>
+            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Perfil</p>
           </li>
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2">
+          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <ArrowLeftEndOnRectangleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <ArrowLeftEndOnRectangleIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
-            <p className="ml-2 text-[rgb(39,42,48)]">Cerrar Sesión</p>
+            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Cerrar Sesión</p>
           </li>
         </ul>
       </nav>
@@ -53,8 +54,8 @@ export default function Dashboard() {
         <div className="h-[80px] w-full bg-white">
 
         </div>
-        <div className="w-full bg-yellow-200 cont-bottom">
-
+        <div className="w-full bg-[rgb(244,244,244)] cont-bottom">
+          <Home></Home>
         </div>
       </div>
     </section>
