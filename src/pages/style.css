@@ -1,3 +1,7 @@
 .cont-bottom{
     height: calc(100% - 80px);
 }
+.cont-section-dash{
+    height: calc(100% - 96px);
+  
+}
