@@ -5,3 +5,27 @@
     height: calc(100% - 96px);
   
 }
+.activeClassOne {
+    animation: slideAnimationOne .5s ease-in forwards;
+}
+.activeClassTwo{
+    animation: slideAnimationTwo .5s ease-in forwards;
+}
+@keyframes slideAnimationOne {
+    0% {
+        transform: translateX(0);
+    }
+    
+    100% {
+        transform: translateX(calc(100% - 1rem));
+    }
+}
+@keyframes slideAnimationTwo {
+    0% {
+        transform: translateX(calc(100% - 1rem));
+    }
+    
+    100% {
+        transform: translateX(0);
+    }
+}
