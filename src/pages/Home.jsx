@@ -3,6 +3,7 @@ import {
   LineChart, Line,
   BarChart,
   Bar,
+  PieChart, Pie,
   Rectangle,
   XAxis,
   YAxis,
@@ -10,7 +11,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-
 import "../pages/style.css";
 import { ChartBarIcon} from "@heroicons/react/24/solid";
 import { PresentationChartLineIcon,UserIcon} from "@heroicons/react/24/outline";
@@ -23,6 +23,14 @@ export default function Home() {
       setChart(!state)
     }
   };
+  const data3 = [
+    { name: 'Group A', value: 400 },
+    { name: 'Group B', value: 300 },
+    { name: 'Group C', value: 300 },
+    { name: 'Group D', value: 200 },
+    { name: 'Group E', value: 278 },
+    { name: 'Group F', value: 189 },
+  ];
   const data2 = [
     {
         name: 'Ene',
@@ -245,7 +253,20 @@ export default function Home() {
               Datos de los pacientes
             </h2>
           </div>
-          
+          <PieChart className="font-montserrat text-sm" width={400} height={400}>
+          <Pie
+            dataKey="value"
+            isAnimationActive={false}
+            data={data3}
+            cx="50%"
+            cy="50%"
+            outerRadius={80}
+            fill="#8884d8"
+            label
+          />
+          <Pie dataKey="value" data={data3} cx={500} cy={200} innerRadius={40} outerRadius={80} fill="#82ca9d" />
+          <Tooltip />
+        </PieChart>
          
         </div>
         </div>
