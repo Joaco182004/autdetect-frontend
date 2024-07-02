@@ -26,8 +26,8 @@ export default function Home() {
   const data2 = [
     {
         name: 'Ene',
-        paciente_con_TEA: 4000,
-        paciente_con_DT: 2400,
+        paciente_con_TEA: 2000,
+        paciente_con_DT: 3400,
     },
     {
         name: 'Feb',
