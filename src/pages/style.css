@@ -11,7 +11,12 @@
 .activeClassTwo{
     animation: slideAnimationTwo .5s ease-in forwards;
 }
-
+.map-container {
+    margin-top: 1rem;
+    width: 95% !important;
+    height: 410px !important;
+    border-radius: 0.25rem ;
+  }
 @keyframes slideAnimationOne {
     0% {
         transform: translateX(0);

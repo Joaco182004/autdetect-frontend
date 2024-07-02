@@ -36,17 +36,17 @@ export default function Dashboard() {
               <HomeIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
               <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Home</p></li>)}
             
-        
+              <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
+            <UserGroupIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
+            <UserGroupIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
+            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Lista de Pacientes</p>
+          </li>
           <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <ClipboardDocumentListIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <ClipboardDocumentListIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
             <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Evaluación</p>
           </li>
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
-            <UserGroupIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
-            <UserGroupIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
-            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Lista de Pacientes</p>
-          </li>
+         
           <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <UserCircleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <UserCircleIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
