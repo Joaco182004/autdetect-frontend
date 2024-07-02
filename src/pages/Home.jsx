@@ -140,11 +140,12 @@ export default function Home() {
     isActive ? "activeClassOne" : "activeClassTwo"
   }`;
   return (
-    <section className="w-full h-full">
+    <section className="w-full h-full overflow-auto">
       <h1 className="font-montserrat font-semibold mb-[1rem] ml-[2rem] pt-[1rem] text-4xl">
         Dashboard
       </h1>
-      <div className=" w-full cont-section-dash flex gap-4">
+      <div className=" w-full h-auto pb-4 cont-section-dash flex gap-4">
+        <div>
         <div className="bg-white w-[650px] h-[480px] ml-[2rem] rounded-md flex flex-col items-center">
           <div className="flex w-[95%] mt-3 justify-start items-center">
             <div className="bg-blue-500 rounded w-4 h-8"></div>
@@ -236,6 +237,17 @@ export default function Home() {
           <Line type="monotone" dataKey="paciente_con_DT" stroke="#82ca9d" strokeWidth={2}/>
         </LineChart>)}
           </div>
+        </div>
+        <div className="bg-white w-[650px] h-[480px] ml-[2rem] mt-4 rounded-md flex flex-col items-center">
+          <div className="flex w-[95%] mt-3 justify-start items-center">
+            <div className="bg-[rgb(142,89,255)] rounded w-4 h-8"></div>
+            <h2 className="font-montserrat font-semibold text-lg ml-2">
+              Datos de los pacientes
+            </h2>
+          </div>
+          
+         
+        </div>
         </div>
         <div className="bg-white w-[340px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
         <div className="flex w-[95%] mt-3 justify-start items-center">
