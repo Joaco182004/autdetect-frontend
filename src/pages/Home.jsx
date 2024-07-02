@@ -1,5 +1,6 @@
 import React, { useState, PureComponent } from "react";
 import {
+  LineChart, Line,
   BarChart,
   Bar,
   Rectangle,
@@ -8,11 +9,11 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
+
 import "../pages/style.css";
-import { ChartBarIcon } from "@heroicons/react/24/solid";
-import { PresentationChartLineIcon } from "@heroicons/react/24/outline";
+import { ChartBarIcon} from "@heroicons/react/24/solid";
+import { PresentationChartLineIcon,UserIcon} from "@heroicons/react/24/outline";
 export default function Home() {
   const [isActive, setIsActive] = useState(false);
   const [isChart,setChart] = useState(true)
@@ -22,7 +23,69 @@ export default function Home() {
       setChart(!state)
     }
   };
-
+  const data2 = [
+    {
+        name: 'Ene',
+        paciente_con_TEA: 4000,
+        paciente_con_DT: 2400,
+    },
+    {
+        name: 'Feb',
+        paciente_con_TEA: 3000,
+        paciente_con_DT: 1398,
+    },
+    {
+        name: 'Mar',
+        paciente_con_TEA: 2000,
+        paciente_con_DT: 9800,
+    },
+    {
+        name: 'Abr',
+        paciente_con_TEA: 2780,
+        paciente_con_DT: 3908,
+    },
+    {
+        name: 'May',
+        paciente_con_TEA: 1890,
+        paciente_con_DT: 4800,
+    },
+    {
+        name: 'Jun',
+        paciente_con_TEA: 2390,
+        paciente_con_DT: 3800,
+    },
+    {
+        name: 'Jul',
+        paciente_con_TEA: 3490,
+        paciente_con_DT: 4300,
+    },
+    {
+        name: 'Ago',
+        paciente_con_TEA: 2100,
+        paciente_con_DT: 3200,
+    },
+    {
+        name: 'Sep',
+        paciente_con_TEA: 2600,
+        paciente_con_DT: 4100,
+    },
+    {
+        name: 'Oct',
+        paciente_con_TEA: 2800,
+        paciente_con_DT: 4500,
+    },
+    {
+        name: 'Nov',
+        paciente_con_TEA: 3000,
+        paciente_con_DT: 4900,
+    },
+    {
+        name: 'Dic',
+        paciente_con_TEA: 3200,
+        paciente_con_DT: 5300,
+    },
+];
+  
   const data = [
     {
       name: "Ene",
@@ -84,7 +147,7 @@ export default function Home() {
       <div className=" w-full cont-section-dash flex gap-4">
         <div className="bg-white w-[650px] h-[480px] ml-[2rem] rounded-md flex flex-col items-center">
           <div className="flex w-[95%] mt-3 justify-start items-center">
-            <div className="bg-blue-500 rounded-md w-3 h-8"></div>
+            <div className="bg-blue-500 rounded w-4 h-8"></div>
             <h2 className="font-montserrat font-semibold text-lg ml-2">
               Vista General
             </h2>
@@ -104,7 +167,7 @@ export default function Home() {
               </div>
               <div className="ml-4 font-montserrat">
                 <p className="text-[rgb(156,159,162)] font-semibold">
-                  Total de pacientes diagnósticados
+                  Total de pacientes evaluados
                 </p>
                 <h3 className="mt-1 font-medium">1050 pacientes</h3>
               </div>
@@ -152,10 +215,78 @@ export default function Home() {
                 fill="#0084F6"
                 activeBar={<Rectangle fill="rgb(120,155,234)" stroke="blue" />}
               />
-            </BarChart>):(<></>)}
+            </BarChart>):(<LineChart
+            className="mt-4 font-montserrat text-sm"
+          width={650}
+          height={300}
+          data={data2}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="paciente_con_TEA" stroke="#8884d8" strokeWidth={2} activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey="paciente_con_DT" stroke="#82ca9d" strokeWidth={2}/>
+        </LineChart>)}
           </div>
         </div>
-        <div className="bg-white w-[30%] mr-4 mb-4 rounded-md"></div>
+        <div className="bg-white w-[340px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
+        <div className="flex w-[95%] mt-3 justify-start items-center">
+            <div className="bg-[rgb(255,188,153)] rounded w-4 h-8"></div>
+            <h2 className="font-montserrat font-semibold text-lg ml-2">
+              Pacientes evaluados
+            </h2>
+          </div>
+          <div className="flex font-montserrat text-sm w-[315px]  mt-4  text-[rgb(156,159,162)] font-semibold  ">
+            <p className="w-[75%]">Paciente</p>
+            <p>Diagnóstico</p>
+            
+          </div>
+          <div className="h-[1px] w-[315px] bg-[rgb(204,204,204)] line"></div>
+          <ul className="w-full flex flex-col items-center">
+            <li>
+            <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
+              <div className="flex w-[75%]" >
+              <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
+                JD
+              </div>
+              <div className="ml-2  font-montserrat text-sm">
+                <p className="font-medium">Joaquin Diaz Chau</p>
+                <p>18 años</p>
+              </div>
+              </div>
+              <div className="text-center w-[25%] font-montserrat text-sm">
+                <p className="font-semibold text-blue-500">TEA</p>
+                <p>Prob: 85%</p>
+              </div>
+            </div>
+            </li>
+            <li>
+            <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
+              <div className="flex w-[75%]" >
+              <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
+                JD
+              </div>
+              <div className="ml-2  font-montserrat text-sm">
+                <p className="font-medium">Joaquin Diaz Chau</p>
+                <p>18 años</p>
+              </div>
+              </div>
+              <div className="text-center w-[25%] font-montserrat text-sm">
+                <p className="font-semibold text-blue-500">TEA</p>
+                <p>Prob: 85%</p>
+              </div>
+            </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
   );

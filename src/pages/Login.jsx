@@ -17,6 +17,7 @@ function Login() {
   const [loginPassword, setLoginPassword] = useState("");
   const [errorLogin, setErrorLogin] = useState(false);
   const [textErrorLogin,setTextErrorLogin] = useState("");
+  const [msg,setMsg] = useState("Inicie sesión para iniciar los diagnósticos de pacientes.")
   const handleSubmit = (e) => {
     e.preventDefault();
     if (viewLogin) {
@@ -40,6 +41,12 @@ function Login() {
   const changeView = (e) => {
     e.preventDefault();
     setViewLogin(!viewLogin);
+    if(!viewLogin){
+      setMsg("Inicie sesión para iniciar los diagnósticos de pacientes.")
+         }
+    else{
+      setMsg("Crea un usuario para ayudar a niños con su diagnóstico.")
+    }
   };
   const saveUser = () => {
     console.log("Usuario registrado con éxito");
@@ -98,7 +105,8 @@ function Login() {
               ¡Bienvenido a <span className="text-blue-500">AutDetect</span>!
             </h1>
             <p className="font-montserrat mt-4">
-              Crea un usuario para iniciar los diagnósticos de pacientes
+              {msg}
+             
             </p>
           </div>
 

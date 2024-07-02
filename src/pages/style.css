@@ -11,6 +11,7 @@
 .activeClassTwo{
     animation: slideAnimationTwo .5s ease-in forwards;
 }
+
 @keyframes slideAnimationOne {
     0% {
         transform: translateX(0);
