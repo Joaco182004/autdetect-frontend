@@ -1,31 +1,12 @@
 import React, { useState, PureComponent, useEffect } from "react";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Cell,
-  Sector,
-  Legend,
-} from "recharts";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Cell, Sector, Legend} from "recharts";
 import { MapContainer, TileLayer, useMap,Rectangle as Rec,GeoJSON } from "react-leaflet";
 import L from "leaflet";
 import "leaflet.heat";
 import "leaflet/dist/leaflet.css";
 import "../pages/style.css";
 import { ChartBarIcon } from "@heroicons/react/24/solid";
-import {
-  PresentationChartLineIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
-
+import { PresentationChartLineIcon, UserIcon, } from "@heroicons/react/24/outline";
 
 export default function Home() {
   const [isActive, setIsActive] = useState(false);
@@ -36,122 +17,20 @@ export default function Home() {
       setChart(!state);
     }
   };
+  const data = Array.from({ length: 12 }, (_, i) => ({
+    name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
+    Cantidad_de_Diagnósticos: 1000 + i * 100
+  }));
+
+  const data2 = Array.from({ length: 12 }, (_, i) => ({
+    name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
+    paciente_con_TEA: 2000 + i * 200,
+    paciente_con_DT: 3400 + i * 100
+  }));
+
   const data3 = [
     { name: "Femenino", value: 400 },
     { name: "Masculino", value: 200 },
-  ];
-  const data2 = [
-    {
-      name: "Ene",
-      paciente_con_TEA: 2000,
-      paciente_con_DT: 3400,
-    },
-    {
-      name: "Feb",
-      paciente_con_TEA: 3000,
-      paciente_con_DT: 1398,
-    },
-    {
-      name: "Mar",
-      paciente_con_TEA: 2000,
-      paciente_con_DT: 9800,
-    },
-    {
-      name: "Abr",
-      paciente_con_TEA: 2780,
-      paciente_con_DT: 3908,
-    },
-    {
-      name: "May",
-      paciente_con_TEA: 1890,
-      paciente_con_DT: 4800,
-    },
-    {
-      name: "Jun",
-      paciente_con_TEA: 2390,
-      paciente_con_DT: 3800,
-    },
-    {
-      name: "Jul",
-      paciente_con_TEA: 3490,
-      paciente_con_DT: 4300,
-    },
-    {
-      name: "Ago",
-      paciente_con_TEA: 2100,
-      paciente_con_DT: 3200,
-    },
-    {
-      name: "Sep",
-      paciente_con_TEA: 2600,
-      paciente_con_DT: 4100,
-    },
-    {
-      name: "Oct",
-      paciente_con_TEA: 2800,
-      paciente_con_DT: 4500,
-    },
-    {
-      name: "Nov",
-      paciente_con_TEA: 3000,
-      paciente_con_DT: 4900,
-    },
-    {
-      name: "Dic",
-      paciente_con_TEA: 3200,
-      paciente_con_DT: 5300,
-    },
-  ];
-
-  const data = [
-    {
-      name: "Ene",
-      Cantidad_de_Diagnósticos: 1000,
-    },
-    {
-      name: "Feb",
-      Cantidad_de_Diagnósticos: 1500,
-    },
-    {
-      name: "Mar",
-      Cantidad_de_Diagnósticos: 1200,
-    },
-    {
-      name: "Abr",
-      Cantidad_de_Diagnósticos: 1700,
-    },
-    {
-      name: "May",
-      Cantidad_de_Diagnósticos: 1100,
-    },
-    {
-      name: "Jun",
-      Cantidad_de_Diagnósticos: 1400,
-    },
-    {
-      name: "Jul",
-      Cantidad_de_Diagnósticos: 1600,
-    },
-    {
-      name: "Ago",
-      Cantidad_de_Diagnósticos: 1300,
-    },
-    {
-      name: "Set",
-      Cantidad_de_Diagnósticos: 1800,
-    },
-    {
-      name: "Oct",
-      Cantidad_de_Diagnósticos: 1900,
-    },
-    {
-      name: "Nov",
-      Cantidad_de_Diagnósticos: 2100,
-    },
-    {
-      name: "Dic",
-      Cantidad_de_Diagnósticos: 2200,
-    },
   ];
   const classes = `w-1/2 h-[5.25rem] rounded-md absolute bg-white ${
     isActive ? "activeClassOne" : "activeClassTwo"
@@ -208,9 +87,7 @@ export default function Home() {
       { lat: -12.040893, lng: -76.971087, count: 500 },
     ],
   };
-  
-const center = [-12.0464, -77.0428]; // Un punto central en el Departamento de Lima
-const zoom = 9; // Nivel de zoom inicial
+
   const HeatmapLayer = ({ points }) => {
     const map = useMap();
 
@@ -232,8 +109,6 @@ const zoom = 9; // Nivel de zoom inicial
       fillOpacity: 0.1 // Opacidad del relleno
     };
   };
-
-  // Función para determinar el color basado en una propiedad
   
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
@@ -359,7 +234,7 @@ const zoom = 9; // Nivel de zoom inicial
               </h2>
             </div>
             <MapContainer
-              center={center} zoom={zoom}
+              center={[-12.0464, -77.0428]} zoom={9}
               className="map-container"
 
             >

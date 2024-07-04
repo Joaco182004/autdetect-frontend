@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import List from './pages/List';
+import Evaluation from './pages/Evaluation';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,7 +18,8 @@ function App() {
         <Route path="/login" element={ <Login/>} />
         <Route path="app" element={<Dashboard />}>
         <Route path="dashboard" element={<Home />} />
-        <Route path="list" element={<List />} />
+        <Route path="pacientes" element={<List />} />
+        <Route path='evaluaciones' element={<Evaluation />}></Route>
         </Route>
         
         <Route path="/" element={<Navigate to="/login" replace />} />

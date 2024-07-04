@@ -53,10 +53,10 @@ export default function Dashboard() {
             </li>
           )}
 
-          {location.pathname == "/app/list" ? (
+          {location.pathname == "/app/pacientes" ? (
             <li
               onClick={() => {
-                navigate("list");
+                navigate("pacientes");
               }}
               className="group bg-[rgb(244,244,244)] shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 font-semibold"
             >
@@ -68,7 +68,7 @@ export default function Dashboard() {
           ) : (
             <li
               onClick={() => {
-                navigate("list");
+                navigate("pacientes");
               }}
               className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold"
             >
@@ -80,13 +80,32 @@ export default function Dashboard() {
             </li>
           )}
 
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
-            <ClipboardDocumentListIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
-            <ClipboardDocumentListIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
-            <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">
-              Evaluaciones
-            </p>
-          </li>
+          {location.pathname == "/app/evaluaciones" ? (
+            <li
+              onClick={() => {
+                navigate("evaluaciones");
+              }}
+              className="group bg-[rgb(244,244,244)] shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 font-semibold"
+            >
+              <ClipboardDocumentListIcon className="size-6 text-[rgb(39,42,48)] group-hover:block" />
+              <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">
+                Evaluaciones
+              </p>
+            </li>
+          ) : (
+            <li
+              onClick={() => {
+                navigate("evaluaciones");
+              }}
+              className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold"
+            >
+              <ClipboardDocumentListIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
+              <ClipboardDocumentListIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
+              <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">
+                Evaluaciones
+              </p>
+            </li>
+          )}
 
           <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <UserCircleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
