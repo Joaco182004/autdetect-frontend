@@ -236,8 +236,8 @@ const zoom = 9; // Nivel de zoom inicial
   // Función para determinar el color basado en una propiedad
   
   return (
-    <section className="w-full h-full overflow-auto">
-      <h1 className="font-montserrat font-semibold mb-[1rem] ml-[2rem] pt-[1rem] text-4xl">
+    <section className="w-full h-full overflow-auto outline-none select-none">
+      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
         Dashboard
       </h1>
       <div className=" w-full h-auto pb-4 cont-section-dash flex gap-4">
@@ -291,7 +291,7 @@ const zoom = 9; // Nivel de zoom inicial
             <div>
               {isChart ? (
                 <BarChart
-                  className="mt-4 font-montserrat text-sm"
+                  className="mt-4 font-montserrat text-sm "
                   width={650}
                   height={300}
                   data={data}
@@ -434,8 +434,8 @@ const zoom = 9; // Nivel de zoom inicial
           </div>
           <div className="w-100% h-[290px] border-[rgb(204,204,204)] p-4 pb-0 border-solid border-[1px] mt-4 rounded">
           <h5 className="font-montserrat text-sm font-semibold text-center">Distribución de Pacientes por Género</h5>
-          <PieChart className="font-montserrat text-sm ml-7" width={200} height={200}>
-          <Pie
+          <PieChart className="font-montserrat text-sm ml-7 outline-none" width={200} height={200}>
+          <Pie className="outline-none"
             data={data3}
             cx="50%"
             cy="50%"
