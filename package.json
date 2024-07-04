@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.4",
+    "@nextui-org/input": "^2.2.2",
+    "@nextui-org/react": "^2.4.2",
+    "@nextui-org/system": "^2.2.2",
+    "@nextui-org/table": "^2.0.36",
+    "@nextui-org/theme": "^2.2.6",
+    "framer-motion": "^11.2.13",
     "leaflet": "^1.9.4",
     "leaflet.heat": "^0.2.0",
     "react": "^18.2.0",

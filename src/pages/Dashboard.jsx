@@ -30,10 +30,10 @@ export default function Dashboard() {
         </div>
 
         <ul className="flex flex-col items-center w-full mt-1">
-          {location.pathname == "/dashboard" ? (
+          {location.pathname == "/app/dashboard" ? (
             <li
               onClick={() => {
-                navigate("");
+                navigate("dashboard");
               }}
               className="group bg-[rgb(244,244,244)] shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 font-semibold"
             >
@@ -43,7 +43,7 @@ export default function Dashboard() {
           ) : (
             <li
               onClick={() => {
-                navigate("");
+                navigate("dashboard");
               }}
               className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold"
             >
@@ -53,7 +53,7 @@ export default function Dashboard() {
             </li>
           )}
 
-          {location.pathname == "/dashboard/list" ? (
+          {location.pathname == "/app/list" ? (
             <li
               onClick={() => {
                 navigate("list");
@@ -84,7 +84,7 @@ export default function Dashboard() {
             <ClipboardDocumentListIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <ClipboardDocumentListIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
             <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">
-              Evaluación
+              Evaluaciones
             </p>
           </li>
 

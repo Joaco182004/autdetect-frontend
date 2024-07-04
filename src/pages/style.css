@@ -5,6 +5,9 @@
     height: 100%;
   
 }
+.content-list{
+    width: calc(100% - 4rem);
+}
 .activeClassOne {
     animation: slideAnimationOne .5s ease-in forwards;
 }
