@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableHeader,
@@ -13,7 +14,7 @@ import { Input } from "@nextui-org/react";
 import {Button} from "@nextui-org/react";
 
 export default function Evaluation() {
-   
+  const navigate = useNavigate();
   const users = [
     {
       key: "1",
@@ -109,7 +110,7 @@ export default function Evaluation() {
             onClear={() => setFilter("")}
             className="w-[250px] outline-none ml-4 font-montserrat"
           />
-          <Button className="mr-4 h-[40px] w-[150px] font-montserrat font-medium" color="primary" variant="solid">
+          <Button onClick={()=>{navigate("/app/evaluaciones/mchat")}} className="mr-4 h-[40px] w-[150px] font-montserrat font-medium" color="primary" variant="solid">
         Realizar Evaluación
       </Button>
      

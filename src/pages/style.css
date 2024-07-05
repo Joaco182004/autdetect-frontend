@@ -8,6 +8,9 @@
 .content-list{
     width: calc(100% - 4rem);
 }
+.mchat-content{
+    width: calc(100% - 4rem);
+}
 .activeClassOne {
     animation: slideAnimationOne .5s ease-in forwards;
 }

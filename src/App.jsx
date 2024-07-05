@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import List from './pages/List';
 import Evaluation from './pages/Evaluation';
+import MCHAT from './pages/MCHAT';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,6 +21,7 @@ function App() {
         <Route path="dashboard" element={<Home />} />
         <Route path="pacientes" element={<List />} />
         <Route path='evaluaciones' element={<Evaluation />}></Route>
+        <Route path='evaluaciones/mchat' element={<MCHAT />}></Route>
         </Route>
         
         <Route path="/" element={<Navigate to="/login" replace />} />

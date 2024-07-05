@@ -30,7 +30,7 @@ export default function Dashboard() {
         </div>
 
         <ul className="flex flex-col items-center w-full mt-1">
-          {location.pathname == "/app/dashboard" ? (
+          {location.pathname == "/app/dashboard"  ? (
             <li
               onClick={() => {
                 navigate("dashboard");
@@ -80,7 +80,7 @@ export default function Dashboard() {
             </li>
           )}
 
-          {location.pathname == "/app/evaluaciones" ? (
+          {location.pathname == "/app/evaluaciones" ||location.pathname == "/app/evaluaciones/mchat"  ? (
             <li
               onClick={() => {
                 navigate("evaluaciones");
