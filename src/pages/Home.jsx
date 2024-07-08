@@ -7,8 +7,10 @@ import "leaflet/dist/leaflet.css";
 import "../pages/style.css";
 import { ChartBarIcon } from "@heroicons/react/24/solid";
 import { PresentationChartLineIcon, UserIcon, } from "@heroicons/react/24/outline";
+import { getAllPsychologist } from "../api/psychologist.api.js";
 
 export default function Home() {
+  const [psychologists, setPsychologists] = useState([]);
   const [isActive, setIsActive] = useState(false);
   const [isChart, setChart] = useState(true);
   const toggleClass = (state) => {
@@ -66,7 +68,11 @@ export default function Home() {
   const [geojsonData, setGeojsonData] = useState(null);
 
   useEffect(() => {
-    // Usa la URL del archivo en modo "Raw" de GitHub
+    async function loadPsychologist(){
+      const res =await getAllPsychologist();
+      setPsychologists(res.data)
+    }
+    loadPsychologist();
     const geojsonUrl = "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
 
     fetch(geojsonUrl)
@@ -78,6 +84,7 @@ export default function Home() {
       })
       .then(data => setGeojsonData(data))
       .catch(error => console.error('Error loading the geojson data: ', error));
+    
   }, []);
   
   const heatmapData = {
@@ -264,14 +271,15 @@ export default function Home() {
           </div>
           <div className="h-[1px] w-[315px] bg-[rgb(204,204,204)] line"></div>
           <ul className="w-full flex flex-col items-center">
-            <li>
+            {psychologists.map(ele => (
+              <li key={ele.id}>
               <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
                 <div className="flex w-[75%]">
                   <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
                     JD
                   </div>
                   <div className="ml-2  font-montserrat text-sm">
-                    <p className="font-medium">Joaquin Diaz Chau</p>
+                    <p className="font-medium">{ele.name}</p>
                     <p>18 años</p>
                   </div>
                 </div>
@@ -281,23 +289,8 @@ export default function Home() {
                 </div>
               </div>
             </li>
-            <li>
-              <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
-                <div className="flex w-[75%]">
-                  <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
-                    JD
-                  </div>
-                  <div className="ml-2  font-montserrat text-sm">
-                    <p className="font-medium">Joaquin Diaz Chau</p>
-                    <p>18 años</p>
-                  </div>
-                </div>
-                <div className="text-center w-[25%] font-montserrat text-sm">
-                  <p className="font-semibold text-blue-500">TEA</p>
-                  <p>Prob: 85%</p>
-                </div>
-              </div>
-            </li>
+            ))}
+            
           </ul>
         </div>
         <div className="bg-white w-[340px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
