@@ -71,8 +71,10 @@ export default function Home() {
     async function loadPsychologist(){
       const res =await getAllPsychologist();
       setPsychologists(res.data)
+      
     }
     loadPsychologist();
+    
     const geojsonUrl = "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
 
     fetch(geojsonUrl)
@@ -85,7 +87,7 @@ export default function Home() {
       .then(data => setGeojsonData(data))
       .catch(error => console.error('Error loading the geojson data: ', error));
     
-  }, []);
+  }, [console.log(psychologists)]);
   
   const heatmapData = {
     max: 8,
@@ -279,7 +281,7 @@ export default function Home() {
                     JD
                   </div>
                   <div className="ml-2  font-montserrat text-sm">
-                    <p className="font-medium">{ele.name}</p>
+                    <p className="font-medium">{ele.full_name}</p>
                     <p>18 años</p>
                   </div>
                 </div>
