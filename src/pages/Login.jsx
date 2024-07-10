@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import img_login from "../assets/under-il.svg";
 import { useNavigate } from "react-router-dom";
+import { register,login } from "../api/authorization.api.js";
 function Login() {
   let navigate = useNavigate();
   const [name, setName] = useState("");
@@ -49,19 +50,37 @@ function Login() {
     }
   };
   const saveUser = () => {
-    console.log("Usuario registrado con éxito");
-    setViewLogin(true)
+    const user = {
+      "password": password,
+      "email": email,
+      "full_name": name,
+      "dni": dni,
+      "tuition_number": numeroColegiatura,
+  };
+  register(user)
+      .then(() => {
+          setViewLogin(true);
+      })
+      .catch(error => {
+          console.error("Error in saveUser function:", error);
+      });
   };
   const validateLogin = () => {
-    if(loginEmail == "joaquindiazchau@gmail.com" && loginPassword == "universo2004"){
-      setErrorLogin(false)
-      setTextErrorLogin("!Bienvenido a la plataforma Autdetect!.");
-      navigate('/app/dashboard');
+    const userLogin = {
+      "username":loginEmail,
+      "password":loginPassword,
     }
-    else{
-      setErrorLogin(true)
-      setTextErrorLogin("Las creedenciales ingresadas son incorrectas.");
-    }
+    login(userLogin)
+      .then((response) => {
+        console.log(response)
+        setErrorLogin(false)
+        setTextErrorLogin("!Bienvenido a la plataforma Autdetect!.");
+        navigate('/app/dashboard');
+      })
+      .catch(error => {
+        setErrorLogin(true)
+        setTextErrorLogin("Las creedenciales ingresadas son incorrectas.");
+      });
     
   };
   const validate = () => {

@@ -87,7 +87,7 @@ export default function Home() {
       .then(data => setGeojsonData(data))
       .catch(error => console.error('Error loading the geojson data: ', error));
     
-  }, [console.log(psychologists)]);
+  }, []);
   
   const heatmapData = {
     max: 8,
