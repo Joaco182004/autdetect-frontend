@@ -12,5 +12,5 @@ export const getAllPsychologist = () => {
     };
 
     // Hacer la solicitud GET con el encabezado de autorización
-    return axios.get('http://localhost:8000/psychologist/api/v1/psychologist', config);
+    return axios.get('http://localhost:8000/autdetect/api/v1/psychologist/', config);
 }
