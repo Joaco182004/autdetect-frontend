@@ -10,12 +10,25 @@ import {
   getKeyValue,
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import {Button} from "@nextui-org/react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Checkbox, Link} from "@nextui-org/react";
+import { DateInput } from "@nextui-org/react";
+import {Select, SelectItem} from "@nextui-org/react";
 
+import { Button } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Checkbox,
+  Link,
+} from "@nextui-org/react";
+import { es } from "date-fns/locale";
 
 export default function List() {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const users = [
     {
       key: "1",
@@ -58,7 +71,8 @@ export default function List() {
       name: "John Smith",
       role: "CFO",
       status: "Inactive",
-    },{
+    },
+    {
       key: "8",
       name: "John Smith",
       role: "CFO",
@@ -72,16 +86,62 @@ export default function List() {
     },
     // Add more users if needed
   ];
+  const distritosLimaMetropolitana = [
+    { key: "Ancón", label: "Ancón" },
+    { key: "Ate", label: "Ate" },
+    { key: "Barranco", label: "Barranco" },
+    { key: "Breña", label: "Breña" },
+    { key: "Carabayllo", label: "Carabayllo" },
+    { key: "Chaclacayo", label: "Chaclacayo" },
+    { key: "Chorrillos", label: "Chorrillos" },
+    { key: "Cieneguilla", label: "Cieneguilla" },
+    { key: "Comas", label: "Comas" },
+    { key: "El Agustino", label: "El Agustino" },
+    { key: "Independencia", label: "Independencia" },
+    { key: "Jesús María", label: "Jesús María" },
+    { key: "La Molina", label: "La Molina" },
+    { key: "La Victoria", label: "La Victoria" },
+    { key: "Lima", label: "Lima" },
+    { key: "Lince", label: "Lince" },
+    { key: "Los Olivos", label: "Los Olivos" },
+    { key: "Lurigancho-Chosica", label: "Lurigancho-Chosica" },
+    { key: "Lurín", label: "Lurín" },
+    { key: "Magdalena del Mar", label: "Magdalena del Mar" },
+    { key: "Miraflores", label: "Miraflores" },
+    { key: "Pachacámac", label: "Pachacámac" },
+    { key: "Pucusana", label: "Pucusana" },
+    { key: "Pueblo Libre", label: "Pueblo Libre" },
+    { key: "Puente Piedra", label: "Puente Piedra" },
+    { key: "Punta Hermosa", label: "Punta Hermosa" },
+    { key: "Punta Negra", label: "Punta Negra" },
+    { key: "Rímac", label: "Rímac" },
+    { key: "San Bartolo", label: "San Bartolo" },
+    { key: "San Borja", label: "San Borja" },
+    { key: "San Isidro", label: "San Isidro" },
+    { key: "San Juan de Lurigancho", label: "San Juan de Lurigancho" },
+    { key: "San Juan de Miraflores", label: "San Juan de Miraflores" },
+    { key: "San Luis", label: "San Luis" },
+    { key: "San Martín de Porres", label: "San Martín de Porres" },
+    { key: "San Miguel", label: "San Miguel" },
+    { key: "Santa Anita", label: "Santa Anita" },
+    { key: "Santa María del Mar", label: "Santa María del Mar" },
+    { key: "Santa Rosa", label: "Santa Rosa" },
+    { key: "Santiago de Surco", label: "Santiago de Surco" },
+    { key: "Surquillo", label: "Surquillo" },
+    { key: "Villa El Salvador", label: "Villa El Salvador" },
+    { key: "Villa María del Triunfo", label: "Villa María del Triunfo" }
+  ];
   
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const rowsPerPage = 7;
 
   const filteredUsers = useMemo(() => {
-    return users.filter(user =>
-      user.name.toLowerCase().includes(filter.toLowerCase()) ||
-      user.role.toLowerCase().includes(filter.toLowerCase()) ||
-      user.status.toLowerCase().includes(filter.toLowerCase())
+    return users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(filter.toLowerCase()) ||
+        user.role.toLowerCase().includes(filter.toLowerCase()) ||
+        user.status.toLowerCase().includes(filter.toLowerCase())
     );
   }, [filter, users]);
 
@@ -111,48 +171,95 @@ export default function List() {
             onClear={() => setFilter("")}
             className="w-[250px] outline-none ml-4 font-montserrat"
           />
-          <Button onPress={onOpen} className="mr-4 h-[40px] w-[150px] font-montserrat font-medium" color="primary" variant="solid">
-        Agregar Paciente
-      </Button>
-      <Modal 
-        isOpen={isOpen} 
-        onOpenChange={onOpenChange}
-        placement="top-center"
-        className="font-montserrat w-[400px]"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Registro de paciente</ModalHeader>
-              <ModalBody>
-                <Input
-                  
-                  
-                  label="Nombre"
-                  placeholder="Ingrese el nombre completo del paciente"
-                  variant="bordered"
-                />
-                <Input
-                  
-                  label="Edad"
-                  placeholder="Ingrese la edad del paciente"
-                 
-                  variant="bordered"
-                />
-                
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Cerrar
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Registrar
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+          <Button
+            onPress={onOpen}
+            className="mr-4 h-[40px] w-[150px] font-montserrat font-medium"
+            color="primary"
+            variant="solid"
+          >
+            Agregar Paciente
+          </Button>
+          <Modal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            placement="top-center"
+            className="font-montserrat w-[400px] max-h-[550px] overflow-auto"
+          >
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="flex flex-col gap-1">
+                    Registro de paciente
+                  </ModalHeader>
+                  <ModalBody>
+                    <Input
+                      label="Nombre del tutor"
+                      placeholder="Ingrese el nombre completo del tutor"
+                      variant="bordered"
+                    />
+                    <Input
+                      label="DNI del tutor"
+                      placeholder="Ingrese el nombre completo del tutor"
+                      variant="bordered"
+                    />
+                    <Input
+                      label="Número de contacto"
+                      placeholder="Ingrese el número de contacto"
+                      variant="bordered"
+                    />
+                    <Input
+                      label="Correo de contacto"
+                      placeholder="Ingrese el correo de contacto"
+                      variant="bordered"
+                    />
+                    <DateInput
+                      variant="bordered"
+                      label="Fecha de nacimiento del paciente"
+                    
+                    />
+                    <Input
+                      label="Nombre del paciente"
+                      placeholder="Ingrese el nombre del paciente"
+                      visibleMonths
+                      variant="bordered"
+                    />
+                    <Select
+            variant="bordered"
+            label="Género del paciente"
+            placeholder="Seleccione el género del paciente"
+      
+          >
+            {[{key: "Masculino", label: "Masculino"},{key: "Femenino", label: "Femenino"}].map((gender) => (
+              <SelectItem className="font-montserrat" key={gender.key}>
+                {gender.label}
+              </SelectItem>
+            ))}
+          </Select>
+          <Select
+            variant="bordered"
+            label="Género del paciente"
+            placeholder="Seleccione el género del paciente"
+      
+          >
+            {distritosLimaMetropolitana.map((country) => (
+              <SelectItem className="font-montserrat" key={country.key}>
+                {country.label}
+              </SelectItem>
+            ))}
+          </Select>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="danger" variant="flat" onPress={onClose}>
+                      Cerrar
+                    </Button>
+                    <Button color="primary" onPress={onClose}>
+                      Registrar
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
         </div>
         <Table
           className="w-[95%] rounded-2xl border-1 font-montserrat"
