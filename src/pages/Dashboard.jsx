@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import {
   HomeIcon,
@@ -15,11 +15,20 @@ import {
   ArrowLeftEndOnRectangleIcon as ArrowLeftEndOnRectangleIconLine,
 } from "@heroicons/react/24/outline";
 
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
+
+
 import "../pages/style.css";
 import Home from "./Home";
 export default function Dashboard() {
   const location = useLocation();
+  const [logout,setLogOut] = useState(false);
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const navigate = useNavigate();
+  const limpiarSesion =()=>{
+    localStorage.clear();
+    navigate("/login")
+  }
   return (
     <section className="bg-[rgb(244,244,244)] w-screen h-screen flex items-center select-none">
       <nav className="bg-white h-[100%] w-[300px] flex flex-col">
@@ -28,7 +37,28 @@ export default function Dashboard() {
             AutDetect
           </h1>
         </div>
-
+        <Modal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
+        placement="top-center"
+        className="font-montserrat"
+      >
+        <ModalContent>
+        {(onClose) => (<>
+        <ModalHeader className="flex flex-col gap-1">Cerrar Sesión</ModalHeader>
+        <ModalBody>
+          <p>¿Desea cerrar la sesión actual?</p>
+        </ModalBody>
+        <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Cancelar
+                </Button>
+                <Button color="primary" onClick={limpiarSesion}>
+                  Aceptar
+                </Button>
+              </ModalFooter></>)}
+           </ModalContent>
+      </Modal>
         <ul className="flex flex-col items-center w-full mt-1">
           {location.pathname == "/app/dashboard"  ? (
             <li
@@ -107,12 +137,12 @@ export default function Dashboard() {
             </li>
           )}
 
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
+          <li  className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <UserCircleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <UserCircleIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
             <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Perfil</p>
           </li>
-          <li className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
+          <li onClick={onOpen} className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <ArrowLeftEndOnRectangleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <ArrowLeftEndOnRectangleIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
             <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">

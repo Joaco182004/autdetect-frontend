@@ -3,7 +3,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import img_login from "../assets/under-il.svg";
 import { useNavigate } from "react-router-dom";
-import { register,login } from "../api/authorization.api.js";
+import { register, login } from "../api/authorization.api.js";
 function Login() {
   let navigate = useNavigate();
   const [name, setName] = useState("");
@@ -17,8 +17,20 @@ function Login() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [errorLogin, setErrorLogin] = useState(false);
-  const [textErrorLogin,setTextErrorLogin] = useState("");
-  const [msg,setMsg] = useState("Inicie sesión para iniciar los diagnósticos de pacientes.")
+  const [textErrorLogin, setTextErrorLogin] = useState("");
+  const [msg, setMsg] = useState(
+    "Inicie sesión para iniciar los diagnósticos de pacientes."
+  );
+
+  const handleKeyDown = (event) => {
+   
+    if (event.key === 'Enter') {
+      if(loginEmail.length >  0 && loginPassword.length>0){
+        validateLogin()
+      }
+      // Aquí puedes agregar la lógica para iniciar sesión o cualquier otra acción deseada
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (viewLogin) {
@@ -30,58 +42,55 @@ function Login() {
         saveUser();
         setDni("");
         setEmail("");
-        setNumeroColegiatura("")
+        setNumeroColegiatura("");
         setPassword("");
-        setName("")
+        setName("");
       } else {
         setErrors(validationErrors);
       }
-  
     }
   };
   const changeView = (e) => {
     e.preventDefault();
     setViewLogin(!viewLogin);
-    if(!viewLogin){
-      setMsg("Inicie sesión para iniciar los diagnósticos de pacientes.")
-         }
-    else{
-      setMsg("Crea un usuario para ayudar a niños con su diagnóstico.")
+    if (!viewLogin) {
+      setMsg("Inicie sesión para iniciar los diagnósticos de pacientes.");
+    } else {
+      setMsg("Crea un usuario para ayudar a niños con su diagnóstico.");
     }
   };
   const saveUser = () => {
     const user = {
-      "password": password,
-      "email": email,
-      "full_name": name,
-      "dni": dni,
-      "tuition_number": numeroColegiatura,
-  };
-  register(user)
+      password: password,
+      email: email,
+      full_name: name,
+      dni: dni,
+      tuition_number: numeroColegiatura,
+    };
+    register(user)
       .then(() => {
-          setViewLogin(true);
+        setViewLogin(true);
       })
-      .catch(error => {
-          console.error("Error in saveUser function:", error);
+      .catch((error) => {
+        console.error("Error in saveUser function:", error);
       });
   };
   const validateLogin = () => {
     const userLogin = {
-      "username":loginEmail,
-      "password":loginPassword,
-    }
+      username: loginEmail,
+      password: loginPassword,
+    };
     login(userLogin)
       .then((response) => {
-        console.log(response)
-        setErrorLogin(false)
+        console.log(response);
+        setErrorLogin(false);
         setTextErrorLogin("!Bienvenido a la plataforma Autdetect!.");
-        navigate('/app/dashboard');
+        navigate("/app/dashboard");
       })
-      .catch(error => {
-        setErrorLogin(true)
+      .catch((error) => {
+        setErrorLogin(true);
         setTextErrorLogin("Las creedenciales ingresadas son incorrectas.");
       });
-    
   };
   const validate = () => {
     let errors = {};
@@ -111,7 +120,7 @@ function Login() {
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
       errors.password = "La contraseña debe tener un carácter especial";
     }
-    
+
     return errors;
   };
 
@@ -123,13 +132,13 @@ function Login() {
             <h1 className="font-black font-playwrite text-4xl mb-1">
               ¡Bienvenido a <span className="text-blue-500">AutDetect</span>!
             </h1>
-            <p className="font-montserrat mt-4">
-              {msg}
-             
-            </p>
+            <p className="font-montserrat mt-4">{msg}</p>
           </div>
 
-          <img className="w-[500px] h-[420px] select-none" src={img_login}></img>
+          <img
+            className="w-[500px] h-[420px] select-none"
+            src={img_login}
+          ></img>
         </div>
         <div className="w-[50%] h-full flex items-center justify-center">
           <div className="bg-white w-[420px] h-auto rounded-md p-4 pb-1">
@@ -201,21 +210,50 @@ function Login() {
                   Iniciar Sesión
                 </h1>
                 <form className="w-full flex flex-col justify-center items-center">
-                  <Input
-                    width={widthInput}
-                    type="email"
-                    label="Correo electrónico"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                  />
-                  <Input
-                    width={widthInput}
-                    type="password"
-                    label="Contraseña"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                  />
-                  <p  className={` text-xm mb-4 font-medium ${errorLogin ? 'text-red-500' : 'text-green-400'}`} >{textErrorLogin}</p>
+                  <div
+                    className="mb-8"
+                    style={{ width: `${widthInput}px`, height: `${40}px` }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <label className="uppercase block font-montserrat text-[rgb(175,185,200)] text-xs font-text mb-1">
+                      Correo electrónico
+                      </label>
+                      
+                    </div>
+                    <input
+                      type="email"
+                      value={loginEmail}
+                      onChange={(e)=>setLoginEmail(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      className="font-montserrat w-full p-2.5 border bg-[rgb(240,243,250)] rounded-lg outline-0 text-gray-700"
+                    />
+                  </div>
+                  <div
+                    className="mb-8"
+                    style={{ width: `${widthInput}px`, height: `${40}px` }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <label className="uppercase block font-montserrat text-[rgb(175,185,200)] text-xs font-text mb-1">
+                      Contraseña
+                      </label>
+                      
+                    </div>
+                    <input
+                      type="email"
+                      value={loginPassword}
+                      onChange={(e)=>setLoginPassword(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      className="font-montserrat w-full p-2.5 border bg-[rgb(240,243,250)] rounded-lg outline-0 text-gray-700"
+                    />
+                  </div>
+                 
+                  <p
+                    className={` text-xm mb-4 font-medium ${
+                      errorLogin ? "text-red-500" : "text-green-400"
+                    }`}
+                  >
+                    {textErrorLogin}
+                  </p>
                   <Button
                     type={"primary"}
                     description={"Iniciar Sesión"}

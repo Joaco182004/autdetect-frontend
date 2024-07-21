@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import List from './pages/List';
 import Evaluation from './pages/Evaluation';
 import MCHAT from './pages/MCHAT';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -16,14 +17,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={ <Login/>} />
+      <Route path="/login" element={ <Login/>} />
+      <Route element={<PrivateRoute />}>
+        
         <Route path="app" element={<Dashboard />}>
         <Route path="dashboard" element={<Home />} />
         <Route path="pacientes" element={<List />} />
         <Route path='evaluaciones' element={<Evaluation />}></Route>
         <Route path='evaluaciones/mchat' element={<MCHAT />}></Route>
         </Route>
-        
+        </Route>
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
