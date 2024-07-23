@@ -239,7 +239,7 @@ function Login() {
                       
                     </div>
                     <input
-                      type="email"
+                      type="password"
                       value={loginPassword}
                       onChange={(e)=>setLoginPassword(e.target.value)}
                       onKeyDown={handleKeyDown}
