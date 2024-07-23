@@ -12,11 +12,21 @@ import {
 import { Input, DateInput, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react"; // Asegúrate de importar correctamente todos los componentes
 import { getAllPatients, savePatient } from "../api/infantPatient.api";
 import { es } from "date-fns/locale";
-
-
+import "../pages/style.css";
+import {
+  PencilSquareIcon
+} from "@heroicons/react/24/solid";
 export default function List() {
+  const [idEditable, setIdEditable] = useState("");
+  const getId=(e)=>{
+    console.log(e.id)
+    setIdEditable(e.id)
+  }
   async function loadPatients() {
     const res = await getAllPatients();
+    
+    res.data.map(e => { e.edit = <div onClick={()=>{getId(e)}} className="flex justify-center items-center cursor-pointer text-blue-600"><PencilSquareIcon className="w-[20px] "></PencilSquareIcon></div>})
+    
     setPatients(res.data);
   }
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -83,7 +93,7 @@ export default function List() {
 
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const rowsPerPage = 7;
+  const rowsPerPage = 6;
 
   const registerPatient = () => {
     
@@ -133,11 +143,11 @@ export default function List() {
   }, [page, filteredPatients]);
 
   return (
-    <section className="w-full h-full overflow-auto outline-none select-none">
-      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
+    <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-[full] overflow-x-hidden outline-none select-none ">
+      <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
         Lista de pacientes
       </h1>
-      <div className="h-[auto] flex flex-col items-center bg-white mx-8 content-list rounded-md pb-4">
+      <div className="h-[auto]  flex flex-col items-center mb-4  bg-white mx-8 content-list rounded-md pb-4">
         <div className="w-[100%] flex items-center justify-between bg-red p-2 rounded-md my-4">
           <Input
             isClearable
@@ -283,13 +293,14 @@ export default function List() {
           </Modal>
         </div>
         <Table
-          className="w-[95%] rounded-2xl border-1 font-montserrat overflow-auto"
+          className="width-content rounded-2xl border-1 font-montserrat"
           bottomContent={
-            <div className="flex w-full justify-center">
+            <div  className=" flex w-full justify-center">
               <Pagination
                 isCompact
                 showControls
                 showShadow
+                
                 color="primary"
                 page={page}
                 total={pages}
@@ -349,17 +360,25 @@ export default function List() {
             <TableColumn key="district">
               <span className=" flex justify-center text-center">Distrito</span>
             </TableColumn>
+            <TableColumn key="edit">
+              <span className=" flex justify-center text-center">Edición</span>
+            </TableColumn>
           </TableHeader>
           <TableBody items={items}>
             {(item) => (
+              
               <TableRow key={item.key}>
                 {(columnKey) => (
                   <TableCell className="text-xs text-center">
                     {getKeyValue(item, columnKey)}
                   </TableCell>
+                    
                 )}
+              
               </TableRow>
+              
             )}
+           
           </TableBody>
         </Table>
       </div>

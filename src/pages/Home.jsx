@@ -121,7 +121,7 @@ export default function Home() {
   
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
-      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
+      <h1 className="tracking-in-expand  font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
         Dashboard
       </h1>
       <div className=" w-full h-auto pb-4 cont-section-dash flex gap-4">

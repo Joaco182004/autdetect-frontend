@@ -151,8 +151,8 @@ export default function Dashboard() {
           </li>
         </ul>
       </nav>
-      <div className="w-full h-full border-[rgb(244,244,244)] border-l-2">
-        <div className="w-full bg-[rgb(244,244,244)] cont-bottom">
+      <div className="w-full h-full overflow-x-hidden border-[rgb(244,244,244)] border-l-2">
+        <div className="  w-full bg-[rgb(244,244,244)] cont-bottom">
           <Outlet />
         </div>
       </div>

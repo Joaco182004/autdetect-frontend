@@ -94,8 +94,8 @@ export default function Evaluation() {
   }, [page, filteredUsers]);
 
   return (
-    <section className="w-full h-full overflow-auto outline-none select-none">
-      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
+    <section className="tracking-in-expand2 w-full h-full overflow-auto outline-none select-none">
+      <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
         Lista de evaluaciones
       </h1>
       <div className="h-[auto] flex flex-col items-center bg-white mx-8 content-list rounded-md pb-4">
@@ -148,6 +148,7 @@ export default function Evaluation() {
                 )}
               </TableRow>
             )}
+            
           </TableBody>
         </Table>
       </div>

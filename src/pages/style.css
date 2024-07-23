@@ -5,6 +5,13 @@
     height: 100%;
   
 }
+.height-cont{
+    height: calc(100vh - 15rem) !important;
+  
+}
+.width-content{
+    width: calc(100% - 3rem) !important;
+}
 .content-list{
     width: calc(100% - 4rem);
 }
@@ -23,6 +30,47 @@
     height: 410px !important;
     border-radius: 0.25rem ;
   }
+  .tracking-in-expand {
+ 
+    -webkit-animation: tracking-in-expand 1.2s cubic-bezier(.215, .61, .355, 1.000) both;
+    animation: tracking-in-expand 1.2s cubic-bezier(.215, .61, .355, 1.000) both
+}
+.tracking-in-expand2 {
+ 
+    -webkit-animation: tracking-in-expand2 1.2s cubic-bezier(.215, .61, .355, 1.000) both;
+    animation: tracking-in-expand2 1.2s cubic-bezier(.215, .61, .355, 1.000) both
+}
+@keyframes tracking-in-expand {
+    0% {
+        letter-spacing: -.5em;
+        opacity: 0
+    }
+
+    40% {
+        opacity: .6
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes tracking-in-expand2 {
+    0% {
+        
+        opacity: 0
+    }
+
+    40% {
+        opacity: .6
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+
 @keyframes slideAnimationOne {
     0% {
         transform: translateX(0);
