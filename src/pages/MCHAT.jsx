@@ -1,15 +1,19 @@
-import React from 'react'
+import {React,useEffect,useState} from 'react'
 import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
 import {RadioGroup, Radio} from "@nextui-org/react";
 import {Button} from "@nextui-org/react";
-import { useNavigate } from 'react-router-dom';
-
+import {useNavigate } from 'react-router-dom';
+import {getAllPatients} from "../api/infantPatient.api";
 export default function MCHAT() {
-    const animals = [
-        {key: "cat", label: "Dario Joaquin Facundo Diaz Chau (72536359)"},
-        {key: "dog", label: "Pilar Chau Vandervelde (09804124)"},
-    ]
-    const navigate = useNavigate()
+  const [patients, setPatients] = useState([]);
+  async function loadPatients() {
+    const res = await getAllPatients();
+    setPatients(res.data);
+  }
+  useEffect(() => {
+    loadPatients();
+  }, []);
+  const navigate = useNavigate()
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
       <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
@@ -21,9 +25,9 @@ export default function MCHAT() {
         placeholder='Selecciona el paciente a diagnosticar'
         className="w-[405px] font-montserrat mt-2" 
       >
-        {animals.map((animal) => (
-          <AutocompleteItem className='font-montserrat' key={animal.value} value={animal.value}>
-            {animal.label}
+        {patients.map((patient) => (
+          <AutocompleteItem className='font-montserrat' key={patient.id} value={patient.infant_dni}>
+            {patient.infant_name + " ("+patient.infant_dni+")"}
           </AutocompleteItem>
         ))}
       </Autocomplete>

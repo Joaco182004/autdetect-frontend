@@ -9,33 +9,95 @@ import {
   Pagination,
   getKeyValue,
 } from "@nextui-org/react";
-import { Input, DateInput, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react"; // Asegúrate de importar correctamente todos los componentes
-import { getAllPatients, savePatient } from "../api/infantPatient.api";
+import {
+  Input,
+  DateInput,
+  Select,
+  SelectItem,
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react"; // Asegúrate de importar correctamente todos los componentes
+import {
+  getAllPatients,
+  savePatient,
+  getPatientById,savePatientById
+} from "../api/infantPatient.api";
 import { es } from "date-fns/locale";
 import "../pages/style.css";
-import {
-  PencilSquareIcon
-} from "@heroicons/react/24/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { parseDate } from "@internationalized/date";
 export default function List() {
-  const [idEditable, setIdEditable] = useState("");
-  const getId=(e)=>{
-    console.log(e.id)
-    setIdEditable(e.id)
+  const [isEditable, setIsEditable] = useState(false);
+  const [textform, setTextForm] = useState("");
+  const [id,setId] = useState("");
+  async function loadPatients() {
+    const res = await getAllPatients();
+
+    res.data.map((e) => {
+      e.edit = (
+        <div
+          onClick={() => {
+            getPatient(e);
+          }}
+          className="flex justify-center items-center cursor-pointer text-blue-600"
+        >
+          <PencilSquareIcon className="w-[20px] "></PencilSquareIcon>
+        </div>
+      );
+    });
+
+    setPatients(res.data);
+  }
+  async function getPatient(e) {
+    setIsEditable(true)
+    setId(Number(e.id))
+    const res = await getPatientById(Number(e.id));
+    console.log(res.data);
+    openEdit(res.data);
   }
   async function loadPatients() {
     const res = await getAllPatients();
-    
-    res.data.map(e => { e.edit = <div onClick={()=>{getId(e)}} className="flex justify-center items-center cursor-pointer text-blue-600"><PencilSquareIcon className="w-[20px] "></PencilSquareIcon></div>})
-    
+
+    res.data.map((e) => {
+      e.edit = (
+        <div
+          onClick={() => {
+            getPatient(e);
+          }}
+          className="flex justify-center items-center cursor-pointer text-blue-600"
+        >
+          <PencilSquareIcon className="w-[20px] "></PencilSquareIcon>
+        </div>
+      );
+    });
+
     setPatients(res.data);
   }
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [patients, setPatients] = useState([]);
   useEffect(() => {
-    
     loadPatients();
   }, []);
-  
+
+  const abrirModal = () => {
+    setIsEditable(false)
+    setInfantDni("");
+    setInfantName("");
+    setBirthDate(null);
+    setGender("");
+    setGuardianDni("");
+    setGuardianName("");
+    setGuardianEmail("");
+    setContactPhone("");
+    setDistrict("");
+    setTextForm("Registro de paciente");
+    onOpen(true);
+  };
   const [infantDni, setInfantDni] = useState("");
   const [infantName, setInfantName] = useState("");
   const [birthDate, setBirthDate] = useState(null);
@@ -93,23 +155,24 @@ export default function List() {
 
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const rowsPerPage = 6;
+  const rowsPerPage = 4;
 
   const registerPatient = () => {
-    
     const user = {
       infant_dni: infantDni,
       infant_name: infantName,
-      birth_date: birthDate["year"]+"-"+birthDate["month"] + "-"+ birthDate["day"],
-      gender:gender,
+      birth_date:
+        birthDate["year"] + "-" + birthDate["month"] + "-" + birthDate["day"],
+      gender: gender,
       guardian_dni: guardianDni,
       guardian_name: guardianName,
       guardian_email: guardianEmail,
       contact_phone: contactPhone,
       district: district,
     };
-    console.log(user)
-    savePatient(user)
+    console.log(user);
+    if(!isEditable){
+      savePatient(user)
       .then((response) => {
         console.log("Patient saved successfully", response.data);
         onOpenChange(false); // Cerrar el modal después de registrar el paciente
@@ -118,6 +181,35 @@ export default function List() {
       .catch((error) => {
         console.error("There was an error saving the patient!", error);
       });
+    }
+    else{
+      console.log(id)
+      savePatientById(id, user).then((response) => {
+        console.log("Patient saved successfully", response.data);
+        onOpenChange(false); // Cerrar el modal después de registrar el paciente
+        loadPatients();
+      })
+      .catch((error) => {
+        console.error("There was an error saving the patient!", error);
+      });
+    }
+  };
+  const openEdit = (data) => {
+    // Establecer los datos
+    setTextForm("Editar paciente");
+    setInfantDni(data.infant_dni);
+    setInfantName(data.infant_name);
+    const date = parseDate(data.birth_date);
+    setBirthDate(date); // Asegúrate de que esto es lo que quieres
+    setGender(data.gender);
+    setGuardianDni(data.guardian_dni);
+    setGuardianName(data.guardian_name);
+    setGuardianEmail(data.guardian_email);
+    setContactPhone(data.contact_phone);
+    setDistrict(data.district);
+
+    // Llama a abrir el modal
+    onOpen(true);
   };
 
   const filteredPatients = useMemo(() => {
@@ -160,7 +252,7 @@ export default function List() {
             className="w-[250px] outline-none ml-4 font-montserrat"
           />
           <Button
-            onPress={onOpen}
+            onPress={abrirModal}
             className="mr-4 h-[40px] w-[150px] font-montserrat font-medium"
             color="primary"
             variant="solid"
@@ -177,7 +269,7 @@ export default function List() {
               {(onClose) => (
                 <>
                   <ModalHeader className="flex flex-col gap-1">
-                    Registro de paciente
+                    {textform}
                   </ModalHeader>
                   <ModalBody>
                     <form>
@@ -197,13 +289,12 @@ export default function List() {
                         variant="bordered"
                         className="mb-2"
                       />
-                      
+
                       <Select
                         variant="bordered"
                         label="Género del paciente"
                         placeholder="Seleccione el género del paciente"
                         selectedKeys={[gender]}
-                        
                         onChange={(e) => setGender(e.target.value)}
                         className="mb-2"
                       >
@@ -220,11 +311,13 @@ export default function List() {
                           </SelectItem>
                         ))}
                       </Select>
-                      <DateInput className="mb-2"
-                      variant="bordered"
-                      label="Fecha de nacimiento del paciente"
-                      value={birthDate} onChange={setBirthDate}
-                    />
+                      <DateInput
+                        className="mb-2"
+                        variant="bordered"
+                        label="Fecha de nacimiento del paciente"
+                        value={birthDate}
+                        onChange={setBirthDate}
+                      />
                       <Input
                         label="DNI del tutor"
                         placeholder="Ingrese el DNI del tutor"
@@ -262,16 +355,13 @@ export default function List() {
                         label="Distrito"
                         placeholder="Seleccione el distrito"
                         selectedKeys={[district]}
-                        
                         onChange={(e) => setDistrict(e.target.value)}
-                        
                       >
                         {distritosLimaMetropolitana.map((district) => (
                           <SelectItem
                             className="font-montserrat"
                             key={district.key}
                             value={district.label}
-                           
                           >
                             {district.label}
                           </SelectItem>
@@ -283,7 +373,11 @@ export default function List() {
                     <Button color="danger" variant="flat" onPress={onClose}>
                       Cerrar
                     </Button>
-                    <Button type="button" onClick={registerPatient} color="primary">
+                    <Button
+                      type="button"
+                      onClick={registerPatient}
+                      color="primary"
+                    >
                       Registrar
                     </Button>
                   </ModalFooter>
@@ -294,13 +388,13 @@ export default function List() {
         </div>
         <Table
           className="width-content rounded-2xl border-1 font-montserrat"
+          aria-label="Tabla de Pacientes"
           bottomContent={
-            <div  className=" flex w-full justify-center">
+            <div className=" flex w-full justify-center">
               <Pagination
                 isCompact
                 showControls
                 showShadow
-                
                 color="primary"
                 page={page}
                 total={pages}
@@ -366,19 +460,14 @@ export default function List() {
           </TableHeader>
           <TableBody items={items}>
             {(item) => (
-              
               <TableRow key={item.key}>
                 {(columnKey) => (
                   <TableCell className="text-xs text-center">
                     {getKeyValue(item, columnKey)}
                   </TableCell>
-                    
                 )}
-              
               </TableRow>
-              
             )}
-           
           </TableBody>
         </Table>
       </div>
