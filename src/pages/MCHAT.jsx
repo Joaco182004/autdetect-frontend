@@ -1,7 +1,8 @@
 import { React, useEffect, useState } from "react";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
-import { getAllPatients } from "../api/infantPatient.api";
+import { savePatient } from "../api/infantPatient.api";
+import { saveQuestionnaire } from "../api/questionnaire.api";
 import {
   Input,
   DateInput,
@@ -19,6 +20,56 @@ export default function MCHAT() {
   const [guardianEmail, setGuardianEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [district, setDistrict] = useState("");
+  const [q1, setQ1] = useState(0);
+  const [q2, setQ2] = useState(0);
+  const [idUserSave, setIdUserSave] = useState("");
+  const transfromValue=(value)=>{
+    return value == 1 ? true : false
+  }
+  const registerEvaluation = () => {
+    console.log(q1)
+    console.log(q2)
+    const user = {
+      infant_dni: infantDni,
+      infant_name: infantName,
+      birth_date:
+        birthDate["year"] + "-" + birthDate["month"] + "-" + birthDate["day"],
+      gender: gender,
+      guardian_dni: guardianDni,
+      guardian_name: guardianName,
+      guardian_email: guardianEmail,
+      contact_phone: contactPhone,
+      district: district,
+    };
+    savePatient(user)
+      .then((response) => {
+        console.log("Patient saved successfully", response.data);
+        setIdUserSave(response.data.id);
+      })
+      .catch((error) => {
+        console.error("There was an error saving the patient!", error);
+      });
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0, 10);
+    const questionnaire = {
+      patient: 8,
+      question1: transfromValue(q1),
+      question2: transfromValue(q2),
+      result: true,
+      probability: 0.9,
+      date_evaluation: formattedDate,
+    };
+    console.log(questionnaire)
+
+    saveQuestionnaire(questionnaire)
+      .then((response) => {
+        console.log("Questionnaire saved successfully", response.data);
+        setIdUserSave(response.data.id);
+      })
+      .catch((error) => {
+        console.error("There was an error saving the Questionnaire!", error);
+      });
+  };
   const distritosLimaMetropolitana = [
     { key: "Ancón", label: "Ancón" },
     { key: "Ate", label: "Ate" },
@@ -64,7 +115,7 @@ export default function MCHAT() {
     { key: "Villa El Salvador", label: "Villa El Salvador" },
     { key: "Villa María del Triunfo", label: "Villa María del Triunfo" },
   ];
-  
+
   const navigate = useNavigate();
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
@@ -73,9 +124,10 @@ export default function MCHAT() {
       </h1>
       <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4">
         <form className="w-[350px]">
-          <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">Registro del paciente</h2>
+          <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
+            Registro del paciente
+          </h2>
           <Input
-            
             label="DNI del paciente"
             placeholder="Ingrese el DNI del paciente"
             value={infantDni}
@@ -185,6 +237,8 @@ export default function MCHAT() {
           label="Seleccione la respuesta"
           orientation="horizontal"
           className="font-montserrat text-sm ml-7 mt-2"
+          value={q1}
+          onValueChange={setQ1}
         >
           <Radio className="text-xs" value="1">
             Sí
@@ -207,6 +261,8 @@ export default function MCHAT() {
           label="Seleccione la respuesta"
           orientation="horizontal"
           className="font-montserrat text-sm ml-7 mt-2"
+          value={q2}
+          onValueChange={setQ2}
         >
           <Radio className="text-xs" value="1">
             Sí
@@ -223,9 +279,7 @@ export default function MCHAT() {
             Predecir
           </Button>
           <Button
-            onClick={() => {
-              navigate("/app/evaluaciones");
-            }}
+            onClick={registerEvaluation}
             className="ml-2 w-[150px] font-montserrat font-medium"
             color="default"
           >

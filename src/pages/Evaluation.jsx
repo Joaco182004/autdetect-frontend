@@ -11,116 +11,66 @@ import {
   getKeyValue,
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import {Button} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { getAllQuestionnaire } from "../api/questionnaire.api";
 import { getPatientById } from "../api/infantPatient.api";
 
 export default function Evaluation() {
-  const [questionnaires,setQuestionnaires] = useState([])
+  const [questionnaires, setQuestionnaires] = useState([]);
   const navigate = useNavigate();
-  async function getPatient(id){
-    const user = await getPatientById(id)
-    return user.data
+
+  async function getPatient(id) {
+    const user = await getPatientById(id);
+    return user.data;
   }
-  async function loadQuestionnaires(){
-      
-      const res = await getAllQuestionnaire()
-      const data = res.data
-      const promises = data.map(async (e) => {
-        const patientData = await getPatient(e.patient);
-        return {
-            ...e,
-            patient_evaluated: patientData.infant_name,  
-            patient_dni: patientData.infant_dni          
-        };
+
+  async function loadQuestionnaires() {
+    const res = await getAllQuestionnaire();
+    const data = res.data;
+    const promises = data.map(async (e) => {
+      const patientData = await getPatient(e.patient);
+      return {
+        ...e,
+        patient_evaluated: patientData.infant_name,
+        patient_dni: patientData.infant_dni,
+      };
     });
 
-    // Espera a que todas las promesas se resuelvan antes de establecer el estado
+    // Wait for all promises to resolve before setting state
     const questionnairesWithPatientInfo = await Promise.all(promises);
     setQuestionnaires(questionnairesWithPatientInfo);
   }
+
   useEffect(() => {
     loadQuestionnaires();
-    
   }, []);
-  
-  const users = [
-    {
-      key: "1",
-      name: "Tony Reichert",
-      role: "CEO",
-      status: "Active",
-    },
-    {
-      key: "2",
-      name: "Zoey Lang",
-      role: "CTO",
-      status: "Inactive",
-    },
-    {
-      key: "3",
-      name: "Jane Doe",
-      role: "CMO",
-      status: "Active",
-    },
-    {
-      key: "4",
-      name: "John Smith",
-      role: "CFO",
-      status: "Inactive",
-    },
-    {
-      key: "5",
-      name: "John Smith",
-      role: "CFO",
-      status: "Inactive",
-    },
-    {
-      key: "6",
-      name: "John Smith",
-      role: "CFO",
-      status: "Inactive",
-    },
-    {
-      key: "7",
-      name: "John Smith",
-      role: "CFO",
-      status: "Inactive",
-    },{
-      key: "8",
-      name: "John Smith",
-      role: "CFO",
-      status: "Inactive",
-    },
-    {
-      key: "9",
-      name: "John Smith",
-      role: "CFO",
-      status: "Inactive",
-    },
-    // Add more users if needed
-  ];
-  
+
+  const transformValue=(value)=>{
+    return value === true ? "Autista" : "Neurotípico"
+  }
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const rowsPerPage = 7;
 
-  const filteredUsers = useMemo(() => {
-    return users.filter(user =>
-      user.name.toLowerCase().includes(filter.toLowerCase()) ||
-      user.role.toLowerCase().includes(filter.toLowerCase()) ||
-      user.status.toLowerCase().includes(filter.toLowerCase())
+  const filteredQuestionnaires = useMemo(() => {
+    return questionnaires.filter(
+      (questionnaire) =>
+        questionnaire.patient_evaluated
+          .toLowerCase()
+          .includes(filter.toLowerCase()) ||
+        questionnaire.patient_dni.toLowerCase()
+        .includes(filter.toLowerCase()) || transformValue(questionnaire.result).toLowerCase().includes(filter.toLowerCase())
     );
-  }, [filter, users]);
+  }, [filter, questionnaires]);
 
-  const pages = Math.ceil(filteredUsers.length / rowsPerPage);
+  const pages = Math.ceil(filteredQuestionnaires.length / rowsPerPage);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredUsers.slice(start, end);
-  }, [page, filteredUsers]);
+    return filteredQuestionnaires.slice(start, end);
+  }, [page, filteredQuestionnaires]);
 
   return (
     <section className="tracking-in-expand2 w-full h-full overflow-auto outline-none select-none">
@@ -139,10 +89,16 @@ export default function Evaluation() {
             onClear={() => setFilter("")}
             className="w-[250px] outline-none ml-4 font-montserrat"
           />
-          <Button onClick={()=>{navigate("/app/evaluaciones/mchat");}} className="mr-4 h-[40px] w-[150px] font-montserrat font-medium" color="primary" variant="solid">
-        Realizar Evaluación
-      </Button>
-     
+          <Button
+            onClick={() => {
+              navigate("/app/evaluaciones/mchat");
+            }}
+            className="mr-4 h-[40px] w-[150px] font-montserrat font-medium"
+            color="primary"
+            variant="solid"
+          >
+            Realizar Evaluación
+          </Button>
         </div>
         <Table
           className="w-[95%] rounded-2xl border-1 font-montserrat"
@@ -165,22 +121,23 @@ export default function Evaluation() {
           }}
         >
           <TableHeader>
-            <TableColumn key="name">NAME</TableColumn>
-            <TableColumn key="role">ROLE</TableColumn>
-            <TableColumn key="status">STATUS</TableColumn>
+            <TableColumn key="id">Id</TableColumn>
+            <TableColumn key="patient_dni">DNI del Paciente</TableColumn>
+            <TableColumn key="patient_evaluated">Nombre del Paciente</TableColumn>
+            <TableColumn key="result">Resultado</TableColumn>
+            <TableColumn key="probability">Probability</TableColumn>
           </TableHeader>
           <TableBody items={items}>
             {(item) => (
               <TableRow key={item.key}>
                 {(columnKey) => (
-                  <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                  <TableCell>{columnKey=="result"?transformValue(getKeyValue(item, columnKey)):getKeyValue(item, columnKey)}</TableCell>
                 )}
               </TableRow>
             )}
-            
           </TableBody>
         </Table>
       </div>
     </section>
-  )
+  );
 }
