@@ -120,7 +120,13 @@ useEffect(() => {
 }, []);
 
 const countAutism = () =>{
-  return questionnaire.length
+  const contAutism = 0
+  questionnaire.map(e=>{
+    if(e.result == true){
+      contAutism+=1
+    }
+  })
+  return contAutism
 }
 
 const heatmapData = {
