@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -12,9 +12,25 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import {Button} from "@nextui-org/react";
+import { getAllQuestionnaire } from "../api/questionnaire.api";
+import { getPatientById } from "../api/infantPatient.api";
 
 export default function Evaluation() {
+  const [questionnaires,setQuestionnaires] = useState([])
   const navigate = useNavigate();
+  async function getPatient(id){
+    const user = await getPatientById(id)
+    console.log(user.data)
+  }
+  async function loadQuestionnaires(){
+      
+      const res = await getAllQuestionnaire()
+      const data = res.data
+      data.map(e => {console.log(e.id)})
+  }
+  useEffect(() => {
+    loadQuestionnaires();
+  }, []);
   const users = [
     {
       key: "1",

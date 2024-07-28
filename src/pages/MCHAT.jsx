@@ -64,16 +64,7 @@ export default function MCHAT() {
     { key: "Villa El Salvador", label: "Villa El Salvador" },
     { key: "Villa María del Triunfo", label: "Villa María del Triunfo" },
   ];
-  const [patients, setPatients] = useState([]);
-  const [patientsEvaluation,setPatientsEvaluation] = useState([])
-  async function loadPatients() {
-    const res = await getAllPatients();
-    res.data()
-    setPatients(res.data);
-  }
-  useEffect(() => {
-    loadPatients();
-  }, []);
+  
   const navigate = useNavigate();
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
