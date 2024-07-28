@@ -20,17 +20,30 @@ export default function Evaluation() {
   const navigate = useNavigate();
   async function getPatient(id){
     const user = await getPatientById(id)
-    console.log(user.data)
+    return user.data
   }
   async function loadQuestionnaires(){
       
       const res = await getAllQuestionnaire()
       const data = res.data
-      data.map(e => {console.log(e.id)})
+      const promises = data.map(async (e) => {
+        const patientData = await getPatient(e.patient);
+        return {
+            ...e,
+            patient_evaluated: patientData.infant_name,  
+            patient_dni: patientData.infant_dni          
+        };
+    });
+
+    // Espera a que todas las promesas se resuelvan antes de establecer el estado
+    const questionnairesWithPatientInfo = await Promise.all(promises);
+    setQuestionnaires(questionnairesWithPatientInfo);
   }
   useEffect(() => {
     loadQuestionnaires();
+    
   }, []);
+  
   const users = [
     {
       key: "1",
@@ -126,7 +139,7 @@ export default function Evaluation() {
             onClear={() => setFilter("")}
             className="w-[250px] outline-none ml-4 font-montserrat"
           />
-          <Button onClick={()=>{navigate("/app/evaluaciones/mchat")}} className="mr-4 h-[40px] w-[150px] font-montserrat font-medium" color="primary" variant="solid">
+          <Button onClick={()=>{navigate("/app/evaluaciones/mchat");}} className="mr-4 h-[40px] w-[150px] font-montserrat font-medium" color="primary" variant="solid">
         Realizar Evaluación
       </Button>
      
