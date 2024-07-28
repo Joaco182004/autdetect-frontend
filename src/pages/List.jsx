@@ -25,7 +25,8 @@ import {
 import {
   getAllPatients,
   savePatient,
-  getPatientById,savePatientById
+  getPatientById,
+  savePatientById,
 } from "../api/infantPatient.api";
 import { es } from "date-fns/locale";
 import "../pages/style.css";
@@ -34,7 +35,7 @@ import { parseDate } from "@internationalized/date";
 export default function List() {
   const [isEditable, setIsEditable] = useState(false);
   const [textform, setTextForm] = useState("");
-  const [id,setId] = useState("");
+  const [id, setId] = useState("");
   async function loadPatients() {
     const res = await getAllPatients();
 
@@ -54,8 +55,8 @@ export default function List() {
     setPatients(res.data);
   }
   async function getPatient(e) {
-    setIsEditable(true)
-    setId(Number(e.id))
+    setIsEditable(true);
+    setId(Number(e.id));
     const res = await getPatientById(Number(e.id));
     console.log(res.data);
     openEdit(res.data);
@@ -85,7 +86,7 @@ export default function List() {
   }, []);
 
   const abrirModal = () => {
-    setIsEditable(false)
+    setIsEditable(false);
     setInfantDni("");
     setInfantName("");
     setBirthDate(null);
@@ -171,27 +172,27 @@ export default function List() {
       district: district,
     };
     console.log(user);
-    if(!isEditable){
+    if (!isEditable) {
       savePatient(user)
-      .then((response) => {
-        console.log("Patient saved successfully", response.data);
-        onOpenChange(false); // Cerrar el modal después de registrar el paciente
-        loadPatients();
-      })
-      .catch((error) => {
-        console.error("There was an error saving the patient!", error);
-      });
-    }
-    else{
-      console.log(id)
-      savePatientById(id, user).then((response) => {
-        console.log("Patient saved successfully", response.data);
-        onOpenChange(false); // Cerrar el modal después de registrar el paciente
-        loadPatients();
-      })
-      .catch((error) => {
-        console.error("There was an error saving the patient!", error);
-      });
+        .then((response) => {
+          console.log("Patient saved successfully", response.data);
+          onOpenChange(false); // Cerrar el modal después de registrar el paciente
+          loadPatients();
+        })
+        .catch((error) => {
+          console.error("There was an error saving the patient!", error);
+        });
+    } else {
+      console.log(id);
+      savePatientById(id, user)
+        .then((response) => {
+          console.log("Patient saved successfully", response.data);
+          onOpenChange(false); // Cerrar el modal después de registrar el paciente
+          loadPatients();
+        })
+        .catch((error) => {
+          console.error("There was an error saving the patient!", error);
+        });
     }
   };
   const openEdit = (data) => {
@@ -251,14 +252,7 @@ export default function List() {
             onClear={() => setFilter("")}
             className="w-[250px] outline-none ml-4 font-montserrat"
           />
-          <Button
-            onPress={abrirModal}
-            className="mr-4 h-[40px] w-[150px] font-montserrat font-medium"
-            color="primary"
-            variant="solid"
-          >
-            Agregar Paciente
-          </Button>
+          
           <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
