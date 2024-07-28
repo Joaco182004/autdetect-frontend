@@ -8,116 +8,129 @@ import "../pages/style.css";
 import { ChartBarIcon } from "@heroicons/react/24/solid";
 import { PresentationChartLineIcon, UserIcon, } from "@heroicons/react/24/outline";
 import { getAllPsychologist } from "../api/psychologist.api.js";
+import { getAllQuestionnaire } from "../api/questionnaire.api.js";
 
 export default function Home() {
-  const [psychologists, setPsychologists] = useState([]);
-  const [isActive, setIsActive] = useState(false);
-  const [isChart, setChart] = useState(true);
-  const toggleClass = (state) => {
-    if (isActive != state) {
-      setIsActive(state);
-      setChart(!state);
-    }
-  };
-  const data = Array.from({ length: 12 }, (_, i) => ({
-    name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
-    Cantidad_de_Diagnósticos: 1000 + i * 100
-  }));
+  // State Initializations
+const [psychologists, setPsychologists] = useState([]);
+const [isActive, setIsActive] = useState(false);
+const [isChart, setChart] = useState(true);
+const [questionnaire, setQuestionnaire] = useState([]);
+const [geojsonData, setGeojsonData] = useState(null);
 
-  const data2 = Array.from({ length: 12 }, (_, i) => ({
-    name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
-    paciente_con_TEA: 2000 + i * 200,
-    paciente_con_DT: 3400 + i * 100
-  }));
+// Data Definitions
+const data = Array.from({ length: 12 }, (_, i) => ({
+  name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
+  Cantidad_de_Diagnósticos: 1000 + i * 100
+}));
 
-  const data3 = [
-    { name: "Femenino", value: 400 },
-    { name: "Masculino", value: 200 },
-  ];
-  const classes = `w-1/2 h-[5.25rem] rounded-md absolute bg-white ${
-    isActive ? "activeClassOne" : "activeClassTwo"
-  }`;
-  const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042"];
+const data2 = Array.from({ length: 12 }, (_, i) => ({
+  name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
+  paciente_con_TEA: 2000 + i * 200,
+  paciente_con_DT: 3400 + i * 100
+}));
 
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+const data3 = [
+  { name: "Femenino", value: 400 },
+  { name: "Masculino", value: 200 },
+];
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
-  const [geojsonData, setGeojsonData] = useState(null);
+const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042"];
+const RADIAN = Math.PI / 180;
 
-  useEffect(() => {
-    async function loadPsychologist(){
-      const res =await getAllPsychologist();
-      setPsychologists(res.data)
-      
-    }
-    loadPsychologist();
-    
-    const geojsonUrl = "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
+// Function Definitions
+async function loadQuestionnaires() {
+  const res = await getAllQuestionnaire();
+  console.log(res)
+  setQuestionnaire(res.data)
+}
 
-    fetch(geojsonUrl)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-      })
-      .then(data => setGeojsonData(data))
-      .catch(error => console.error('Error loading the geojson data: ', error));
-    
-  }, []);
-  
-  const heatmapData = {
-    max: 8,
-    data: [
-      { lat: -12.0464, lng: -77.0428, count: 200 },
-      { lat: -12.040893, lng: -76.971087, count: 500 },
-    ],
-  };
+async function loadPsychologist() {
+  const res = await getAllPsychologist();
+  setPsychologists(res.data)
+}
 
-  const HeatmapLayer = ({ points }) => {
-    const map = useMap();
+const toggleClass = (state) => {
+  if (isActive !== state) {
+    setIsActive(state);
+    setChart(!state);
+  }
+};
 
-    React.useEffect(() => {
-      const heatmap = L.heatLayer(points, { radius: 25 }).addTo(map);
-      return () => {
-        map.removeLayer(heatmap);
-      };
-    }, [points, map]);
+const renderCustomizedLabel = ({
+  cx, cy, midAngle, innerRadius, outerRadius, percent, index,
+}) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
 
-    return null;
-  };
-  const geoJsonStyle = (feature) => {
-    return {
-      fillColor: 'red', // Colorea según una propiedad
-      weight: 1,       // Grosor de la línea del borde
-      opacity: 1,      // Opacidad de la línea del borde
-      color: 'skyblue',  // Color de la línea del borde
-      fillOpacity: 0.1 // Opacidad del relleno
+// Heatmap Layer Component
+const HeatmapLayer = ({ points }) => {
+  const map = useMap();
+  React.useEffect(() => {
+    const heatmap = L.heatLayer(points, { radius: 25 }).addTo(map);
+    return () => {
+      map.removeLayer(heatmap);
     };
+  }, [points, map]);
+  return null;
+};
+const classes = `w-1/2 h-[5.25rem] rounded-md absolute bg-white ${
+  isActive ? "activeClassOne" : "activeClassTwo"
+}`;
+// GeoJSON Style
+const geoJsonStyle = (feature) => {
+  return {
+    fillColor: 'red',
+    weight: 1,
+    opacity: 1,
+    color: 'skyblue',
+    fillOpacity: 0.1
   };
+};
+
+// Effects
+
+useEffect(() => {
+  loadQuestionnaires();
+  loadPsychologist();
+  
+  const geojsonUrl = "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
+  fetch(geojsonUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => setGeojsonData(data))
+    .catch(error => console.error('Error loading the geojson data: ', error));
+}, []);
+
+const countAutism = () =>{
+  return questionnaire.length
+}
+
+const heatmapData = {
+  max: 8,
+  data: [
+    { lat: -12.0464, lng: -77.0428, count: 200 },
+    { lat: -12.040893, lng: -76.971087, count: 500 },
+  ],
+};
+
   
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
@@ -150,7 +163,7 @@ export default function Home() {
                   <p className="text-[rgb(156,159,162)] font-semibold">
                     Total de pacientes evaluados
                   </p>
-                  <h3 className="mt-1 font-medium">1050 pacientes</h3>
+                  <h3 className="mt-1 font-medium">{questionnaire.length} pacientes</h3>
                 </div>
               </div>
               <div
@@ -168,7 +181,7 @@ export default function Home() {
                   <p className="text-[rgb(156,159,162)] font-semibold">
                     Pacientes totales con TEA
                   </p>
-                  <h3 className="mt-1 font-medium">550 pacientes</h3>
+                  <h3 className="mt-1 font-medium">{countAutism()} pacientes</h3>
                 </div>
               </div>
             </div>

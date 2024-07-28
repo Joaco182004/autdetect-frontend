@@ -15,6 +15,7 @@ import {
   ArrowLeftEndOnRectangleIcon as ArrowLeftEndOnRectangleIconLine,
 } from "@heroicons/react/24/outline";
 
+import { getAllQuestionnaire } from "../api/questionnaire.api";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
 
 
@@ -22,13 +23,14 @@ import "../pages/style.css";
 import Home from "./Home";
 export default function Dashboard() {
   const location = useLocation();
-  const [logout,setLogOut] = useState(false);
+ 
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const navigate = useNavigate();
   const limpiarSesion =()=>{
     localStorage.clear();
     navigate("/login")
   }
+  
   return (
     <section className="bg-[rgb(244,244,244)] w-screen h-screen flex items-center select-none">
       <nav className="bg-white h-[100%] w-[300px] flex flex-col">

@@ -125,7 +125,8 @@ export default function Evaluation() {
             <TableColumn key="patient_dni">DNI del Paciente</TableColumn>
             <TableColumn key="patient_evaluated">Nombre del Paciente</TableColumn>
             <TableColumn key="result">Resultado</TableColumn>
-            <TableColumn key="probability">Probability</TableColumn>
+            <TableColumn key="probability">Probabilidad</TableColumn>
+            <TableColumn key="date_evaluation">Fecha de Evaluación</TableColumn>
           </TableHeader>
           <TableBody items={items}>
             {(item) => (

@@ -22,18 +22,16 @@ export default function MCHAT() {
   const [district, setDistrict] = useState("");
   const [q1, setQ1] = useState(0);
   const [q2, setQ2] = useState(0);
-  const [idUserSave, setIdUserSave] = useState("");
-  const transfromValue=(value)=>{
+
+
+  const transformValue=(value)=>{
     return value == 1 ? true : false
   }
-  const registerEvaluation = () => {
-    console.log(q1)
-    console.log(q2)
+  const registerEvaluation = async () => {
     const user = {
       infant_dni: infantDni,
       infant_name: infantName,
-      birth_date:
-        birthDate["year"] + "-" + birthDate["month"] + "-" + birthDate["day"],
+      birth_date: `${birthDate["year"]}-${String(birthDate["month"]).padStart(2, '0')}-${String(birthDate["day"]).padStart(2, '0')}`,
       gender: gender,
       guardian_dni: guardianDni,
       guardian_name: guardianName,
@@ -41,35 +39,31 @@ export default function MCHAT() {
       contact_phone: contactPhone,
       district: district,
     };
-    savePatient(user)
-      .then((response) => {
-        console.log("Patient saved successfully", response.data);
-        setIdUserSave(response.data.id);
-      })
-      .catch((error) => {
-        console.error("There was an error saving the patient!", error);
-      });
-    const today = new Date();
-    const formattedDate = today.toISOString().slice(0, 10);
-    const questionnaire = {
-      patient: 8,
-      question1: transfromValue(q1),
-      question2: transfromValue(q2),
-      result: true,
-      probability: 0.9,
-      date_evaluation: formattedDate,
-    };
-    console.log(questionnaire)
-
-    saveQuestionnaire(questionnaire)
-      .then((response) => {
-        console.log("Questionnaire saved successfully", response.data);
-        setIdUserSave(response.data.id);
-      })
-      .catch((error) => {
-        console.error("There was an error saving the Questionnaire!", error);
-      });
+  
+    try {
+      const patientResponse = await savePatient(user);
+      console.log("Patient saved successfully", patientResponse.data);
+      const patientId = patientResponse.data.id;
+  
+      const today = new Date();
+      const formattedDate = today.toISOString().slice(0, 10);
+      const questionnaire = {
+        patient: patientId,
+        question1: transformValue(q1),
+        question2: transformValue(q2),
+        result: true,
+        probability: 0.9,
+        date_evaluation: formattedDate,
+      };
+  
+      const questionnaireResponse = await saveQuestionnaire(questionnaire);
+      console.log("Questionnaire saved successfully", questionnaireResponse.data);
+      navigate("/app/evaluaciones/")
+    } catch (error) {
+      console.error("There was an error!", error);
+    }
   };
+  
   const distritosLimaMetropolitana = [
     { key: "Ancón", label: "Ancón" },
     { key: "Ate", label: "Ate" },
@@ -275,11 +269,12 @@ export default function MCHAT() {
           <Button
             className="w-[150px] font-montserrat font-medium"
             color="primary"
+            onClick={registerEvaluation}
           >
             Predecir
           </Button>
           <Button
-            onClick={registerEvaluation}
+            onClick={()=>{navigate("/app/evaluaciones/")}}
             className="ml-2 w-[150px] font-montserrat font-medium"
             color="default"
           >
