@@ -301,6 +301,7 @@ export default function MCHAT() {
           className="font-montserrat text-sm ml-7 mt-2"
           value={q1}
           onValueChange={setQ1}
+          isReadOnly={view}
         >
           <Radio className="text-xs" value={1}>
             Sí
@@ -325,6 +326,7 @@ export default function MCHAT() {
           className="font-montserrat text-sm ml-7 mt-2"
           value={q2}
           onValueChange={setQ2}
+          isReadOnly={view}
         >
           <Radio className="text-xs" value={1}>
             Sí

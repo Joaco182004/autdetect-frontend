@@ -9,6 +9,7 @@ import { ChartBarIcon } from "@heroicons/react/24/solid";
 import { PresentationChartLineIcon, UserIcon, } from "@heroicons/react/24/outline";
 import { getAllPsychologist } from "../api/psychologist.api.js";
 import { getAllQuestionnaire } from "../api/questionnaire.api.js";
+import {getQuestionnaireOrderByMonth} from '../api/custom.api.js'
 
 export default function Home() {
   // State Initializations
@@ -17,12 +18,10 @@ const [isActive, setIsActive] = useState(false);
 const [isChart, setChart] = useState(true);
 const [questionnaire, setQuestionnaire] = useState([]);
 const [geojsonData, setGeojsonData] = useState(null);
+const [evaluationByMonth,setEvaluationByMonth] = useState([])
 
 // Data Definitions
-const data = Array.from({ length: 12 }, (_, i) => ({
-  name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
-  Cantidad_de_Diagnósticos: 1000 + i * 100
-}));
+
 
 const data2 = Array.from({ length: 12 }, (_, i) => ({
   name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
@@ -39,6 +38,12 @@ const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042"];
 const RADIAN = Math.PI / 180;
 
 // Function Definitions
+
+const transformMonth = (month) =>{
+  const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  return meses[month - 1]
+}
+
 async function loadQuestionnaires() {
   const res = await getAllQuestionnaire();
   setQuestionnaire(res.data)
@@ -48,7 +53,16 @@ async function loadPsychologist() {
   const res = await getAllPsychologist();
   setPsychologists(res.data)
 }
+async function loadEvaluations() {
+  const res = await getQuestionnaireOrderByMonth();
+  res.data.map(e => {e.month = transformMonth(e.month)})
 
+  const dataByMonth = []
+
+  res.data.map(e => {dataByMonth.push({name:e.month,Cantidad_de_Diagnósticos:e.total})})
+
+  setEvaluationByMonth(dataByMonth)
+}
 const toggleClass = (state) => {
   if (isActive !== state) {
     setIsActive(state);
@@ -105,7 +119,7 @@ const geoJsonStyle = (feature) => {
 useEffect(() => {
   loadQuestionnaires();
   loadPsychologist();
-  
+  loadEvaluations();
   const geojsonUrl = "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
   fetch(geojsonUrl)
     .then(response => {
@@ -196,7 +210,7 @@ const heatmapData = {
                   className="mt-4 font-montserrat text-sm "
                   width={650}
                   height={300}
-                  data={data}
+                  data={evaluationByMonth}
                   margin={{
                     top: 5,
                     right: 30,
