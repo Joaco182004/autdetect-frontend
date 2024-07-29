@@ -38,7 +38,9 @@ export default function MCHAT() {
     const questionnaire = await getQuestionnaireById(id);
     return questionnaire.data;
   }
-
+  const transformText =(text)=>{
+    return text == true ? 1 : 0
+  }
   useEffect(() => {
     const fetchData = async () => {
       if (localStorage.getItem("questionnaires") != null) {
@@ -48,8 +50,9 @@ export default function MCHAT() {
             localStorage.getItem("questionnaires")
           );
           console.log(questionnaireFind);
-          setQ1(questionnaireFind.question_1)
-          setQ2(questionnaireFind.question_2)
+          
+          setQ1(transformText(questionnaireFind.question_1))
+          setQ2(transformText(questionnaireFind.question_2))
           try {
             const userFind = await getPatient(questionnaireFind.id);
             console.log(userFind);
@@ -299,10 +302,10 @@ export default function MCHAT() {
           value={q1}
           onValueChange={setQ1}
         >
-          <Radio className="text-xs" value="1">
+          <Radio className="text-xs" value={1}>
             Sí
           </Radio>
-          <Radio className="text-xs" value="0">
+          <Radio className="text-xs" value={0}>
             No
           </Radio>
         </RadioGroup>
@@ -323,15 +326,17 @@ export default function MCHAT() {
           value={q2}
           onValueChange={setQ2}
         >
-          <Radio className="text-xs" value="1">
+          <Radio className="text-xs" value={1}>
             Sí
           </Radio>
-          <Radio className="text-xs" value="0">
+          <Radio className="text-xs" value={0}>
             No
           </Radio>
         </RadioGroup>
         <div className="mt-8 flex">
-          <Button
+          {!view ? (
+            <>
+            <Button
             className="w-[150px] font-montserrat font-medium"
             color="primary"
             onClick={registerEvaluation}
@@ -347,6 +352,17 @@ export default function MCHAT() {
           >
             Cancelar
           </Button>
+            </>
+          ): (
+            <Button
+            className="w-[150px] font-montserrat font-medium"
+            color="primary"
+            onClick={() => {
+              navigate("/app/evaluaciones/");
+            }}
+          >
+            Cerrar
+          </Button>)}
         </div>
       </div>
     </section>
