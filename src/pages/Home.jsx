@@ -9,7 +9,7 @@ import { ChartBarIcon } from "@heroicons/react/24/solid";
 import { PresentationChartLineIcon, UserIcon, } from "@heroicons/react/24/outline";
 import { getAllPsychologist } from "../api/psychologist.api.js";
 import { getAllQuestionnaire } from "../api/questionnaire.api.js";
-import {getQuestionnaireOrderByMonth,getQuestionnaireOrderByMonthAutism} from '../api/custom.api.js'
+import {getQuestionnaireOrderByMonth,getQuestionnaireOrderByMonthAutism,getPatientsByGender} from '../api/custom.api.js'
 import { getAllPatients } from "../api/infantPatient.api.js";
 
 export default function Home() {
@@ -21,17 +21,58 @@ const [questionnaire, setQuestionnaire] = useState([]);
 const [geojsonData, setGeojsonData] = useState(null);
 const [evaluationByMonth,setEvaluationByMonth] = useState([])
 const [evaluationByMonthAutism,setEvaluationByMonthAutism] = useState([])
-
-
-const data3 = [
-  { name: "Femenino", value: 400 },
-  { name: "Masculino", value: 200 },
-];
-
+const [patientsByGender,setPatientsByGender] = useState([])
+const [patientsByDistrict,setPatientsByDistrict] = useState([])
 const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042"];
 const RADIAN = Math.PI / 180;
 
 // Function Definitions
+
+const distritosLimaMetropolitana = [
+  { key: "Ancón", coordenadas: { lat: -11.776, lng: -77.157 } },
+  { key: "Ate", coordenadas: { lat: -12.027, lng: -76.890 } },
+  { key: "Barranco", coordenadas: { lat: -12.144, lng: -77.020 } },
+  { key: "Breña", coordenadas: { lat: -12.055, lng: -77.046 } },
+  { key: "Carabayllo", coordenadas: { lat: -11.877, lng: -77.038 } },
+  { key: "Chaclacayo", coordenadas: { lat: -11.981, lng: -76.802 } },
+  { key: "Chorrillos", coordenadas: { lat: -12.171, lng: -77.012 } },
+  { key: "Cieneguilla", coordenadas: { lat: -12.062, lng: -76.869 } },
+  { key: "Comas", coordenadas: { lat: -11.938, lng: -77.048 } },
+  { key: "El Agustino", coordenadas: { lat: -12.051, lng: -77.017 } },
+  { key: "Independencia", coordenadas: { lat: -11.982, lng: -77.052 } },
+  { key: "Jesús María", coordenadas: { lat: -12.079, lng: -77.050 } },
+  { key: "La Molina", coordenadas: { lat: -12.089, lng: -76.936 } },
+  { key: "La Victoria", coordenadas: { lat: -12.071, lng: -77.017 } },
+  { key: "Lima", coordenadas: { lat: -12.046, lng: -77.030 } },
+  { key: "Lince", coordenadas: { lat: -12.073, lng: -77.036 } },
+  { key: "Los Olivos", coordenadas: { lat: -11.948, lng: -77.076 } },
+  { key: "Lurigancho-Chosica", coordenadas: { lat: -11.931, lng: -76.998 } },
+  { key: "Lurín", coordenadas: { lat: -12.266, lng: -76.880 } },
+  { key: "Magdalena del Mar", coordenadas: { lat: -12.091, lng: -77.067 } },
+  { key: "Miraflores", coordenadas: { lat: -12.120, lng: -77.030 } },
+  { key: "Pachacámac", coordenadas: { lat: -12.251, lng: -76.853 } },
+  { key: "Pucusana", coordenadas: { lat: -12.475, lng: -76.786 } },
+  { key: "Pueblo Libre", coordenadas: { lat: -12.076, lng: -77.057 } },
+  { key: "Puente Piedra", coordenadas: { lat: -11.875, lng: -77.041 } },
+  { key: "Punta Hermosa", coordenadas: { lat: -12.324, lng: -76.836 } },
+  { key: "Punta Negra", coordenadas: { lat: -12.378, lng: -76.788 } },
+  { key: "Rímac", coordenadas: { lat: -12.035, lng: -77.029 } },
+  { key: "San Bartolo", coordenadas: { lat: -12.386, lng: -76.783 } },
+  { key: "San Borja", coordenadas: { lat: -12.108, lng: -77.004 } },
+  { key: "San Isidro", coordenadas: { lat: -12.092, lng: -77.046 } },
+  { key: "San Juan de Lurigancho", coordenadas: { lat: -11.981, lng: -76.995 } },
+  { key: "San Juan de Miraflores", coordenadas: { lat: -12.154, lng: -76.970 } },
+  { key: "San Luis", coordenadas: { lat: -12.069, lng: -77.004 } },
+  { key: "San Martín de Porres", coordenadas: { lat: -12.011, lng: -77.070 } },
+  { key: "San Miguel", coordenadas: { lat: -12.079, lng: -77.082 } },
+  { key: "Santa Anita", coordenadas: { lat: -12.048, lng: -76.970 } },
+  { key: "Santa María del Mar", coordenadas: { lat: -12.368, lng: -76.788 } },
+  { key: "Santa Rosa", coordenadas: { lat: -11.846, lng: -77.158 } },
+  { key: "Santiago de Surco", coordenadas: { lat: -12.140, lng: -76.991 } },
+  { key: "Surquillo", coordenadas: { lat: -12.120, lng: -77.018 } },
+  { key: "Villa El Salvador", coordenadas: { lat: -12.193, lng: -76.952 } },
+  { key: "Villa María del Triunfo", coordenadas: { lat: -12.165, lng: -76.936 } }
+];
 
 const transformMonth = (month) =>{
   const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -42,6 +83,14 @@ async function loadQuestionnaires() {
   const res = await getAllQuestionnaire();
   setQuestionnaire(res.data)
 }
+
+async function loadPatientsByGender() {
+  const res = await getPatientsByGender();
+  const dataGender = []
+  res.data.map(e => {if(e.gender == "M"){dataGender.push({name:"Masculino",value:e.total})}else{dataGender.push({name:"Femenino",value:e.total})}})
+  setPatientsByGender(dataGender)
+}
+
 function searchQuestionnaire(id){
 
   const questionnairefind= questionnaire.filter(e => {if(e.patient==id) return e})
@@ -49,6 +98,14 @@ function searchQuestionnaire(id){
   return questionnairefind[0]
 }
 
+const transformarCoordenadas = (distrito) => {
+  const distritoEncontrado = distritosLimaMetropolitana.find(d => d.key === distrito);
+  if (distritoEncontrado) {
+    return distritoEncontrado.coordenadas;
+  } else {
+    console.log("Distrito no encontrado");
+  }
+};
 
 async function loadPatients() {
   const res = await getAllPatients();
@@ -59,6 +116,20 @@ async function loadPatients() {
     if(index == 4) break
   }
   setPatients(datapatient)
+}
+async function loadPatientsByDistrict() {
+  const res = await getAllPatients();
+  const dataDistrict = []
+  res.data.map(e => {dataDistrict.push(transformarCoordenadas(e.district))})
+  dataDistrict.forEach(e => {
+    e.count = 0
+  })
+  dataDistrict.forEach(e => {
+    e.count = e.count + 50
+  })
+  const sinDuplicados = [...new Set(dataDistrict)];
+
+  setPatientsByDistrict(sinDuplicados)
 }
 async function loadEvaluations() {
   const res = await getQuestionnaireOrderByMonth();
@@ -160,9 +231,11 @@ const calculateMonth=(date) =>{
 
 useEffect(() => {
   loadQuestionnaires();
+  loadPatientsByGender();
   loadPatients();
   loadEvaluations();
   loadEvaluationsAutism();
+  loadPatientsByDistrict();
   const geojsonUrl = "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
   fetch(geojsonUrl)
     .then(response => {
@@ -186,11 +259,8 @@ const countAutism = () =>{
 }
 
 const heatmapData = {
-  max: 8,
-  data: [
-    { lat: -12.0464, lng: -77.0428, count: 200 },
-    { lat: -12.040893, lng: -76.971087, count: 500 },
-  ],
+  max: -1,
+  data: patientsByDistrict,
 };
 
   
@@ -361,7 +431,7 @@ const heatmapData = {
                   </div>
                 </div>
                 <div className="text-center w-[25%] font-montserrat text-sm">
-                  {searchQuestionnaire(ele.id).result== true ? <p className="font-semibold text-blue-500">TEA</p>: <p className="font-semibold text-[#82ca9d]">DT</p>}
+                  {searchQuestionnaire(ele.id).result== true ? <p className="font-semibold text-blue-500">TEA</p>: <p className="font-semibold text-[#82ca9d]">NT</p>}
                   <p>Prob: {searchQuestionnaire(ele.id).probability}</p>
                 </div>
               </div>
@@ -381,7 +451,7 @@ const heatmapData = {
           <h5 className="font-montserrat text-sm font-semibold text-center">Distribución de Pacientes por Género</h5>
           <PieChart className="font-montserrat text-sm ml-7 outline-none" width={200} height={200}>
           <Pie className="outline-none"
-            data={data3}
+            data={patientsByGender}
             cx="50%"
             cy="50%"
             labelLine={false}
@@ -390,7 +460,7 @@ const heatmapData = {
             fill="#8884d8"
             dataKey="value"
           >
-            {data3.map((entry, index) => (
+            {patientsByGender.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
