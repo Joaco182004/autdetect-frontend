@@ -43,7 +43,7 @@ export default function Dashboard() {
         isOpen={isOpen} 
         onOpenChange={onOpenChange}
         placement="top-center"
-        className="font-montserrat"
+        className="font-montserrat z-50"
       >
         <ModalContent>
         {(onClose) => (<>

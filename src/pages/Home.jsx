@@ -9,23 +9,19 @@ import { ChartBarIcon } from "@heroicons/react/24/solid";
 import { PresentationChartLineIcon, UserIcon, } from "@heroicons/react/24/outline";
 import { getAllPsychologist } from "../api/psychologist.api.js";
 import { getAllQuestionnaire } from "../api/questionnaire.api.js";
-import {getQuestionnaireOrderByMonth} from '../api/custom.api.js'
+import {getQuestionnaireOrderByMonth,getQuestionnaireOrderByMonthAutism} from '../api/custom.api.js'
+import { getAllPatients } from "../api/infantPatient.api.js";
 
 export default function Home() {
   // State Initializations
-const [psychologists, setPsychologists] = useState([]);
+const [patients, setPatients] = useState([]);
 const [isActive, setIsActive] = useState(false);
 const [isChart, setChart] = useState(true);
 const [questionnaire, setQuestionnaire] = useState([]);
 const [geojsonData, setGeojsonData] = useState(null);
 const [evaluationByMonth,setEvaluationByMonth] = useState([])
+const [evaluationByMonthAutism,setEvaluationByMonthAutism] = useState([])
 
-
-const data2 = Array.from({ length: 12 }, (_, i) => ({
-  name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
-  paciente_con_TEA: 2000 + i * 200,
-  paciente_con_DT: 3400 + i * 100
-}));
 
 const data3 = [
   { name: "Femenino", value: 400 },
@@ -46,10 +42,23 @@ async function loadQuestionnaires() {
   const res = await getAllQuestionnaire();
   setQuestionnaire(res.data)
 }
+function searchQuestionnaire(id){
 
-async function loadPsychologist() {
-  const res = await getAllPsychologist();
-  setPsychologists(res.data)
+  const questionnairefind= questionnaire.filter(e => {if(e.patient==id) return e})
+
+  return questionnairefind[0]
+}
+
+
+async function loadPatients() {
+  const res = await getAllPatients();
+  const datapatient = []
+  for (let index = 0; index < res.data.length; index++) {
+    const element = res.data[index];
+    datapatient.push(element)
+    if(index == 4) break
+  }
+  setPatients(datapatient)
 }
 async function loadEvaluations() {
   const res = await getQuestionnaireOrderByMonth();
@@ -60,6 +69,16 @@ async function loadEvaluations() {
   res.data.map(e => {dataByMonth.push({name:e.month,Cantidad_de_Diagnósticos:e.total})})
 
   setEvaluationByMonth(dataByMonth)
+}
+async function loadEvaluationsAutism() {
+  const res = await getQuestionnaireOrderByMonthAutism();
+  res.data.map(e => {e.month = transformMonth(e.month)})
+
+  const dataByMonth = []
+
+  res.data.map(e => {dataByMonth.push({name:e.month,paciente_con_TEA:e.paciente_con_TEA,paciente_con_DT:e.paciente_con_DT})})
+
+  setEvaluationByMonthAutism(dataByMonth)
 }
 const toggleClass = (state) => {
   if (isActive !== state) {
@@ -111,13 +130,39 @@ const geoJsonStyle = (feature) => {
     fillOpacity: 0.1
   };
 };
+function diferenciaEnMeses(fechaInicio, fechaFin) {
+  // Asegúrate de que fechaFin sea mayor o igual a fechaInicio
+  if (fechaFin < fechaInicio) {
+    throw new Error('La fecha de fin debe ser mayor o igual a la fecha de inicio.');
+  }
+
+  // Obtener el año y el mes de ambas fechas
+  const añoInicio = fechaInicio.getFullYear();
+  const mesInicio = fechaInicio.getMonth();
+  const añoFin = fechaFin.getFullYear();
+  const mesFin = fechaFin.getMonth();
+
+  // Calcular la diferencia en meses
+  const diferenciaAños = añoFin - añoInicio;
+  const diferenciaMeses = mesFin - mesInicio;
+
+  // Calcular la diferencia total en meses
+  return diferenciaAños * 12 + diferenciaMeses;
+}
+const calculateMonth=(date) =>{
+  const today = new Date()
+  const bd = new Date(date)
+  const diferenciaMeses = diferenciaEnMeses(bd,today);
+  return parseInt(diferenciaMeses) + " meses"
+}
 
 // Effects
 
 useEffect(() => {
   loadQuestionnaires();
-  loadPsychologist();
+  loadPatients();
   loadEvaluations();
+  loadEvaluationsAutism();
   const geojsonUrl = "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
   fetch(geojsonUrl)
     .then(response => {
@@ -235,7 +280,7 @@ const heatmapData = {
                   className="mt-4 font-montserrat text-sm"
                   width={650}
                   height={300}
-                  data={data2}
+                  data={evaluationByMonthAutism}
                   margin={{
                     top: 5,
                     right: 30,
@@ -245,7 +290,7 @@ const heatmapData = {
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                  <YAxis />
+                  <YAxis tickCount={4}/>
                   <Tooltip />
                   <Legend />
                   <Line
@@ -274,7 +319,7 @@ const heatmapData = {
             </div>
             <MapContainer
               center={[-12.0464, -77.0428]} zoom={9}
-              className="map-container -z-10"
+              className="map-container"
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               <HeatmapLayer
@@ -302,21 +347,22 @@ const heatmapData = {
           </div>
           <div className="h-[1px] w-[315px] bg-[rgb(204,204,204)] line"></div>
           <ul className="w-full flex flex-col items-center">
-            {psychologists.map(ele => (
+            {
+            patients.map(ele => (
               <li key={ele.id}>
               <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
                 <div className="flex w-[75%]">
                   <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
-                    JD
+                    {ele.infant_name.split(" ")[0][0] + ele.infant_name.split(" ")[1][0]}
                   </div>
                   <div className="ml-2  font-montserrat text-sm">
-                    <p className="font-medium">{ele.full_name}</p>
-                    <p>18 años</p>
+                    <p className="font-medium">{ele.infant_name}</p>
+                    <p>{calculateMonth(ele.birth_date)}</p>
                   </div>
                 </div>
                 <div className="text-center w-[25%] font-montserrat text-sm">
-                  <p className="font-semibold text-blue-500">TEA</p>
-                  <p>Prob: 85%</p>
+                  {searchQuestionnaire(ele.id).result== true ? <p className="font-semibold text-blue-500">TEA</p>: <p className="font-semibold text-[#82ca9d]">DT</p>}
+                  <p>Prob: {searchQuestionnaire(ele.id).probability}</p>
                 </div>
               </div>
             </li>
