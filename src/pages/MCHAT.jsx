@@ -2,7 +2,11 @@ import { React, useEffect, useState } from "react";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { savePatient } from "../api/infantPatient.api";
-import { saveQuestionnaire } from "../api/questionnaire.api";
+import {
+  saveQuestionnaire,
+  getQuestionnaireById,
+} from "../api/questionnaire.api";
+import { getPatientById } from "../api/infantPatient.api";
 import {
   Input,
   DateInput,
@@ -10,6 +14,7 @@ import {
   SelectItem,
   Button,
 } from "@nextui-org/react";
+import { parseDate } from "@internationalized/date";
 export default function MCHAT() {
   const [infantDni, setInfantDni] = useState("");
   const [infantName, setInfantName] = useState("");
@@ -22,16 +27,65 @@ export default function MCHAT() {
   const [district, setDistrict] = useState("");
   const [q1, setQ1] = useState(0);
   const [q2, setQ2] = useState(0);
+  const [view, setView] = useState(false);
 
-
-  const transformValue=(value)=>{
-    return value == 1 ? true : false
+  async function getPatient(id) {
+    const user = await getPatientById(id);
+    return user.data;
   }
+
+  async function getQuestionnaire(id) {
+    const questionnaire = await getQuestionnaireById(id);
+    return questionnaire.data;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (localStorage.getItem("questionnaires") != null) {
+        setView(true);
+        try {
+          const questionnaireFind = await getQuestionnaire(
+            localStorage.getItem("questionnaires")
+          );
+          console.log(questionnaireFind);
+          setQ1(questionnaireFind.question_1)
+          setQ2(questionnaireFind.question_2)
+          try {
+            const userFind = await getPatient(questionnaireFind.id);
+            console.log(userFind);
+            setInfantDni(userFind.infant_dni);
+            setInfantName(userFind.infant_name);
+            const date = parseDate(userFind.birth_date);
+            setBirthDate(date); // Asegúrate de que esto es lo que quieres
+            setGender(userFind.gender);
+            setGuardianDni(userFind.guardian_dni);
+            setGuardianName(userFind.guardian_name);
+            setGuardianEmail(userFind.guardian_email);
+            setContactPhone(userFind.contact_phone);
+            setDistrict(userFind.district);
+          } catch (e) {
+            console.log(e);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        setView(false);
+      }
+    };
+    fetchData();
+  }, []);
+  const transformValue = (value) => {
+    return value == 1 ? true : false;
+  };
   const registerEvaluation = async () => {
     const user = {
       infant_dni: infantDni,
       infant_name: infantName,
-      birth_date: `${birthDate["year"]}-${String(birthDate["month"]).padStart(2, '0')}-${String(birthDate["day"]).padStart(2, '0')}`,
+      birth_date: `${birthDate["year"]}-${String(birthDate["month"]).padStart(
+        2,
+        "0"
+      )}-${String(birthDate["day"]).padStart(2, "0")}`,
       gender: gender,
       guardian_dni: guardianDni,
       guardian_name: guardianName,
@@ -39,31 +93,33 @@ export default function MCHAT() {
       contact_phone: contactPhone,
       district: district,
     };
-  
+
     try {
       const patientResponse = await savePatient(user);
       console.log("Patient saved successfully", patientResponse.data);
       const patientId = patientResponse.data.id;
-  
+
       const today = new Date();
       const formattedDate = today.toISOString().slice(0, 10);
       const questionnaire = {
         patient: patientId,
-        question1: transformValue(q1),
-        question2: transformValue(q2),
+        question_1: q1,
+        question_2: q2,
         result: true,
         probability: 0.9,
         date_evaluation: formattedDate,
       };
-  
       const questionnaireResponse = await saveQuestionnaire(questionnaire);
-      console.log("Questionnaire saved successfully", questionnaireResponse.data);
-      navigate("/app/evaluaciones/")
+      console.log(
+        "Questionnaire saved successfully",
+        questionnaireResponse.data
+      );
+      navigate("/app/evaluaciones/");
     } catch (error) {
       console.error("There was an error!", error);
     }
   };
-  
+
   const distritosLimaMetropolitana = [
     { key: "Ancón", label: "Ancón" },
     { key: "Ate", label: "Ate" },
@@ -119,9 +175,10 @@ export default function MCHAT() {
       <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4">
         <form className="w-[350px]">
           <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
-            Registro del paciente
+            {!view ? "Registro del paciente" : "Paciente Evaluado"}
           </h2>
           <Input
+            isReadOnly={view}
             label="DNI del paciente"
             placeholder="Ingrese el DNI del paciente"
             value={infantDni}
@@ -130,6 +187,7 @@ export default function MCHAT() {
             className="mb-2 font-montserrat"
           />
           <Input
+            isReadOnly={view}
             label="Nombre del paciente"
             placeholder="Ingrese el nombre del paciente"
             value={infantName}
@@ -151,6 +209,7 @@ export default function MCHAT() {
               { key: "F", label: "Femenino" },
             ].map((gender) => (
               <SelectItem
+                isReadOnly={view}
                 className="font-montserrat"
                 key={gender.key}
                 value={gender.key}
@@ -160,6 +219,7 @@ export default function MCHAT() {
             ))}
           </Select>
           <DateInput
+            isReadOnly={view}
             className="mb-2 font-montserrat"
             variant="bordered"
             label="Fecha de nacimiento del paciente"
@@ -167,6 +227,7 @@ export default function MCHAT() {
             onChange={setBirthDate}
           />
           <Input
+            isReadOnly={view}
             label="DNI del tutor"
             placeholder="Ingrese el DNI del tutor"
             value={guardianDni}
@@ -175,6 +236,7 @@ export default function MCHAT() {
             className="mb-2 font-montserrat"
           />
           <Input
+            isReadOnly={view}
             label="Nombre del tutor"
             placeholder="Ingrese el nombre completo del tutor"
             value={guardianName}
@@ -183,6 +245,7 @@ export default function MCHAT() {
             className="mb-2 font-montserrat"
           />
           <Input
+            isReadOnly={view}
             label="Correo de contacto"
             placeholder="Ingrese el correo de contacto"
             value={guardianEmail}
@@ -191,6 +254,7 @@ export default function MCHAT() {
             className="mb-2 font-montserrat"
           />
           <Input
+            isReadOnly={view}
             label="Número de contacto"
             placeholder="Ingrese el número de contacto"
             value={contactPhone}
@@ -208,6 +272,7 @@ export default function MCHAT() {
           >
             {distritosLimaMetropolitana.map((district) => (
               <SelectItem
+                isReadOnly={view}
                 className="font-montserrat"
                 key={district.key}
                 value={district.label}
@@ -274,7 +339,9 @@ export default function MCHAT() {
             Predecir
           </Button>
           <Button
-            onClick={()=>{navigate("/app/evaluaciones/")}}
+            onClick={() => {
+              navigate("/app/evaluaciones/");
+            }}
             className="ml-2 w-[150px] font-montserrat font-medium"
             color="default"
           >

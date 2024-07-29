@@ -14,6 +14,7 @@ import { Input } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { getAllQuestionnaire } from "../api/questionnaire.api";
 import { getPatientById } from "../api/infantPatient.api";
+import { EyeIcon } from "@heroicons/react/24/solid";
 
 export default function Evaluation() {
   const [questionnaires, setQuestionnaires] = useState([]);
@@ -23,10 +24,26 @@ export default function Evaluation() {
     const user = await getPatientById(id);
     return user.data;
   }
-
+  const setViewQuestionnaire =(id)=>{
+    localStorage.setItem("questionnaires",id)
+    navigate("/app/evaluaciones/mchat");
+  }
   async function loadQuestionnaires() {
     const res = await getAllQuestionnaire();
     const data = res.data;
+
+    data.map((e) => {
+      e.view = (
+        <div
+          onClick={() => {
+            setViewQuestionnaire(e.id);
+          }}
+          className="flex justify-center items-center cursor-pointer text-blue-600"
+        >
+          <EyeIcon className="w-[20px] "></EyeIcon>
+        </div>
+      );
+    }); 
     const promises = data.map(async (e) => {
       const patientData = await getPatient(e.patient);
       return {
@@ -35,6 +52,8 @@ export default function Evaluation() {
         patient_dni: patientData.infant_dni,
       };
     });
+    
+    
 
     // Wait for all promises to resolve before setting state
     const questionnairesWithPatientInfo = await Promise.all(promises);
@@ -42,6 +61,7 @@ export default function Evaluation() {
   }
 
   useEffect(() => {
+    localStorage.removeItem("questionnaires")
     loadQuestionnaires();
   }, []);
 
@@ -124,9 +144,10 @@ export default function Evaluation() {
             <TableColumn key="id">Id</TableColumn>
             <TableColumn key="patient_dni">DNI del Paciente</TableColumn>
             <TableColumn key="patient_evaluated">Nombre del Paciente</TableColumn>
+            <TableColumn key="date_evaluation">Fecha de Evaluación</TableColumn>
             <TableColumn key="result">Resultado</TableColumn>
             <TableColumn key="probability">Probabilidad</TableColumn>
-            <TableColumn key="date_evaluation">Fecha de Evaluación</TableColumn>
+            <TableColumn key="view">Visualizar</TableColumn>
           </TableHeader>
           <TableBody items={items}>
             {(item) => (

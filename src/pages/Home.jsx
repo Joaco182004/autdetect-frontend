@@ -41,7 +41,6 @@ const RADIAN = Math.PI / 180;
 // Function Definitions
 async function loadQuestionnaires() {
   const res = await getAllQuestionnaire();
-  console.log(res)
   setQuestionnaire(res.data)
 }
 
@@ -120,7 +119,7 @@ useEffect(() => {
 }, []);
 
 const countAutism = () =>{
-  const contAutism = 0
+  var contAutism = 0
   questionnaire.map(e=>{
     if(e.result == true){
       contAutism+=1

@@ -22,3 +22,12 @@ export const saveQuestionnaire = (questionnaire) => {
     };
     return axios.post('http://localhost:8000/autdetect/api/v1/questionnaire/',questionnaire, config);
 }
+export const getQuestionnaireById = (id) => {
+    const token = localStorage.getItem('token');
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`,
+        }
+    };
+    return axios.get(`http://localhost:8000/autdetect/api/v1/questionnaire/${id}/`, config);
+}
