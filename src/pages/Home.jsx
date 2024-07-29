@@ -20,8 +20,6 @@ const [questionnaire, setQuestionnaire] = useState([]);
 const [geojsonData, setGeojsonData] = useState(null);
 const [evaluationByMonth,setEvaluationByMonth] = useState([])
 
-// Data Definitions
-
 
 const data2 = Array.from({ length: 12 }, (_, i) => ({
   name: new Date(0, i + 1).toLocaleString('es', { month: 'short' }),
