@@ -262,8 +262,7 @@ const heatmapData = {
             </div>
             <MapContainer
               center={[-12.0464, -77.0428]} zoom={9}
-              className="map-container"
-
+              className="map-container -z-10"
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               <HeatmapLayer
