@@ -10,6 +10,7 @@ import List from './pages/List';
 import Evaluation from './pages/Evaluation';
 import MCHAT from './pages/MCHAT';
 import PrivateRoute from './components/PrivateRoute';
+import Profile from './pages/Profile';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +26,7 @@ function App() {
         <Route path="pacientes" element={<List />} />
         <Route path='evaluaciones' element={<Evaluation />}></Route>
         <Route path='evaluaciones/mchat' element={<MCHAT />}></Route>
+        <Route path='perfil' element={<Profile />}></Route>
         </Route>
         </Route>
         <Route path="/" element={<Navigate to="/login" replace />} />

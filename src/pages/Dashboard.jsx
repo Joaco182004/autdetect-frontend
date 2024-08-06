@@ -138,12 +138,32 @@ export default function Dashboard() {
               </p>
             </li>
           )}
-
-          <li  className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
-            <UserCircleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
+          {location.pathname == "/app/perfil" ? (
+            <li
+              onClick={() => {
+                navigate("perfil");
+              }}
+              className="group bg-[rgb(244,244,244)] shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 font-semibold"
+            >
+              <UserCircleIcon className="size-6 text-[rgb(39,42,48)] group-hover:block" />
+              <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">
+                Perfil
+              </p>
+            </li>
+          ) : (
+            <li
+              onClick={() => {
+                navigate("perfil");
+              }}
+              className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold"
+            >
+              <UserCircleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <UserCircleIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
             <p className="font-montserrat ml-2 text-[rgb(39,42,48)]">Perfil</p>
-          </li>
+            </li>
+          )}
+
+         
           <li onClick={onOpen} className="group hover:bg-[rgb(244,244,244)] hover:shadow-md cursor-pointer p-[10px] rounded-md flex items-center w-[90%] mb-2 hover:font-semibold">
             <ArrowLeftEndOnRectangleIconLine className="size-6 text-[rgb(39,42,48)] group-hover:hidden" />
             <ArrowLeftEndOnRectangleIcon className="size-6 text-[rgb(39,42,48)] hidden group-hover:block" />
