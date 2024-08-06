@@ -40,6 +40,14 @@
     -webkit-animation: tracking-in-expand2 1.2s cubic-bezier(.215, .61, .355, 1.000) both;
     animation: tracking-in-expand2 1.2s cubic-bezier(.215, .61, .355, 1.000) both
 }
+
+
+@media (min-width:1500px) {
+    .container-main{
+        border-radius: 0.375rem;
+    }
+}
+
 @keyframes tracking-in-expand {
     0% {
         letter-spacing: -.5em;

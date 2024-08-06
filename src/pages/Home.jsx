@@ -62,125 +62,14 @@ export default function Home() {
   const [patientsByGender, setPatientsByGender] = useState([]);
   const [patientsByDistrict, setPatientsByDistrict] = useState([]);
   const [activeMap, setActiveMap] = useState(true);
+  const [districtTable, setDistrictTable] = useState([]);
   const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042"];
   const RADIAN = Math.PI / 180;
   const [page, setPage] = React.useState(1);
+  const [agePatients, setAgePatients] = useState([]);
   const rowsPerPage = 7;
-  
 
   // Function Definitions
-
-  const distritos = [
-    {
-      key: "1",
-      name: "Miraflores",
-      value: 18,
-    },
-    {
-      key: "2",
-      name: "San Isidro",
-      value: 15,
-    },
-    {
-      key: "3",
-      name: "Barranco",
-      value: 12,
-    },
-    {
-      key: "4",
-      name: "San Borja",
-      value: 20,
-    },
-    {
-      key: "5",
-      name: "Surco",
-      value: 17,
-    },
-    {
-      key: "6",
-      name: "La Molina",
-      value: 19,
-    },
-    {
-      key: "7",
-      name: "San Miguel",
-      value: 10,
-    },
-    {
-      key: "8",
-      name: "Pueblo Libre",
-      value: 9,
-    },
-    {
-      key: "9",
-      name: "Magdalena",
-      value: 13,
-    },
-    {
-      key: "10",
-      name: "Lince",
-      value: 11,
-    },
-    {
-      key: "11",
-      name: "Jesús María",
-      value: 16,
-    },
-    {
-      key: "12",
-      name: "Cercado de Lima",
-      value: 14,
-    },
-    {
-      key: "13",
-      name: "Rímac",
-      value: 8,
-    },
-    {
-      key: "14",
-      name: "Breña",
-      value: 7,
-    },
-    {
-      key: "15",
-      name: "San Juan de Lurigancho",
-      value: 5,
-    },
-    {
-      key: "16",
-      name: "Comas",
-      value: 4,
-    },
-    {
-      key: "17",
-      name: "Los Olivos",
-      value: 6,
-    },
-    {
-      key: "18",
-      name: "San Juan de Miraflores",
-      value: 3,
-    },
-    {
-      key: "19",
-      name: "Villa El Salvador",
-      value: 2,
-    },
-    {
-      key: "20",
-      name: "Villa María del Triunfo",
-      value: 1,
-    },
-  ];
-  
-
-  const pages = Math.ceil(distritos.length / rowsPerPage);
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return distritos.slice(start, end);
-  }, [page, distritos]);
 
   const distritosLimaMetropolitana = [
     { key: "Ancón", coordenadas: { lat: -11.776, lng: -77.157 } },
@@ -259,7 +148,15 @@ export default function Home() {
     const res = await getAllQuestionnaire();
     setQuestionnaire(res.data);
   }
+  async function loadPatientsByAge() {
+    const res = await getAllPatients();
+    const dataAge = [];
+    res.data.map((e) => {
+      dataAge.push(calculateMonth(e.birth_date));
+    });
 
+    setAgePatients(dataAge);
+  }
   async function loadPatientsByGender() {
     const res = await getPatientsByGender();
     const dataGender = [];
@@ -305,8 +202,18 @@ export default function Home() {
   async function loadPatientsByDistrict() {
     const res = await getAllPatients();
     const dataDistrict = [];
+    const dataDistrictTable = [];
     res.data.map((e) => {
       dataDistrict.push(transformarCoordenadas(e.district));
+    });
+    res.data.forEach((e) => {
+      dataDistrictTable.push({
+        district: e.district,
+        count: 0,
+      });
+    });
+    dataDistrictTable.forEach((e) => {
+      e.count += 1;
     });
     dataDistrict.forEach((e) => {
       e.count = 0;
@@ -314,10 +221,29 @@ export default function Home() {
     dataDistrict.forEach((e) => {
       e.count = e.count + 50;
     });
+
+    const sinDuplicadosTabla = dataDistrictTable.reduce((acc, curr) => {
+      const existing = acc.find((item) => item.district === curr.district);
+      if (existing) {
+        existing.count += curr.count;
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
+    setDistrictTable(sinDuplicadosTabla.sort((a, b) => b.count - a.count));
     const sinDuplicados = [...new Set(dataDistrict)];
 
     setPatientsByDistrict(sinDuplicados);
   }
+  const pages = Math.ceil(districtTable.length / rowsPerPage);
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return districtTable.slice(start, end);
+  }, [page, districtTable]);
   async function loadEvaluations() {
     const res = await getQuestionnaireOrderByMonth();
     res.data.map((e) => {
@@ -431,12 +357,13 @@ export default function Home() {
     const today = new Date();
     const bd = new Date(date);
     const diferenciaMeses = diferenciaEnMeses(bd, today);
-    return parseInt(diferenciaMeses) + " meses";
+    return parseInt(diferenciaMeses);
   };
 
   // Effects
 
   useEffect(() => {
+    loadPatientsByAge();
     loadQuestionnaires();
     loadPatientsByGender();
     loadPatients();
@@ -652,15 +579,23 @@ export default function Home() {
                 }}
               >
                 <TableHeader>
-                  <TableColumn key="name">Nombre del Distrito</TableColumn>
-                  <TableColumn key="value" className="text-center">Cantidad de pacientes</TableColumn>
+                  <TableColumn key="district">Nombre del Distrito</TableColumn>
+                  <TableColumn key="count" className="text-center">
+                    Cantidad de pacientes
+                  </TableColumn>
                 </TableHeader>
                 <TableBody items={items}>
                   {(item) => (
-                    <TableRow key={item.name}>
-                      {(columnKey) => (
-                        columnKey == "name" ? <TableCell>{getKeyValue(item, columnKey)}</TableCell>: <TableCell className="text-center">{getKeyValue(item, columnKey)}</TableCell>
-                      )}
+                    <TableRow key={item.district}>
+                      {(columnKey) =>
+                        columnKey == "district" ? (
+                          <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                        ) : (
+                          <TableCell className="text-center">
+                            {getKeyValue(item, columnKey)}
+                          </TableCell>
+                        )
+                      }
                     </TableRow>
                   )}
                 </TableBody>
@@ -692,7 +627,7 @@ export default function Home() {
                       </div>
                       <div className="ml-2  font-montserrat text-sm">
                         <p className="font-medium">{ele.infant_name}</p>
-                        <p>{calculateMonth(ele.birth_date)}</p>
+                        <p>{calculateMonth(ele.birth_date)} meses</p>
                       </div>
                     </div>
                     <div className="text-center w-[25%] font-montserrat text-sm">
@@ -775,9 +710,20 @@ export default function Home() {
               </TableHeader>
               <TableBody>
                 <TableRow key="1">
-                  <TableCell className="text-center">18 meses</TableCell>
-                  <TableCell className="text-center">14 meses</TableCell>
-                  <TableCell className="text-center">12 meses</TableCell>
+                  <TableCell className="text-center">
+                    {" "}
+                    {(
+                      agePatients.reduce((acc, num) => acc + num, 0) /
+                      agePatients.length
+                    ).toFixed(2)}{" "}
+                    meses
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {Math.max(...agePatients)} meses
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {Math.min(...agePatients)} meses
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>

@@ -32,8 +32,9 @@ export default function Dashboard() {
   }
   
   return (
-    <section className="bg-[rgb(244,244,244)] w-screen h-screen flex items-center select-none">
-      <nav className="bg-white h-[100%] w-[300px] flex flex-col">
+    <section className="bg-[rgb(142,175,219)] w-screen h-screen flex justify-center items-center">
+      <section className="bg-[rgb(244,244,244)] w-screen h-screen max-w-[1500px]  max-h-[900px] flex items-center select-none container-main">
+      <nav className="bg-white h-[100%] w-[300px] flex flex-col rounded-s-[0.375rem]">
         <div>
           <h1 className="font-playwrite text-blue-500 text-center font-bold w-[100%] h-[100px] flex  items-center justify-center text-2xl">
             AutDetect
@@ -173,11 +174,12 @@ export default function Dashboard() {
           </li>
         </ul>
       </nav>
-      <div className="w-full h-full overflow-x-hidden border-[rgb(244,244,244)] border-l-2">
+      <div className="w-full h-full overflow-x-hidden border-[rgb(244,244,244)] border-l-2 rounded-[5px]">
         <div className="  w-full bg-[rgb(244,244,244)] cont-bottom">
           <Outlet />
         </div>
       </div>
+    </section>
     </section>
   );
 }

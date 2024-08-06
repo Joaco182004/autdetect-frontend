@@ -125,8 +125,8 @@ function Login() {
   };
 
   return (
-    <section className="bg-[rgb(120,155,234)] w-screen h-screen flex justify-center items-center">
-      <section className="bg-[rgb(240,243,250)] w-screen h-screen max-w-[1500px] rounded-md max-h-[800px] flex flex-row ">
+    <section className="bg-[rgb(142,173,219)] w-screen h-screen flex justify-center items-center">
+      <section className="bg-[rgb(240,243,250)] w-screen h-screen max-w-[1500px] rounded-md max-h-[900px] flex flex-row ">
         <div className=" w-[50%] h-full relative flex items-center flex-col justify-around">
           <div className="text-center">
             <h1 className="font-black font-playwrite text-4xl mb-1">
