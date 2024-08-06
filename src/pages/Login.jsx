@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import img_login from "../assets/under-il.svg";
 import { useNavigate } from "react-router-dom";
 import { register, login } from "../api/authorization.api.js";
+import { getAllPsychologist } from "../api/psychologist.api.js";
 function Login() {
   let navigate = useNavigate();
   const [name, setName] = useState("");
@@ -18,10 +19,11 @@ function Login() {
   const [loginPassword, setLoginPassword] = useState("");
   const [errorLogin, setErrorLogin] = useState(false);
   const [textErrorLogin, setTextErrorLogin] = useState("");
+  const [psychologist, setPsychologist] = useState([])
   const [msg, setMsg] = useState(
     "Inicie sesión para iniciar los diagnósticos de pacientes."
   );
-
+  
   const handleKeyDown = (event) => {
    
     if (event.key === 'Enter') {
@@ -31,11 +33,17 @@ function Login() {
       // Aquí puedes agregar la lógica para iniciar sesión o cualquier otra acción deseada
     }
   };
+  async function getPsychologist() {
+    const res = await getAllPsychologist()
+    setPsychologist(res.data)
+  }
+  useEffect(() => {
+    getPsychologist()
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (viewLogin) {
       validateLogin();
-      console.log("Hola");
     } else {
       const validationErrors = validate();
       if (Object.keys(validationErrors).length === 0) {
@@ -82,8 +90,12 @@ function Login() {
     };
     login(userLogin)
       .then((response) => {
-        console.log(response);
         setErrorLogin(false);
+        psychologist.map(e =>{
+          if(e.email == userLogin.username){
+            localStorage.setItem("idPsychology",e.id)
+          }
+        })
         setTextErrorLogin("!Bienvenido a la plataforma Autdetect!.");
         navigate("/app/dashboard");
       })

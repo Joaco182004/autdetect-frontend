@@ -32,7 +32,7 @@ export default function Dashboard() {
   }
   
   return (
-    <section className="bg-[rgb(142,175,219)] w-screen h-screen flex justify-center items-center">
+    <section className="bg-[rgba(134,185,221,0.5)] w-screen h-screen flex justify-center items-center">
       <section className="bg-[rgb(244,244,244)] w-screen h-screen max-w-[1500px]  max-h-[900px] flex items-center select-none container-main">
       <nav className="bg-white h-[100%] w-[300px] flex flex-col rounded-s-[0.375rem]">
         <div>
