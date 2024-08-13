@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-const ActivateAccount = ({ match }) => {
+const ActivateAccount = () => {
   const [message, setMessage] = useState('Verificando...');
+  const { activation_key } = useParams(); // Obtén el parámetro de la URL
 
   useEffect(() => {
     const activateAccount = async () => {
       try {
-        const activationKey = match.params.activation_key;
-        await axios.get(`http://localhost:8000/activate/${activationKey}`);
+        await axios.get(`http://localhost:8000/activate/${activation_key}`);
         setMessage('Cuenta activada con éxito. Puedes iniciar sesión.');
       } catch (error) {
         setMessage('Error al activar la cuenta. El enlace puede haber expirado o ser inválido.');
       }
     };
 
-    activateAccount();
-  }, [match.params.activation_key]);
+    if (activation_key) {
+      activateAccount();
+    }
+  }, [activation_key]); // Agrega `activation_key` como dependencia
 
   return (
     <div>

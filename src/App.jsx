@@ -19,7 +19,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-      <Route path="/activate/:activation_key" component={ActivateAccount} />
+      <Route path="/activate/:activation_key" element={<ActivateAccount />} />
       <Route path="/login" element={ <Login/>} />
       <Route element={<PrivateRoute />}>
         
