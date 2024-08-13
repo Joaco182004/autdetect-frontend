@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { getPsychologistById } from "../api/psychologist.api";
 import { IdentificationIcon, AtSymbolIcon } from "@heroicons/react/24/solid";
 import { Divider } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 export default function Profile() {
   const [psychologist, setPsychologist] = useState(null);
   async function getPsychologist() {
@@ -57,28 +59,50 @@ export default function Profile() {
           )}
         </div>
         <div className="h-[80%] w-[70%] flex flex-col items-center  bg-white mx-6 content-list rounded-md pb-4">
-    
-          <div className="w-[97%] ">
-          <Tabs variant="underlined" className="mt-4 ml-4" color="primary" aria-label="Options">
-        <Tab key="photos" title="Mis Datos">
-          <Card >
-            <CardBody>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </CardBody>
-          </Card>  
+          <div className="w-[97%] font-montserrat">
+            <Tabs className="mt-4" variant="underlined" color="primary" aria-label="Options">
+        <Tab className="font-semibold" key="photos" title="Modificación de Correo">
+        <Card className="font-normal">
+              <CardBody>
+                <form>
+                <h3 className="font-semibold text-xl">
+                    Modificación de Correo
+                  </h3>
+                  <p className="mt-2 text-sm">Por favor, ingrese el nuevo correo electrónico. Se enviará un código de verificación al correo proporcionado. Una vez que se verifique el código, se realizará el cambio de correo electrónico.</p>
+                  <Input
+                    
+                    className="my-4 w-96"
+                    type="email"
+                    label="Correo Electrónico"
+                    placeholder="Ingrese el nuevo correo"
+                  />
+                  <Button color="primary">Modificar</Button>
+                </form>
+              </CardBody>
+            </Card>
         </Tab>
-        <Tab key="music" title="Cambio de Contraseña">
-          <Card>
-            <CardBody>
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            </CardBody>
-          </Card>  
+        <Tab className="font-semibold" key="music" title="Modificación de Contraseña">
+        <Card className="font-normal">
+              <CardBody>
+                <form>
+                  <h3 className="font-semibold text-xl">
+                    Modificación de Contraseña
+                  </h3>
+                  <p className="mt-2 text-sm">Para cambiar su contraseña, verifique primero su contraseña actual. Luego, ingrese y confirme su nueva contraseña para completar el proceso.</p>
+                  <Input
+                    className="my-4 w-96"
+                    type="password"
+                    label="Contraseña"
+                    placeholder="Ingrese su contraseña actual"
+                  />
+                  <Button color="primary">Modificar</Button>
+                </form>
+              </CardBody>
+            </Card>
         </Tab>
-       
-      </Tabs>
+      </Tabs>     
           </div>
         </div>
-      
       </div>
     </section>
   );

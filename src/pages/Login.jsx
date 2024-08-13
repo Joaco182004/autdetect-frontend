@@ -184,14 +184,7 @@ function Login() {
                     onChange={(e) => setNumeroColegiatura(e.target.value)}
                     error={errors.numeroColegiatura}
                   />
-                  <Input
-                    width={widthInput}
-                    type="email"
-                    label="Correo electrónico"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    error={errors.email}
-                  />
+                  
                   <Input
                     width={widthInput}
                     type="password"
