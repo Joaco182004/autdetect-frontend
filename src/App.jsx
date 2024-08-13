@@ -11,6 +11,7 @@ import Evaluation from './pages/Evaluation';
 import MCHAT from './pages/MCHAT';
 import PrivateRoute from './components/PrivateRoute';
 import Profile from './pages/Profile';
+import ActivateAccount from './pages/ActivateAccount';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,6 +19,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+      <Route path="/activate/:activation_key" component={ActivateAccount} />
       <Route path="/login" element={ <Login/>} />
       <Route element={<PrivateRoute />}>
         
