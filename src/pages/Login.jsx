@@ -41,10 +41,12 @@ function Login() {
     getPsychologist()
   }, []);
   const handleSubmit = (e) => {
+    console.log("Hola")
     e.preventDefault();
     if (viewLogin) {
       validateLogin();
     } else {
+      console.log("Hola")
       const validationErrors = validate();
       if (Object.keys(validationErrors).length === 0) {
         saveUser();
@@ -54,6 +56,7 @@ function Login() {
         setPassword("");
         setName("");
       } else {
+        console.log(validationErrors)
         setErrors(validationErrors);
       }
     }
@@ -184,7 +187,14 @@ function Login() {
                     onChange={(e) => setNumeroColegiatura(e.target.value)}
                     error={errors.numeroColegiatura}
                   />
-                  
+                  <Input
+                    width={widthInput}
+                    type="email"
+                    label="Correo electrónico"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={errors.email}
+                  />
                   <Input
                     width={widthInput}
                     type="password"
