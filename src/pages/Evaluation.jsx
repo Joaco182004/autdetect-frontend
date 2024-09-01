@@ -24,15 +24,35 @@ export default function Evaluation() {
     const user = await getPatientById(id);
     return user.data;
   }
-  const setViewQuestionnaire =(id)=>{
-    localStorage.setItem("questionnaires",id)
+  const setViewQuestionnaire = (id) => {
+    localStorage.setItem("questionnaires", id);
     navigate("/app/evaluaciones/mchat");
+  };
+
+  async function getPatientId(id) {
+    const res = await getPatientById(id);
+    console.log(res.data.psychology);
+    return res.data.psychology == localStorage.getItem("idPsychology");
   }
+
+  async function getPatientId(id) {
+    const res = await getPatientById(id);
+    console.log(res.data.psychology);
+    return res.data.psychology == localStorage.getItem("idPsychology");
+  }
+
   async function loadQuestionnaires() {
+    const questionnaireFilter = [];
     const res = await getAllQuestionnaire();
     const data = res.data;
+    for (const e of res.data) {
+      const isMatching = await getPatientId(e.patient);
+      if (isMatching) {
+        questionnaireFilter.push(e);
+      }
+    }
 
-    data.map((e) => {
+    questionnaireFilter.map((e) => {
       e.view = (
         <div
           onClick={() => {
@@ -43,8 +63,9 @@ export default function Evaluation() {
           <EyeIcon className="w-[20px] "></EyeIcon>
         </div>
       );
-    }); 
-    const promises = data.map(async (e) => {
+    });
+
+    const promises = questionnaireFilter.map(async (e) => {
       const patientData = await getPatient(e.patient);
       return {
         ...e,
@@ -52,8 +73,6 @@ export default function Evaluation() {
         patient_dni: patientData.infant_dni,
       };
     });
-    
-    
 
     // Wait for all promises to resolve before setting state
     const questionnairesWithPatientInfo = await Promise.all(promises);
@@ -61,13 +80,13 @@ export default function Evaluation() {
   }
 
   useEffect(() => {
-    localStorage.removeItem("questionnaires")
+    localStorage.removeItem("questionnaires");
     loadQuestionnaires();
   }, []);
 
-  const transformValue=(value)=>{
-    return value === true ? "Autista" : "Neurotípico"
-  }
+  const transformValue = (value) => {
+    return value === true ? "Autista" : "Neurotípico";
+  };
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const rowsPerPage = 7;
@@ -78,8 +97,12 @@ export default function Evaluation() {
         questionnaire.patient_evaluated
           .toLowerCase()
           .includes(filter.toLowerCase()) ||
-        questionnaire.patient_dni.toLowerCase()
-        .includes(filter.toLowerCase()) || transformValue(questionnaire.result).toLowerCase().includes(filter.toLowerCase())
+        questionnaire.patient_dni
+          .toLowerCase()
+          .includes(filter.toLowerCase()) ||
+        transformValue(questionnaire.result)
+          .toLowerCase()
+          .includes(filter.toLowerCase())
     );
   }, [filter, questionnaires]);
 
@@ -143,7 +166,9 @@ export default function Evaluation() {
           <TableHeader>
             <TableColumn key="id">Id</TableColumn>
             <TableColumn key="patient_dni">DNI del Paciente</TableColumn>
-            <TableColumn key="patient_evaluated">Nombre del Paciente</TableColumn>
+            <TableColumn key="patient_evaluated">
+              Nombre del Paciente
+            </TableColumn>
             <TableColumn key="date_evaluation">Fecha de Evaluación</TableColumn>
             <TableColumn key="result">Resultado</TableColumn>
             <TableColumn key="probability">Probabilidad</TableColumn>
@@ -153,7 +178,11 @@ export default function Evaluation() {
             {(item) => (
               <TableRow key={item.key}>
                 {(columnKey) => (
-                  <TableCell>{columnKey=="result"?transformValue(getKeyValue(item, columnKey)):getKeyValue(item, columnKey)}</TableCell>
+                  <TableCell>
+                    {columnKey == "result"
+                      ? transformValue(getKeyValue(item, columnKey))
+                      : getKeyValue(item, columnKey)}
+                  </TableCell>
                 )}
               </TableRow>
             )}

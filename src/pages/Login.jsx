@@ -5,6 +5,8 @@ import img_login from "../assets/under-il.svg";
 import { useNavigate } from "react-router-dom";
 import { register, login } from "../api/authorization.api.js";
 import { getAllPsychologist } from "../api/psychologist.api.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Login() {
   let navigate = useNavigate();
   const [name, setName] = useState("");
@@ -19,34 +21,33 @@ function Login() {
   const [loginPassword, setLoginPassword] = useState("");
   const [errorLogin, setErrorLogin] = useState(false);
   const [textErrorLogin, setTextErrorLogin] = useState("");
-  const [psychologist, setPsychologist] = useState([])
+  const [psychologist, setPsychologist] = useState([]);
   const [msg, setMsg] = useState(
     "Inicie sesión para iniciar los diagnósticos de pacientes."
   );
-  
+
   const handleKeyDown = (event) => {
-   
-    if (event.key === 'Enter') {
-      if(loginEmail.length >  0 && loginPassword.length>0){
-        validateLogin()
+    if (event.key === "Enter") {
+      if (loginEmail.length > 0 && loginPassword.length > 0) {
+        validateLogin();
       }
       // Aquí puedes agregar la lógica para iniciar sesión o cualquier otra acción deseada
     }
   };
   async function getPsychologist() {
-    const res = await getAllPsychologist()
-    setPsychologist(res.data)
+    const res = await getAllPsychologist();
+    setPsychologist(res.data);
   }
   useEffect(() => {
-    getPsychologist()
+    getPsychologist();
   }, []);
   const handleSubmit = (e) => {
-    console.log("Hola")
+    console.log("Hola");
     e.preventDefault();
     if (viewLogin) {
       validateLogin();
     } else {
-      console.log("Hola")
+      console.log("Hola");
       const validationErrors = validate();
       if (Object.keys(validationErrors).length === 0) {
         saveUser();
@@ -56,7 +57,7 @@ function Login() {
         setPassword("");
         setName("");
       } else {
-        console.log(validationErrors)
+        console.log(validationErrors);
         setErrors(validationErrors);
       }
     }
@@ -80,32 +81,78 @@ function Login() {
     };
     register(user)
       .then(() => {
+        toast.success(
+          "Usuario registrado. Por favor valide su cuenta mediante correo.",
+          {
+            position: "bottom-center",
+            style: {
+              width: 500,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          }
+        );
         setViewLogin(true);
       })
       .catch((error) => {
-        console.error("Error in saveUser function:", error);
+        console.log("Error2");
+        toast.error(
+          "Hubo un error en el registro. Por favor, vuelva intentarlo",
+          {
+            position: "bottom-center",
+            style: {
+              width: 450,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          }
+        );
       });
   };
   const validateLogin = () => {
-    const userLogin = {
-      username: loginEmail,
-      password: loginPassword,
-    };
-    login(userLogin)
-      .then((response) => {
-        setErrorLogin(false);
-        psychologist.map(e =>{
-          if(e.email == userLogin.username){
-            localStorage.setItem("idPsychology",e.id)
-          }
-        })
-        setTextErrorLogin("!Bienvenido a la plataforma Autdetect!.");
-        navigate("/app/dashboard");
-      })
-      .catch((error) => {
-        setErrorLogin(true);
-        setTextErrorLogin("Las creedenciales ingresadas son incorrectas.");
+    if (loginEmail == "" || loginPassword == "") {
+      toast.error("Los campos de correo y contraseña estan vacíos.", {
+        position: "bottom-center",
+        style: {
+          width: 410,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
       });
+    } else {
+      const userLogin = {
+        username: loginEmail,
+        password: loginPassword,
+      };
+      login(userLogin)
+        .then((response) => {
+          psychologist.map((e) => {
+            if (e.email == userLogin.username) {
+              localStorage.setItem("idPsychology", e.id);
+            }
+          });
+          toast.success("!Bienvenido a la plataforma Autdetect!.", {
+            position: "bottom-center",
+            style: {
+              width: 410,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+          navigate("/app/dashboard");
+        })
+        .catch((error) => {
+          console.log("Hola");
+          toast.error("El correo o contraseña no son correctos.", {
+            position: "bottom-center",
+            style: {
+              width: 350,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+        });
+    }
   };
   const validate = () => {
     let errors = {};
@@ -231,14 +278,13 @@ function Login() {
                   >
                     <div className="flex items-center justify-between">
                       <label className="uppercase block font-montserrat text-[rgb(175,185,200)] text-xs font-text mb-1">
-                      Correo electrónico
+                        Correo electrónico
                       </label>
-                      
                     </div>
                     <input
                       type="email"
                       value={loginEmail}
-                      onChange={(e)=>setLoginEmail(e.target.value)}
+                      onChange={(e) => setLoginEmail(e.target.value)}
                       onKeyDown={handleKeyDown}
                       className="font-montserrat w-full p-2.5 border bg-[rgb(240,243,250)] rounded-lg outline-0 text-gray-700"
                     />
@@ -249,19 +295,18 @@ function Login() {
                   >
                     <div className="flex items-center justify-between">
                       <label className="uppercase block font-montserrat text-[rgb(175,185,200)] text-xs font-text mb-1">
-                      Contraseña
+                        Contraseña
                       </label>
-                      
                     </div>
                     <input
                       type="password"
                       value={loginPassword}
-                      onChange={(e)=>setLoginPassword(e.target.value)}
+                      onChange={(e) => setLoginPassword(e.target.value)}
                       onKeyDown={handleKeyDown}
                       className="font-montserrat w-full p-2.5 border bg-[rgb(240,243,250)] rounded-lg outline-0 text-gray-700"
                     />
                   </div>
-                 
+
                   <p
                     className={` text-xm mb-4 font-medium ${
                       errorLogin ? "text-red-500" : "text-green-400"
@@ -288,6 +333,7 @@ function Login() {
           </div>
         </div>
       </section>
+      <ToastContainer className="font-montserrat !important" />
     </section>
   );
 }

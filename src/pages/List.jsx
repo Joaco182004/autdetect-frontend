@@ -38,7 +38,7 @@ export default function List() {
   const [id, setId] = useState("");
   async function loadPatients() {
     const res = await getAllPatients();
-
+    const data_final = []
     res.data.map((e) => {
       e.edit = (
         <div
@@ -52,7 +52,13 @@ export default function List() {
       );
     });
 
-    setPatients(res.data);
+    res.data.map((e)=>{
+      if(e.psychology == localStorage.getItem('idPsychology')){
+        console.log(e)
+        data_final.push(e)
+      }
+    })
+    setPatients(data_final);
   }
   async function getPatient(e) {
     setIsEditable(true);
@@ -61,44 +67,14 @@ export default function List() {
     console.log(res.data);
     openEdit(res.data);
   }
-  async function loadPatients() {
-    const res = await getAllPatients();
-
-    res.data.map((e) => {
-      e.edit = (
-        <div
-          onClick={() => {
-            getPatient(e);
-          }}
-          className="flex justify-center items-center cursor-pointer text-blue-600"
-        >
-          <PencilSquareIcon className="w-[20px] "></PencilSquareIcon>
-        </div>
-      );
-    });
-
-    setPatients(res.data);
-  }
+  
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [patients, setPatients] = useState([]);
   useEffect(() => {
     loadPatients();
   }, []);
 
-  const abrirModal = () => {
-    setIsEditable(false);
-    setInfantDni("");
-    setInfantName("");
-    setBirthDate(null);
-    setGender("");
-    setGuardianDni("");
-    setGuardianName("");
-    setGuardianEmail("");
-    setContactPhone("");
-    setDistrict("");
-    setTextForm("Registro de paciente");
-    onOpen(true);
-  };
+  
   const [infantDni, setInfantDni] = useState("");
   const [infantName, setInfantName] = useState("");
   const [birthDate, setBirthDate] = useState(null);

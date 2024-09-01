@@ -95,6 +95,7 @@ export default function MCHAT() {
       guardian_email: guardianEmail,
       contact_phone: contactPhone,
       district: district,
+      psychology: localStorage.getItem('idPsychology'),
     };
 
     try {

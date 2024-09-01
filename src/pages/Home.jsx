@@ -38,7 +38,7 @@ import {
   getQuestionnaireOrderByMonthAutism,
   getPatientsByGender,
 } from "../api/custom.api.js";
-import { getAllPatients } from "../api/infantPatient.api.js";
+import { getAllPatients, getPatientById } from "../api/infantPatient.api.js";
 import {
   Table,
   TableHeader,
@@ -143,24 +143,42 @@ export default function Home() {
     ];
     return meses[month - 1];
   };
+  async function getPatientId(id) {
+    const res = await getPatientById(id);
+    return res.data.psychology == localStorage.getItem("idPsychology");
+  }
 
   async function loadQuestionnaires() {
+    const questionnaireFilter = [];
     const res = await getAllQuestionnaire();
-    setQuestionnaire(res.data);
+
+    for (const e of res.data) {
+      const isMatching = await getPatientId(e.patient);
+      if (isMatching) {
+        questionnaireFilter.push(e);
+      }
+    }
+
+    setQuestionnaire(questionnaireFilter);
   }
   async function loadPatientsByAge() {
     const res = await getAllPatients();
+    const dataFilter = res.data.filter(
+      (e) => e.psychology == localStorage.getItem("idPsychology")
+    );
     const dataAge = [];
-    res.data.map((e) => {
+    dataFilter.map((e) => {
       dataAge.push(calculateMonth(e.birth_date));
     });
-
     setAgePatients(dataAge);
   }
   async function loadPatientsByGender() {
     const res = await getPatientsByGender();
+    const dataFilter = res.data.filter(
+      (e) => e.psychology == localStorage.getItem("idPsychology")
+    );
     const dataGender = [];
-    res.data.map((e) => {
+    dataFilter.map((e) => {
       if (e.gender == "M") {
         dataGender.push({ name: "Masculino", value: e.total });
       } else {
@@ -191,22 +209,29 @@ export default function Home() {
 
   async function loadPatients() {
     const res = await getAllPatients();
-    const datapatient = [];
-    for (let index = 0; index < res.data.length; index++) {
-      const element = res.data[index];
-      datapatient.push(element);
+    const dataPatientFilter = res.data.filter(
+      (e) => e.psychology == localStorage.getItem("idPsychology")
+    );
+    const dataPatient = [];
+    for (let index = 0; index < dataPatientFilter.length; index++) {
+      const element = dataPatientFilter[index];
+      dataPatient.push(element);
       if (index == 4) break;
     }
-    setPatients(datapatient);
+    setPatients(dataPatient);
   }
   async function loadPatientsByDistrict() {
     const res = await getAllPatients();
     const dataDistrict = [];
     const dataDistrictTable = [];
-    res.data.map((e) => {
+
+    const dataFilter = res.data.filter(
+      (e) => e.psychology == localStorage.getItem("idPsychology")
+    );
+    dataFilter.map((e) => {
       dataDistrict.push(transformarCoordenadas(e.district));
     });
-    res.data.forEach((e) => {
+    dataFilter.forEach((e) => {
       dataDistrictTable.push({
         district: e.district,
         count: 0,
@@ -244,15 +269,19 @@ export default function Home() {
 
     return districtTable.slice(start, end);
   }, [page, districtTable]);
+
   async function loadEvaluations() {
     const res = await getQuestionnaireOrderByMonth();
-    res.data.map((e) => {
+    const dataFilter = res.data.filter(
+      (e) => e.patient__psychology == localStorage.getItem("idPsychology")
+    );
+    dataFilter.map((e) => {
       e.month = transformMonth(e.month);
     });
 
     const dataByMonth = [];
 
-    res.data.map((e) => {
+    dataFilter.map((e) => {
       dataByMonth.push({ name: e.month, Cantidad_de_Diagnósticos: e.total });
     });
 
@@ -260,13 +289,16 @@ export default function Home() {
   }
   async function loadEvaluationsAutism() {
     const res = await getQuestionnaireOrderByMonthAutism();
-    res.data.map((e) => {
+    const dataFilter = res.data.filter(
+      (e) => e.patient__psychology == localStorage.getItem("idPsychology")
+    );
+    dataFilter.map((e) => {
       e.month = transformMonth(e.month);
     });
-
+    
     const dataByMonth = [];
 
-    res.data.map((e) => {
+    dataFilter.map((e) => {
       dataByMonth.push({
         name: e.month,
         paciente_con_TEA: e.paciente_con_TEA,
@@ -457,7 +489,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div>
+            {evaluationByMonth.length > 0 && (<div>
               {isChart ? (
                 <BarChart
                   className="mt-4 font-montserrat text-sm "
@@ -518,7 +550,7 @@ export default function Home() {
                   />
                 </LineChart>
               )}
-            </div>
+            </div>)}
           </div>
           <div className="bg-white w-[650px] h-[480px] ml-[2rem] mt-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-between items-center">
@@ -617,30 +649,38 @@ export default function Home() {
             </div>
             <div className="h-[1px] w-[315px] bg-[rgb(204,204,204)] line"></div>
             <ul className="w-full flex flex-col items-center">
-              {patients.map((ele) => (
-                <li key={ele.id}>
-                  <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
-                    <div className="flex w-[75%]">
-                      <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
-                        {ele.infant_name.split(" ")[0][0] +
-                          ele.infant_name.split(" ")[1][0]}
+              {patients.map((ele) => {
+                console.log(ele)
+                const result = searchQuestionnaire(ele.id);
+                return (
+                  <li key={ele.id}>
+                    <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
+                      <div className="flex w-[75%]">
+                        <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
+                          {ele.infant_name.length == 1? ele.infant_name.split(" ")[0][0] +
+                            ele.infant_name.split(" ")[1][0]: ele.infant_name[0]}
+                        </div>
+                        <div className="ml-2 font-montserrat text-sm">
+                          <p className="font-medium">{ele.infant_name}</p>
+                          <p>{calculateMonth(ele.birth_date)} meses</p>
+                        </div>
                       </div>
-                      <div className="ml-2  font-montserrat text-sm">
-                        <p className="font-medium">{ele.infant_name}</p>
-                        <p>{calculateMonth(ele.birth_date)} meses</p>
+                      <div className="text-center w-[25%] font-montserrat text-sm">
+                        {result && (
+                          <>
+                            {result.result ? (
+                              <p className="font-semibold text-blue-500">TEA</p>
+                            ) : (
+                              <p className="font-semibold text-[#82ca9d]">NT</p>
+                            )}
+                            <p>Prob: {result.probability}</p>
+                          </>
+                        )}
                       </div>
                     </div>
-                    <div className="text-center w-[25%] font-montserrat text-sm">
-                      {searchQuestionnaire(ele.id).result == true ? (
-                        <p className="font-semibold text-blue-500">TEA</p>
-                      ) : (
-                        <p className="font-semibold text-[#82ca9d]">NT</p>
-                      )}
-                      <p>Prob: {searchQuestionnaire(ele.id).probability}</p>
-                    </div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div className="bg-white w-[340px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
@@ -714,15 +754,16 @@ export default function Home() {
                     {" "}
                     {(
                       agePatients.reduce((acc, num) => acc + num, 0) /
-                      agePatients.length
+                      agePatients.length > 0 ? agePatients.reduce((acc, num) => acc + num, 0) /
+                      agePatients.length:0
                     ).toFixed(2)}{" "}
                     meses
                   </TableCell>
                   <TableCell className="text-center">
-                    {Math.max(...agePatients)} meses
+                    {isFinite(Math.max(...agePatients))? Math.max(...agePatients):0} meses
                   </TableCell>
                   <TableCell className="text-center">
-                    {Math.min(...agePatients)} meses
+                    {isFinite(Math.min(...agePatients))? Math.min(...agePatients):0} meses
                   </TableCell>
                 </TableRow>
               </TableBody>
