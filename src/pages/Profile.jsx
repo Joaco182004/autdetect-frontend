@@ -6,10 +6,11 @@ import { login } from "../api/authorization.api.js";
 import { IdentificationIcon, AtSymbolIcon } from "@heroicons/react/24/solid";
 import { Divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import { sendEmailChange } from "../api/custom.api";
+import { sendEmailChange,changeUsername } from "../api/custom.api";
 import { ToastContainer, toast } from "react-toastify";
 import { EyeFilledIcon } from "../assets/EyeFilledIcon.jsx";
 import { EyeSlashFilledIcon } from "../assets/EyeSlashFilledIcon.jsx";
+import {getUserProfileById} from "../api/userprofile.api.js"
 export default function Profile() {
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -26,7 +27,37 @@ export default function Profile() {
     getPsychologist();
   }, []);
 
-  async function changeEmail() {
+  async function validateCodeVertification() {
+    const userProfile = await getUserProfileById();
+    if(userProfile.data.code_change == codeVerification){
+      try{
+        const change = {
+          email: psychologist.email,
+          email_change: emailChange,
+        };
+        await changeUsername(change);
+        toast.success(
+          "Se acaba de modificar el correo electrónico.",
+          {
+            position: "bottom-center",
+            style: {
+              width: 380,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          }
+        )
+        setTimeout(() => {
+          window.location.reload(); // Recarga la página después de 3 segundos
+        }, 3000);
+      }
+      catch(e){
+
+      }
+      
+    }
+  }
+  async function validateEmail() {
     if (!emailChange) {
       toast.error("Debe completar el campo de correo.", {
         position: "bottom-center",
@@ -212,7 +243,7 @@ export default function Profile() {
                           value={emailChange}
                           onChange={(e) => setEmailChange(e.target.value)}
                         />
-                        <Button onClick={changeEmail} color="primary">
+                        <Button onClick={validateEmail} color="primary">
                           Validar Correo
                         </Button>
                       </form>
@@ -234,7 +265,7 @@ export default function Profile() {
                           value={codeVerification}
                           onChange={(e) => setCodeVerification(e.target.value)}
                         />
-                        <Button onClick={changeEmail} color="primary">
+                        <Button onClick={validateCodeVertification} color="primary">
                           Validar Correo
                         </Button>
                       </form>

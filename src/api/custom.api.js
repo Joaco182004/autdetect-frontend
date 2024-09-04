@@ -40,3 +40,14 @@ export const sendEmailChange = (change) => {
 
     return axios.post('http://localhost:8000/changeemail/',change,config);
 }
+export const changeUsername = (change) => {    
+    const token = localStorage.getItem('token');
+
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    };
+
+    return axios.post('http://localhost:8000/changeusername/',change,config);
+}
