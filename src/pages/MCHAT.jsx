@@ -6,7 +6,7 @@ import {
   saveQuestionnaire,
   getQuestionnaireById,
 } from "../api/questionnaire.api";
-import { getPatientById } from "../api/infantPatient.api";
+import { getPatientById, getAllPatients } from "../api/infantPatient.api";
 import {
   Input,
   DateInput,
@@ -15,6 +15,8 @@ import {
   Button,
 } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function MCHAT() {
   const [infantDni, setInfantDni] = useState("");
   const [infantName, setInfantName] = useState("");
@@ -28,20 +30,25 @@ export default function MCHAT() {
   const [q1, setQ1] = useState(0);
   const [q2, setQ2] = useState(0);
   const [view, setView] = useState(false);
+  const [patients, setPatients] = useState([]);
 
   async function getPatient(id) {
     const user = await getPatientById(id);
     return user.data;
   }
-
+  async function getPatients() {
+    const users = await getAllPatients();
+    setPatients(users.data);
+  }
   async function getQuestionnaire(id) {
     const questionnaire = await getQuestionnaireById(id);
     return questionnaire.data;
   }
-  const transformText =(text)=>{
-    return text == true ? 1 : 0
-  }
+  const transformText = (text) => {
+    return text == true ? 1 : 0;
+  };
   useEffect(() => {
+    getPatients();
     const fetchData = async () => {
       if (localStorage.getItem("questionnaires") != null) {
         setView(true);
@@ -50,9 +57,9 @@ export default function MCHAT() {
             localStorage.getItem("questionnaires")
           );
           console.log(questionnaireFind);
-          
-          setQ1(transformText(questionnaireFind.question_1))
-          setQ2(transformText(questionnaireFind.question_2))
+
+          setQ1(transformText(questionnaireFind.question_1));
+          setQ2(transformText(questionnaireFind.question_2));
           try {
             const userFind = await getPatient(questionnaireFind.id);
             console.log(userFind);
@@ -82,48 +89,83 @@ export default function MCHAT() {
     return value == 1 ? true : false;
   };
   const registerEvaluation = async () => {
-    const user = {
-      infant_dni: infantDni,
-      infant_name: infantName,
-      birth_date: `${birthDate["year"]}-${String(birthDate["month"]).padStart(
-        2,
-        "0"
-      )}-${String(birthDate["day"]).padStart(2, "0")}`,
-      gender: gender,
-      guardian_dni: guardianDni,
-      guardian_name: guardianName,
-      guardian_email: guardianEmail,
-      contact_phone: contactPhone,
-      district: district,
-      psychology: localStorage.getItem('idPsychology'),
-    };
+    if (
+      !infantDni ||
+      !infantName ||
+      !birthDate ||
+      !gender ||
+      !guardianDni ||
+      !guardianName ||
+      !guardianEmail ||
+      !contactPhone ||
+      !district
+    ) {
+      console.log("Error")
+      toast.error("Debe completar todos los campos.", {
+        position: "bottom-center",
+        style: {
+          width: 320,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
+      });
+    } else {
+      const arrayDni = [];
+      patients.map((e) => {
+        arrayDni.push(e.infant_dni);
+      });
+      if (arrayDni.includes(infantDni)) {
+        toast.error("Este paciente ya ha sido registrado.", {
+          position: "bottom-center",
+          style: {
+            width: 320,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+      } else {
+        const user = {
+          infant_dni: infantDni,
+          infant_name: infantName,
+          birth_date: `${birthDate["year"]}-${String(
+            birthDate["month"]
+          ).padStart(2, "0")}-${String(birthDate["day"]).padStart(2, "0")}`,
+          gender: gender,
+          guardian_dni: guardianDni,
+          guardian_name: guardianName,
+          guardian_email: guardianEmail,
+          contact_phone: contactPhone,
+          district: district,
+          psychology: localStorage.getItem("idPsychology"),
+        };
 
-    try {
-      const patientResponse = await savePatient(user);
-      console.log("Patient saved successfully", patientResponse.data);
-      const patientId = patientResponse.data.id;
+        try {
+          const patientResponse = await savePatient(user);
+          console.log("Patient saved successfully", patientResponse.data);
+          const patientId = patientResponse.data.id;
 
-      const today = new Date();
-      const formattedDate = today.toISOString().slice(0, 10);
-      const questionnaire = {
-        patient: patientId,
-        question_1: q1,
-        question_2: q2,
-        result: true,
-        probability: 0.9,
-        date_evaluation: formattedDate,
-      };
-      const questionnaireResponse = await saveQuestionnaire(questionnaire);
-      console.log(
-        "Questionnaire saved successfully",
-        questionnaireResponse.data
-      );
-      navigate("/app/evaluaciones/");
-    } catch (error) {
-      console.error("There was an error!", error);
+          const today = new Date();
+          const formattedDate = today.toISOString().slice(0, 10);
+          const questionnaire = {
+            patient: patientId,
+            question_1: q1,
+            question_2: q2,
+            result: true,
+            probability: 0.9,
+            date_evaluation: formattedDate,
+          };
+          const questionnaireResponse = await saveQuestionnaire(questionnaire);
+          console.log(
+            "Questionnaire saved successfully",
+            questionnaireResponse.data
+          );
+          navigate("/app/evaluaciones/");
+        } catch (error) {
+          console.error("There was an error!", error);
+        }
+      }
     }
   };
-
   const distritosLimaMetropolitana = [
     { key: "Ancón", label: "Ancón" },
     { key: "Ate", label: "Ate" },
@@ -339,35 +381,37 @@ export default function MCHAT() {
         <div className="mt-8 flex">
           {!view ? (
             <>
-            <Button
-            className="w-[150px] font-montserrat font-medium"
-            color="primary"
-            onClick={registerEvaluation}
-          >
-            Predecir
-          </Button>
-          <Button
-            onClick={() => {
-              navigate("/app/evaluaciones/");
-            }}
-            className="ml-2 w-[150px] font-montserrat font-medium"
-            color="default"
-          >
-            Cancelar
-          </Button>
+              <Button
+                className="w-[150px] font-montserrat font-medium"
+                color="primary"
+                onClick={registerEvaluation}
+              >
+                Predecir
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate("/app/evaluaciones/");
+                }}
+                className="ml-2 w-[150px] font-montserrat font-medium"
+                color="default"
+              >
+                Cancelar
+              </Button>
             </>
-          ): (
+          ) : (
             <Button
-            className="w-[150px] font-montserrat font-medium"
-            color="primary"
-            onClick={() => {
-              navigate("/app/evaluaciones/");
-            }}
-          >
-            Cerrar
-          </Button>)}
+              className="w-[150px] font-montserrat font-medium"
+              color="primary"
+              onClick={() => {
+                navigate("/app/evaluaciones/");
+              }}
+            >
+              Cerrar
+            </Button>
+          )}
         </div>
       </div>
+      <ToastContainer/>
     </section>
   );
 }
