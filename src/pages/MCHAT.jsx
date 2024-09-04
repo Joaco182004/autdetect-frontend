@@ -100,7 +100,6 @@ export default function MCHAT() {
       !contactPhone ||
       !district
     ) {
-      console.log("Error")
       toast.error("Debe completar todos los campos.", {
         position: "bottom-center",
         style: {

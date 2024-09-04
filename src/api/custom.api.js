@@ -29,4 +29,14 @@ export const getPatientsByGender = () => {
 
     return axios.get('http://localhost:8000/autdetect/api/v1/patients_by_gender/', config);
 }
+export const sendEmailChange = (change) => {    
+    const token = localStorage.getItem('token');
 
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    };
+
+    return axios.post('http://localhost:8000/changeemail/',change,config);
+}

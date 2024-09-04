@@ -2,19 +2,101 @@ import React, { useEffect, useState } from "react";
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { getPsychologistById } from "../api/psychologist.api";
+import { login } from "../api/authorization.api.js";
 import { IdentificationIcon, AtSymbolIcon } from "@heroicons/react/24/solid";
 import { Divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
+import { sendEmailChange } from "../api/custom.api";
+import { ToastContainer, toast } from "react-toastify";
+import { EyeFilledIcon } from "../assets/EyeFilledIcon.jsx";
+import { EyeSlashFilledIcon } from "../assets/EyeSlashFilledIcon.jsx";
 export default function Profile() {
+  const [isVisible, setIsVisible] = React.useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
   const [psychologist, setPsychologist] = useState(null);
+  const [emailChange, setEmailChange] = useState("");
+  const [passwordVerification, setPasswordVerification] = useState("");
+  const [nextValidation, setNextValidation] = useState(0);
+  const [codeVerification, setCodeVerification] = useState("");
   async function getPsychologist() {
     const user = await getPsychologistById();
-    console.log(user.data);
     setPsychologist(user.data);
   }
   useEffect(() => {
     getPsychologist();
   }, []);
+
+  async function changeEmail() {
+    if (!emailChange) {
+      toast.error("Debe completar el campo de correo.", {
+        position: "bottom-center",
+        style: {
+          width: 330,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
+      });
+    } else {
+      try {
+        const change = {
+          email: psychologist.email,
+          email_change: emailChange,
+        };
+        await sendEmailChange(change);
+
+        toast.success(
+          "Se acaba de enviar un código de verificación al nuevo correo.",
+          {
+            position: "bottom-center",
+            style: {
+              width: 500,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          }
+        );
+        setNextValidation(2)
+        
+      } catch (e) {
+        toast.error("Ha ocurrido un error. Vuelva intentarlo.", {
+          position: "bottom-center",
+          style: {
+            width: 320,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+      }
+    }
+  }
+  async function validatePassword() {
+    const userLogin = {
+      username: psychologist.email,
+      password: passwordVerification,
+    };
+    login(userLogin)
+      .then((response) => {
+        toast.success("Se validó la contraseña.", {
+          position: "bottom-center",
+          style: {
+            width: 240,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+        setNextValidation(1);
+      })
+      .catch((error) => {
+        toast.error("La contraseña no es correcta.", {
+          position: "bottom-center",
+          style: {
+            width: 270,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+      });
+  } 
   return (
     <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-full  outline-none select-none overflow-hidden">
       <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
@@ -60,50 +142,138 @@ export default function Profile() {
         </div>
         <div className="h-[80%] w-[70%] flex flex-col items-center  bg-white mx-6 content-list rounded-md pb-4">
           <div className="w-[97%] font-montserrat">
-            <Tabs className="mt-4" variant="underlined" color="primary" aria-label="Options">
-        <Tab className="font-semibold" key="photos" title="Modificación de Correo">
-        <Card className="font-normal">
-              <CardBody>
-                <form>
-                <h3 className="font-semibold text-xl">
-                    Modificación de Correo
-                  </h3>
-                  <p className="mt-2 text-sm">Por favor, ingrese el nuevo correo electrónico. Se enviará un código de verificación al correo proporcionado. Una vez que se verifique el código, se realizará el cambio de correo electrónico.</p>
-                  <Input
-                    
-                    className="my-4 w-96"
-                    type="email"
-                    label="Correo Electrónico"
-                    placeholder="Ingrese el nuevo correo"
-                  />
-                  <Button color="primary">Modificar</Button>
-                </form>
-              </CardBody>
-            </Card>
-        </Tab>
-        <Tab className="font-semibold" key="music" title="Modificación de Contraseña">
-        <Card className="font-normal">
-              <CardBody>
-                <form>
-                  <h3 className="font-semibold text-xl">
-                    Modificación de Contraseña
-                  </h3>
-                  <p className="mt-2 text-sm">Para cambiar su contraseña, verifique primero su contraseña actual. Luego, ingrese y confirme su nueva contraseña para completar el proceso.</p>
-                  <Input
-                    className="my-4 w-96"
-                    type="password"
-                    label="Contraseña"
-                    placeholder="Ingrese su contraseña actual"
-                  />
-                  <Button color="primary">Modificar</Button>
-                </form>
-              </CardBody>
-            </Card>
-        </Tab>
-      </Tabs>     
+            <Tabs
+              className="mt-4"
+              variant="underlined"
+              color="primary"
+              aria-label="Options"
+            >
+              <Tab
+                className="font-semibold"
+                key="photos"
+                title="Modificación de Correo"
+              >
+                <Card className="font-normal">
+                  <CardBody>
+                    {nextValidation == 0 ? (
+                      <form>
+                        <h3 className="font-semibold text-xl">
+                          Modificación de Correo
+                        </h3>
+                        <p className="mt-2 text-sm">
+                          Por favor, ingrese su contraseña para validarla.
+                          Luego, introduzca el nuevo correo electrónico. Se
+                          enviará un código de verificación al correo
+                          proporcionado. Una vez que el código sea verificado,
+                          se procederá con el cambio de correo electrónico.
+                        </p>
+                        <Input
+                          label="Contraseña"
+                          placeholder="Ingrese su contraseña"
+                          endContent={
+                            <button
+                              className="focus:outline-none"
+                              type="button"
+                              onClick={toggleVisibility}
+                              aria-label="toggle password visibility"
+                            >
+                              {isVisible ? (
+                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              ) : (
+                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              )}
+                            </button>
+                          }
+                          type={isVisible ? "text" : "password"}
+                          className="my-4 w-96"
+                          value={passwordVerification}
+                          onChange={(e) => setPasswordVerification(e.target.value)}
+                        />
+                        <Button onClick={validatePassword} color="primary">
+                          Validar Contraseña
+                        </Button>
+                      </form>
+                    ) : nextValidation == 1 ? (
+                      <form>
+                        <h3 className="font-semibold text-xl">
+                          Modificación de Correo
+                        </h3>
+                        <p className="mt-2 text-sm">
+                          Por favor, ingrese el nuevo correo electrónico. Se
+                          enviará un código de verificación al correo
+                          proporcionado. Una vez que se verifique el código, se
+                          realizará el cambio de correo electrónico.
+                        </p>
+                        <Input
+                          className="my-4 w-96"
+                          type="email"
+                          label="Correo Electrónico"
+                          placeholder="Ingrese el nuevo correo"
+                          value={emailChange}
+                          onChange={(e) => setEmailChange(e.target.value)}
+                        />
+                        <Button onClick={changeEmail} color="primary">
+                          Validar Correo
+                        </Button>
+                      </form>
+                    ) : (
+                      <form>
+                        <h3 className="font-semibold text-xl">
+                          Modificación de Correo
+                        </h3>
+                        <p className="mt-2 text-sm">
+                          Ya se ha enviado el correo que contiene el código de
+                          verificación. Por favor, ingrese el codigo de
+                          verificación que se ha enviado al nuevo correo.
+                        </p>
+                        <Input
+                          className="my-4 w-96"
+                          type="email"
+                          label="Código de Verificación"
+                          placeholder="Ingrese el código de 6 dígitos"
+                          value={codeVerification}
+                          onChange={(e) => setCodeVerification(e.target.value)}
+                        />
+                        <Button onClick={changeEmail} color="primary">
+                          Validar Correo
+                        </Button>
+                      </form>
+                    )}
+                  </CardBody>
+                </Card>
+              </Tab>
+              <Tab
+                className="font-semibold"
+                key="music"
+                title="Modificación de Contraseña"
+              >
+                <Card className="font-normal">
+                  <CardBody>
+                    <form>
+                      <h3 className="font-semibold text-xl">
+                        Modificación de Contraseña
+                      </h3>
+                      <p className="mt-2 text-sm">
+                        Para cambiar su contraseña, verifique primero su
+                        contraseña actual. Luego, ingrese y confirme su nueva
+                        contraseña para completar el proceso.
+                      </p>
+                      <Input
+                        className="my-4 w-96"
+                        type="password"
+                        label="Contraseña"
+                        placeholder="Ingrese su contraseña actual"
+                      />
+                      <Button color="primary">Modificar</Button>
+                    </form>
+                  </CardBody>
+                </Card>
+              </Tab>
+            </Tabs>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 }
