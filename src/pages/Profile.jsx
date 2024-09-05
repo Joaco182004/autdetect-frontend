@@ -6,18 +6,21 @@ import { login } from "../api/authorization.api.js";
 import { IdentificationIcon, AtSymbolIcon } from "@heroicons/react/24/solid";
 import { Divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import { sendEmailChange,changeUsername } from "../api/custom.api";
+import { sendEmailChange, changeUsername,changePassword as changePasswordFunc } from "../api/custom.api";
 import { ToastContainer, toast } from "react-toastify";
 import { EyeFilledIcon } from "../assets/EyeFilledIcon.jsx";
 import { EyeSlashFilledIcon } from "../assets/EyeSlashFilledIcon.jsx";
-import {getUserProfileById} from "../api/userprofile.api.js"
+import { getUserProfileById } from "../api/userprofile.api.js";
 export default function Profile() {
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const [psychologist, setPsychologist] = useState(null);
   const [emailChange, setEmailChange] = useState("");
   const [passwordVerification, setPasswordVerification] = useState("");
+  const [passwordChange1, setPasswordChange1] = useState("");
+  const [passwordChange2, setPasswordChange2] = useState("");
   const [nextValidation, setNextValidation] = useState(0);
+  const [nextPassword, setNextPassword] = useState(0);
   const [codeVerification, setCodeVerification] = useState("");
   async function getPsychologist() {
     const user = await getPsychologistById();
@@ -27,34 +30,56 @@ export default function Profile() {
     getPsychologist();
   }, []);
 
+  function resetForm(){
+    setPasswordChange1("")
+    setPasswordChange2("")
+    setEmailChange("")
+    setNextValidation(0)
+    setNextPassword(0)
+    setCodeVerification("")
+    setPasswordVerification("")
+  }
   async function validateCodeVertification() {
     const userProfile = await getUserProfileById();
-    if(userProfile.data.code_change == codeVerification){
-      try{
+    if (userProfile.data.code_change == codeVerification) {
+      try {
         const change = {
           email: psychologist.email,
           email_change: emailChange,
         };
         await changeUsername(change);
-        toast.success(
-          "Se acaba de modificar el correo electrónico.",
-          {
-            position: "bottom-center",
-            style: {
-              width: 380,
-              fontSize: "0.85rem",
-              fontFamily: "Montserrat",
-            },
-          }
-        )
+        toast.success("Se acaba de modificar el correo electrónico.", {
+          position: "bottom-center",
+          style: {
+            width: 380,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+        resetForm()
         setTimeout(() => {
           window.location.reload(); // Recarga la página después de 3 segundos
         }, 3000);
+      } catch (e) {
+        toast.error("Ha ocurrido un error. Vuelva intentarlo.", {
+          position: "bottom-center",
+          style: {
+            width: 320,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
       }
-      catch(e){
-
-      }
-      
+    }
+    else{
+      toast.error("El código no corresponde al código enviado.", {
+        position: "bottom-center",
+        style: {
+          width: 380,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
+      });
     }
   }
   async function validateEmail() {
@@ -86,8 +111,7 @@ export default function Profile() {
             },
           }
         );
-        setNextValidation(2)
-        
+        setNextValidation(2);
       } catch (e) {
         toast.error("Ha ocurrido un error. Vuelva intentarlo.", {
           position: "bottom-center",
@@ -100,34 +124,111 @@ export default function Profile() {
       }
     }
   }
-  async function validatePassword() {
-    const userLogin = {
-      username: psychologist.email,
-      password: passwordVerification,
-    };
-    login(userLogin)
-      .then((response) => {
-        toast.success("Se validó la contraseña.", {
-          position: "bottom-center",
-          style: {
-            width: 240,
-            fontSize: "0.85rem",
-            fontFamily: "Montserrat",
-          },
-        });
-        setNextValidation(1);
-      })
-      .catch((error) => {
-        toast.error("La contraseña no es correcta.", {
-          position: "bottom-center",
-          style: {
-            width: 270,
-            fontSize: "0.85rem",
-            fontFamily: "Montserrat",
-          },
-        });
+  async function validatePassword(next) {
+    if(!passwordVerification && !passwordChange1){
+      toast.error("Debe completar el campo de contraseña.", {
+        position: "bottom-center",
+        style: {
+          width: 370,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
       });
-  } 
+    }
+    else{
+      const userLogin = {
+        username: psychologist.email,
+        password: next == 0 ? passwordVerification : passwordChange1,
+      };
+      login(userLogin)
+        .then((response) => {
+          toast.success("Se validó la contraseña.", {
+            position: "bottom-center",
+            style: {
+              width: 240,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+          if (next == 0) {
+            setNextValidation(1);
+          } else {
+            setNextPassword(1);
+          }
+        })
+        .catch((error) => {
+          toast.error("La contraseña no es correcta.", {
+            position: "bottom-center",
+            style: {
+              width: 270,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+        });
+    }
+    
+  }
+  function validarContraseña(contraseña) {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+    // Test de la contraseña con la expresión regular
+    return regex.test(contraseña);
+}
+  async function changePassword() {
+    if(!passwordChange2){
+      toast.error("Debe completar el campo de contraseña.", {
+        position: "bottom-center",
+        style: {
+          width: 370,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
+      });
+    }else{
+      if(validarContraseña(passwordChange2)){
+        const userLogin = {
+          email: psychologist.email,
+          password: passwordChange2 ,
+        };
+        try{
+          await changePasswordFunc(userLogin)
+          toast.success("Se acaba de modificar su contraseña.", {
+            position: "bottom-center",
+            style: {
+              width: 380,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+          resetForm()
+          setTimeout(() => {
+            window.location.reload(); // Recarga la página después de 3 segundos
+          }, 3000);
+        }
+        catch(e){
+          toast.error("Ha ocurrido un error, vuelva a intentarlo.", {
+            position: "bottom-center",
+            style: {
+              width: 320,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+        }
+      }
+      else{
+        toast.error("La contraseña no cumple con los requisitos.", {
+          position: "bottom-center",
+          style: {
+            width: 370,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+      }
+    }
+  }
   return (
     <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-full  outline-none select-none overflow-hidden">
       <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
@@ -218,9 +319,16 @@ export default function Profile() {
                           type={isVisible ? "text" : "password"}
                           className="my-4 w-96"
                           value={passwordVerification}
-                          onChange={(e) => setPasswordVerification(e.target.value)}
+                          onChange={(e) =>
+                            setPasswordVerification(e.target.value)
+                          }
                         />
-                        <Button onClick={validatePassword} color="primary">
+                        <Button
+                          onClick={() => {
+                            validatePassword(0);
+                          }}
+                          color="primary"
+                        >
                           Validar Contraseña
                         </Button>
                       </form>
@@ -265,7 +373,10 @@ export default function Profile() {
                           value={codeVerification}
                           onChange={(e) => setCodeVerification(e.target.value)}
                         />
-                        <Button onClick={validateCodeVertification} color="primary">
+                        <Button
+                          onClick={validateCodeVertification}
+                          color="primary"
+                        >
                           Validar Correo
                         </Button>
                       </form>
@@ -280,23 +391,83 @@ export default function Profile() {
               >
                 <Card className="font-normal">
                   <CardBody>
-                    <form>
-                      <h3 className="font-semibold text-xl">
-                        Modificación de Contraseña
-                      </h3>
-                      <p className="mt-2 text-sm">
-                        Para cambiar su contraseña, verifique primero su
-                        contraseña actual. Luego, ingrese y confirme su nueva
-                        contraseña para completar el proceso.
-                      </p>
-                      <Input
-                        className="my-4 w-96"
-                        type="password"
-                        label="Contraseña"
-                        placeholder="Ingrese su contraseña actual"
-                      />
-                      <Button color="primary">Modificar</Button>
-                    </form>
+                    {nextPassword == 0 ? (
+                      <form>
+                        <h3 className="font-semibold text-xl">
+                          Modificación de Contraseña
+                        </h3>
+                        <p className="mt-2 text-sm">
+                          Para cambiar su contraseña, verifique primero su
+                          contraseña actual. Luego, ingrese y confirme su nueva
+                          contraseña para completar el proceso.
+                        </p>
+                        <Input
+                          label="Contraseña"
+                          placeholder="Ingrese su contraseña"
+                          endContent={
+                            <button
+                              className="focus:outline-none"
+                              type="button"
+                              onClick={toggleVisibility}
+                              aria-label="toggle password visibility"
+                            >
+                              {isVisible ? (
+                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              ) : (
+                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              )}
+                            </button>
+                          }
+                          type={isVisible ? "text" : "password"}
+                          className="my-4 w-96"
+                          value={passwordChange1}
+                          onChange={(e) => setPasswordChange1(e.target.value)}
+                        />
+                        <Button
+                          color="primary"
+                          onClick={() => {
+                            validatePassword(1);
+                          }}
+                        >
+                          Validar Contraseña
+                        </Button>
+                      </form>
+                    ) : (
+                      <form>
+                        <h3 className="font-semibold text-xl">
+                          Modificación de Contraseña
+                        </h3>
+                        <p className="mt-2 text-sm">
+                          Su cuenta ha sido verificada. Por favor, ingrese una
+                          nueva contraseña que contenga al menos una mayúscula,
+                          un carácter especial, un número y tenga una longitud
+                          mínima de 8 caracteres.{" "}
+                        </p>
+                        <Input
+                          label="Contraseña"
+                          placeholder="Ingrese su nueva contraseña"
+                          endContent={
+                            <button
+                              className="focus:outline-none"
+                              type="button"
+                              onClick={toggleVisibility}
+                              aria-label="toggle password visibility"
+                            >
+                              {isVisible ? (
+                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              ) : (
+                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              )}
+                            </button>
+                          }
+                          type={isVisible ? "text" : "password"}
+                          className="my-4 w-96"
+                          value={passwordChange2}
+                          onChange={(e) => setPasswordChange2(e.target.value)}
+                        />
+                        <Button color="primary" onClick={changePassword}>Modificar contraseña</Button>
+                      </form>
+                    )}
                   </CardBody>
                 </Card>
               </Tab>

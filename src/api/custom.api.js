@@ -51,3 +51,14 @@ export const changeUsername = (change) => {
 
     return axios.post('http://localhost:8000/changeusername/',change,config);
 }
+export const changePassword = (change) => {    
+    const token = localStorage.getItem('token');
+
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    };
+
+    return axios.post('http://localhost:8000/changepassword/',change,config);
+}

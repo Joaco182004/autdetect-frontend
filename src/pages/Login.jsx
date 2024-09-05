@@ -187,7 +187,7 @@ function Login() {
   };
 
   return (
-    <section className="bg-[rgb(142,173,219)] w-screen h-screen flex justify-center items-center">
+    <section className="bg-[rgba(134,185,221,0.5)] w-screen h-screen flex justify-center items-center">
       <section className="bg-[rgb(240,243,250)] w-screen h-screen max-w-[1500px] rounded-md max-h-[900px] flex flex-row ">
         <div className=" w-[50%] h-full relative flex items-center flex-col justify-around">
           <div className="text-center">
@@ -327,6 +327,7 @@ function Login() {
                     height={40}
                     onClick={changeView}
                   ></Button>
+                  <a onClick={()=>{navigate("/changepassword")}} className="font-montserrat cursor-pointer mb-2 text-blue-500 underline select-none">¿Te olvidaste tu contraseña?</a>
                 </form>
               </>
             )}
