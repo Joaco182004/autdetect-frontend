@@ -6,7 +6,11 @@ import { login } from "../api/authorization.api.js";
 import { IdentificationIcon, AtSymbolIcon } from "@heroicons/react/24/solid";
 import { Divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
-import { sendEmailChange, changeUsername,changePassword as changePasswordFunc } from "../api/custom.api";
+import {
+  sendEmailChange,
+  changeUsername,
+  changePassword as changePasswordFunc,
+} from "../api/custom.api";
 import { ToastContainer, toast } from "react-toastify";
 import { EyeFilledIcon } from "../assets/EyeFilledIcon.jsx";
 import { EyeSlashFilledIcon } from "../assets/EyeSlashFilledIcon.jsx";
@@ -30,14 +34,14 @@ export default function Profile() {
     getPsychologist();
   }, []);
 
-  function resetForm(){
-    setPasswordChange1("")
-    setPasswordChange2("")
-    setEmailChange("")
-    setNextValidation(0)
-    setNextPassword(0)
-    setCodeVerification("")
-    setPasswordVerification("")
+  function resetForm() {
+    setPasswordChange1("");
+    setPasswordChange2("");
+    setEmailChange("");
+    setNextValidation(0);
+    setNextPassword(0);
+    setCodeVerification("");
+    setPasswordVerification("");
   }
   async function validateCodeVertification() {
     const userProfile = await getUserProfileById();
@@ -56,7 +60,7 @@ export default function Profile() {
             fontFamily: "Montserrat",
           },
         });
-        resetForm()
+        resetForm();
         setTimeout(() => {
           window.location.reload(); // Recarga la página después de 3 segundos
         }, 3000);
@@ -70,8 +74,7 @@ export default function Profile() {
           },
         });
       }
-    }
-    else{
+    } else {
       toast.error("El código no corresponde al código enviado.", {
         position: "bottom-center",
         style: {
@@ -125,7 +128,7 @@ export default function Profile() {
     }
   }
   async function validatePassword(next) {
-    if(!passwordVerification && !passwordChange1){
+    if (!passwordVerification && !passwordChange1) {
       toast.error("Debe completar el campo de contraseña.", {
         position: "bottom-center",
         style: {
@@ -134,8 +137,7 @@ export default function Profile() {
           fontFamily: "Montserrat",
         },
       });
-    }
-    else{
+    } else {
       const userLogin = {
         username: psychologist.email,
         password: next == 0 ? passwordVerification : passwordChange1,
@@ -167,16 +169,15 @@ export default function Profile() {
           });
         });
     }
-    
   }
   function validarContraseña(contraseña) {
     const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
     // Test de la contraseña con la expresión regular
     return regex.test(contraseña);
-}
+  }
   async function changePassword() {
-    if(!passwordChange2){
+    if (!passwordChange2) {
       toast.error("Debe completar el campo de contraseña.", {
         position: "bottom-center",
         style: {
@@ -185,14 +186,14 @@ export default function Profile() {
           fontFamily: "Montserrat",
         },
       });
-    }else{
-      if(validarContraseña(passwordChange2)){
+    } else {
+      if (validarContraseña(passwordChange2)) {
         const userLogin = {
           email: psychologist.email,
-          password: passwordChange2 ,
+          password: passwordChange2,
         };
-        try{
-          await changePasswordFunc(userLogin)
+        try {
+          await changePasswordFunc(userLogin);
           toast.success("Se acaba de modificar su contraseña.", {
             position: "bottom-center",
             style: {
@@ -201,12 +202,11 @@ export default function Profile() {
               fontFamily: "Montserrat",
             },
           });
-          resetForm()
+          resetForm();
           setTimeout(() => {
             window.location.reload(); // Recarga la página después de 3 segundos
           }, 3000);
-        }
-        catch(e){
+        } catch (e) {
           toast.error("Ha ocurrido un error, vuelva a intentarlo.", {
             position: "bottom-center",
             style: {
@@ -216,8 +216,7 @@ export default function Profile() {
             },
           });
         }
-      }
-      else{
+      } else {
         toast.error("La contraseña no cumple con los requisitos.", {
           position: "bottom-center",
           style: {
@@ -465,7 +464,9 @@ export default function Profile() {
                           value={passwordChange2}
                           onChange={(e) => setPasswordChange2(e.target.value)}
                         />
-                        <Button color="primary" onClick={changePassword}>Modificar contraseña</Button>
+                        <Button color="primary" onClick={changePassword}>
+                          Modificar contraseña
+                        </Button>
                       </form>
                     )}
                   </CardBody>

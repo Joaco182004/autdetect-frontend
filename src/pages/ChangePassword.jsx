@@ -11,14 +11,20 @@ import {
   Button,
   code,
 } from "@nextui-org/react";
+import { EyeFilledIcon } from "../assets/EyeFilledIcon.jsx";
+import { EyeSlashFilledIcon } from "../assets/EyeSlashFilledIcon.jsx";
 import { MailIcon } from "../assets/MailIcon.jsx";
-import { changePasswordEmail, validateCode } from "../api/custom.api.js";
+import { changePasswordEmail, validateCode,changePassword as changePasswordFunc} from "../api/custom.api.js";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 export default function ChangePassword() {
   const [email, setEmail] = useState("");
   const [section, setSection] = useState(0);
   const [codeVerification, setCodeVerification] = useState("");
-
+  const [passwordChange,setPasswordChange] = useState("");
+  const [isVisible, setIsVisible] = React.useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+  let navigate = useNavigate();
   async function validateEmails() {
     const emailJson = {
       email: email,
@@ -74,6 +80,7 @@ export default function ChangePassword() {
           fontFamily: "Montserrat",
         },
       });
+      setSection(2);
     } catch (e) {
       toast.error(e.response?.data|| "Error al verificar el código.", {
         position: "bottom-center",
@@ -85,7 +92,65 @@ export default function ChangePassword() {
       });
     }
   }
+  function validarContraseña(contraseña) {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
+    // Test de la contraseña con la expresión regular
+    return regex.test(contraseña);
+}
+  async function changePassword() {
+    if(!passwordChange){
+      toast.error("Debe completar el campo de contraseña.", {
+        position: "bottom-center",
+        style: {
+          width: 370,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
+      });
+    }else{
+      if(validarContraseña(passwordChange)){
+        const userLogin = {
+          email: email,
+          password: passwordChange ,
+        };
+        try{
+          await changePasswordFunc(userLogin)
+          toast.success("Se acaba de modificar su contraseña.", {
+            position: "bottom-center",
+            style: {
+              width: 360,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+          setTimeout(() => {
+            navigate("/") // Recarga la página después de 3 segundos
+          }, 3000);
+        }
+        catch(e){
+          toast.error("Ha ocurrido un error, vuelva a intentarlo.", {
+            position: "bottom-center",
+            style: {
+              width: 320,
+              fontSize: "0.85rem",
+              fontFamily: "Montserrat",
+            },
+          });
+        }
+      }
+      else{
+        toast.error("La contraseña no cumple con los requisitos.", {
+          position: "bottom-center",
+          style: {
+            width: 370,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+      }
+    }
+  }
   return (
     <section className="bg-[rgba(134,185,221,0.5)] w-screen h-screen flex justify-center items-center font-montserrat">
       <Card className="w-[400px]">
@@ -161,29 +226,39 @@ export default function ChangePassword() {
           <>
             <CardBody>
               <p className="text-sm mb-4 mx-1 text-justify">
-                Por favor, ingrese el correo asociado a su cuenta. Le enviaremos
-                un código de verificación para que pueda proceder con el cambio
-                de contraseña.
+                Por favor, ingrese la nueva contraseña para realizar el cambio de contraseña.
               </p>
               <Input
-                autoFocus
-                endContent={
-                  <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                }
-                label="Email"
-                placeholder="Ingresa tu correo registrado"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+                          label="Contraseña"
+                          placeholder="Ingrese su nueva contraseña"
+                          endContent={
+                            <button
+                              className="focus:outline-none"
+                              type="button"
+                              onClick={toggleVisibility}
+                              aria-label="toggle password visibility"
+                            >
+                              {isVisible ? (
+                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              ) : (
+                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              )}
+                            </button>
+                          }
+                          type={isVisible ? "text" : "password"}
+                          className="w-[95%]"
+                          value={passwordChange}
+                          onChange={(e) => setPasswordChange(e.target.value)}
+                        />
             </CardBody>
             <Divider />
             <CardFooter>
               <Button
-                onClick={validateEmails}
+                onClick={changePassword}
                 color="primary"
                 className="font-semibold"
               >
-                Enviar código de Verificación
+                Modificar Contraseña
               </Button>
             </CardFooter>
           </>
