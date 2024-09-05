@@ -62,3 +62,25 @@ export const changePassword = (change) => {
 
     return axios.post('http://localhost:8000/changepassword/',change,config);
 }
+export const changePasswordEmail = (email) => {    
+    const token = localStorage.getItem('token');
+
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    };
+
+    return axios.post('http://localhost:8000/changepasswordemail/',email,config);
+}
+export const validateCode = (code) => {    
+    const token = localStorage.getItem('token');
+
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    };
+
+    return axios.post('http://localhost:8000/validatecode/',code,config);
+}
