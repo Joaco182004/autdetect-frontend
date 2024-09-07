@@ -84,3 +84,14 @@ export const validateCode = (code) => {
 
     return axios.post('http://localhost:8000/validatecode/',code,config);
 }
+export const sendEmailReport = (content) => {    
+    const token = localStorage.getItem('token');
+
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    };
+
+    return axios.post('http://localhost:8000/reporte/',content,config);
+}

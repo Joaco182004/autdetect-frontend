@@ -6,6 +6,7 @@ import {
   saveQuestionnaire,
   getQuestionnaireById,
 } from "../api/questionnaire.api";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Checkbox, Link} from "@nextui-org/react";
 import { getPatientById, getAllPatients } from "../api/infantPatient.api";
 import {
   Input,
@@ -16,8 +17,10 @@ import {
 } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { ToastContainer, toast } from "react-toastify";
+import {sendEmailReport} from "../api/custom.api";
 import "react-toastify/dist/ReactToastify.css";
 export default function MCHAT() {
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [infantDni, setInfantDni] = useState("");
   const [infantName, setInfantName] = useState("");
   const [birthDate, setBirthDate] = useState(null);
@@ -31,6 +34,41 @@ export default function MCHAT() {
   const [q2, setQ2] = useState(0);
   const [view, setView] = useState(false);
   const [patients, setPatients] = useState([]);
+  const [patientChoose, setPatientChoose] =useState(null)
+  async function sendEmailCode(){
+    const data ={
+      name_father: patientChoose.guardian_name,
+      email: patientChoose.guardian_email,
+      patient: patientChoose.infant_name,
+    }
+    try{
+      await sendEmailReport(data)
+      toast.success(
+        "Correo enviado correctamente al padre de familia.",
+        {
+          position: "bottom-center",
+          style: {
+            width: 420,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        }
+      );
+    }
+    catch(e){
+      toast.error(
+        "Hubo un error al enviar el correo. Por favor, vuelva intentarlo.",
+        {
+          position: "bottom-center",
+          style: {
+            width: 470,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        }
+      );
+    }
+  }
 
   async function getPatient(id) {
     const user = await getPatientById(id);
@@ -73,6 +111,7 @@ export default function MCHAT() {
             setGuardianEmail(userFind.guardian_email);
             setContactPhone(userFind.contact_phone);
             setDistrict(userFind.district);
+            setPatientChoose(userFind)
           } catch (e) {
             console.log(e);
           }
@@ -377,6 +416,28 @@ export default function MCHAT() {
             No
           </Radio>
         </RadioGroup>
+        <Modal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
+        placement="top-center"
+        className="font-montserrat z-50"
+      >
+        <ModalContent>
+        {(onClose) => (<>
+        <ModalHeader className="flex flex-col gap-1">Enviar Reporte</ModalHeader>
+        <ModalBody>
+          <p>¿Desea enviar el reporte por correo al padre de familia?</p>
+        </ModalBody>
+        <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Cancelar
+                </Button>
+                <Button onClick={()=>{sendEmailCode();onClose()}} color="primary">
+                  Aceptar
+                </Button>
+              </ModalFooter></>)}
+           </ModalContent>
+      </Modal>
         <div className="mt-8 flex">
           {!view ? (
             <>
@@ -398,15 +459,21 @@ export default function MCHAT() {
               </Button>
             </>
           ) : (
-            <Button
-              className="w-[150px] font-montserrat font-medium"
-              color="primary"
-              onClick={() => {
-                navigate("/app/evaluaciones/");
-              }}
-            >
-              Cerrar
-            </Button>
+            <><Button
+            className="w-[150px] font-montserrat font-medium"
+            color="primary"
+            onClick={onOpen}
+          >
+            Enviar Reporte
+          </Button><Button
+            className="ml-4 w-[150px] font-montserrat font-medium"
+            color="default"
+            onClick={() => {
+              navigate("/app/evaluaciones/");
+            }}
+          >
+            Cerrar
+          </Button></>
           )}
         </div>
       </div>
