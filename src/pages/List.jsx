@@ -146,6 +146,7 @@ export default function List() {
       guardian_email: guardianEmail,
       contact_phone: contactPhone,
       district: district,
+      psychology: localStorage.getItem('idPsychology'),
     };
     console.log(user);
     if (!isEditable) {
