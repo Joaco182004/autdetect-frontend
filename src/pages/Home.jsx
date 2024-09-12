@@ -67,6 +67,8 @@ export default function Home() {
   const RADIAN = Math.PI / 180;
   const [page, setPage] = React.useState(1);
   const [agePatients, setAgePatients] = useState([]);
+  const [widthContainer,setWidthContainer]= useState(650);
+  const [widthPie,setWidthPie] = useState(0)
   const rowsPerPage = 7;
 
   // Function Definitions
@@ -395,6 +397,18 @@ export default function Home() {
   // Effects
 
   useEffect(() => {
+    const width = window.innerWidth;
+    if(width < 1300){
+      setWidthContainer(600)
+      setWidthPie(170)
+    }
+    if(width<1185){
+      setWidthContainer(500)
+    }
+    else{
+      setWidthContainer(650)
+      setWidthPie(190)
+    }
     loadPatientsByAge();
     loadQuestionnaires();
     loadPatientsByGender();
@@ -439,7 +453,7 @@ export default function Home() {
       </h1>
       <div className=" w-full h-auto pb-4 cont-section-dash flex gap-4">
         <div>
-          <div className="bg-white w-[650px] h-[480px] ml-[2rem] rounded-md flex flex-col items-center">
+          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] h-[480px] ml-[2rem] rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-blue-500 rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
@@ -460,10 +474,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="ml-4 font-montserrat">
-                  <p className="text-[rgb(156,159,162)] font-semibold">
+                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem]">
                     Total de pacientes evaluados
                   </p>
-                  <h3 className="mt-1 font-medium">
+                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem]">
                     {questionnaire.length} pacientes
                   </h3>
                 </div>
@@ -480,10 +494,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="ml-4 font-montserrat">
-                  <p className="text-[rgb(156,159,162)] font-semibold">
+                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem]">
                     Pacientes totales con TEA
                   </p>
-                  <h3 className="mt-1 font-medium">
+                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem]">
                     {countAutism()} pacientes
                   </h3>
                 </div>
@@ -493,7 +507,7 @@ export default function Home() {
               {isChart ? (
                 <BarChart
                   className="mt-4 font-montserrat text-sm "
-                  width={650}
+                  width={widthContainer}
                   height={300}
                   data={evaluationByMonth}
                   margin={{
@@ -520,7 +534,7 @@ export default function Home() {
               ) : (
                 <LineChart
                   className="mt-4 font-montserrat text-sm"
-                  width={650}
+                  width={widthContainer}
                   height={300}
                   data={evaluationByMonthAutism}
                   margin={{
@@ -552,7 +566,7 @@ export default function Home() {
               )}
             </div>)}
           </div>
-          <div className="bg-white w-[650px] h-[480px] ml-[2rem] mt-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] h-[480px] ml-[2rem] mt-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-between items-center">
               <div className="flex justify-center items-center">
                 <div className="bg-[rgb(142,89,255)] rounded w-4 h-8"></div>
@@ -636,25 +650,25 @@ export default function Home() {
           </div>
         </div>
         <div>
-          <div className="bg-white w-[340px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[340px] max-w-1300:w-[290px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-[rgb(255,188,153)] rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
                 Pacientes evaluados
               </h2>
             </div>
-            <div className="flex font-montserrat text-sm w-[315px]  mt-4  text-[rgb(156,159,162)] font-semibold  ">
+            <div className="flex font-montserrat text-sm w-[315px] max-w-1300:w-[265px]  mt-4  text-[rgb(156,159,162)] font-semibold  ">
               <p className="w-[75%]">Paciente</p>
               <p>Diagnóstico</p>
             </div>
-            <div className="h-[1px] w-[315px] bg-[rgb(204,204,204)] line"></div>
+            <div className="h-[1px] w-[315px] max-w-1300:w-[265px] bg-[rgb(204,204,204)] line"></div>
             <ul className="w-full flex flex-col items-center">
               {patients.map((ele) => {
                 console.log(ele)
                 const result = searchQuestionnaire(ele.id);
                 return (
                   <li key={ele.id}>
-                    <div className="w-[315px] mt-4 flex h-auto p-1 items-center">
+                    <div className="w-[315px] max-w-1300:w-[265px] mt-4 flex h-auto p-1 items-center">
                       <div className="flex w-[75%]">
                         <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
                           {ele.infant_name.length == 1? ele.infant_name.split(" ")[0][0] +
@@ -665,7 +679,7 @@ export default function Home() {
                           <p>{calculateMonth(ele.birth_date)} meses</p>
                         </div>
                       </div>
-                      <div className="text-center w-[25%] font-montserrat text-sm">
+                      <div className="text-center w-[25%] max-w-1300:w-[30%] font-montserrat text-sm">
                         {result && (
                           <>
                             {result.result ? (
@@ -683,21 +697,21 @@ export default function Home() {
               })}
             </ul>
           </div>
-          <div className="bg-white w-[340px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[340px] h-[480px] max-w-1300:w-[290px]  mr-4 mb-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-[#B1E5FC] rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
                 Métricas importantes
               </h2>
             </div>
-            <div className="w-100% h-[290px] border-[rgb(204,204,204)] p-4 pb-0 border-solid border-[1px] mt-4 rounded">
+            <div className="w-100% h-[290px] max-w-1300:w-[250px] border-[rgb(204,204,204)] p-4 pb-0 border-solid border-[1px] mt-4 rounded flex  items-center flex-col">
               <h5 className="font-montserrat text-sm font-semibold text-center">
                 Distribución de Pacientes por Género
               </h5>
               <PieChart
-                className="font-montserrat text-sm ml-7 outline-none"
-                width={200}
-                height={200}
+                className="font-montserrat text-sm outline-none"
+                width={widthPie}
+                height={widthPie}
               >
                 <Pie
                   className="outline-none"
@@ -719,7 +733,7 @@ export default function Home() {
                 </Pie>
                 <Tooltip />
               </PieChart>
-              <div className="font-montserrat text-xs">
+              <div className="font-montserrat text-xs w-full">
                 <p className="font-semibold mb-1">Leyenda:</p>
                 <div className="flex">
                   <div className="flex items-center">
@@ -734,7 +748,7 @@ export default function Home() {
               </div>
             </div>
             <Table
-              className="mt-2 w-[302px] font-montserrat text-xs"
+              className="mt-2 w-[302px] max-w-1300:w-[258px] font-montserrat text-xs"
               aria-label="Example static collection table"
             >
               <TableHeader>
@@ -757,13 +771,13 @@ export default function Home() {
                       agePatients.length > 0 ? agePatients.reduce((acc, num) => acc + num, 0) /
                       agePatients.length:0
                     ).toFixed(2)}{" "}
-                    meses
+                    M
                   </TableCell>
                   <TableCell className="text-center">
-                    {isFinite(Math.max(...agePatients))? Math.max(...agePatients):0} meses
+                    {isFinite(Math.max(...agePatients))? Math.max(...agePatients):0} M
                   </TableCell>
                   <TableCell className="text-center">
-                    {isFinite(Math.min(...agePatients))? Math.min(...agePatients):0} meses
+                    {isFinite(Math.min(...agePatients))? Math.min(...agePatients):0} M
                   </TableCell>
                 </TableRow>
               </TableBody>

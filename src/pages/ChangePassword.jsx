@@ -19,7 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 export default function ChangePassword() {
   const [email, setEmail] = useState("");
-  const [section, setSection] = useState(2);
+  const [section, setSection] = useState(0);
   const [codeVerification, setCodeVerification] = useState("");
   const [passwordChange,setPasswordChange] = useState("");
   const [isVisible, setIsVisible] = React.useState(false);

@@ -13,10 +13,12 @@ export default {
     }},
     screens: {
         'lg': '1050px',
-        'max-h-849': { 'raw': '(max-height: 849px)' },
+        'max-w-1300': { 'raw': '(max-width: 1300px)' },
+        'max-w-1185': { 'raw': '(max-width: 1185px)' },
         'max-w-530': { 'raw': '(max-width: 530px)' },
-        'max-w-430': { 'raw': '(max-width: 430px)' },
-        'max-w-450': { 'raw': '(max-width: 450px)' },  
+        'max-w-450': { 'raw': '(max-width: 450px)' },
+        'max-w-430': { 'raw': '(max-width: 430px)' }, 
+        'max-h-849': { 'raw': '(max-height: 849px)' },
         'max-h-800': { 'raw': '(max-width: 800px)' },// Definir un nuevo breakpoint personalizado
       },
   },

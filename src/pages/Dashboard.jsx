@@ -34,7 +34,7 @@ export default function Dashboard() {
   return (
     <section className="bg-[rgba(134,185,221,0.5)] w-screen h-screen flex justify-center items-center">
       <section className="bg-[rgb(244,244,244)] w-screen h-screen max-w-[1500px]  max-h-[900px] flex items-center select-none container-main">
-      <nav className="bg-white h-[100%] w-[300px] flex flex-col rounded-s-[0.375rem]">
+      <nav className="bg-white h-[100%] w-[300px] max-w-1300:w-[275px] flex flex-col rounded-s-[0.375rem]">
         <div>
           <h1 className="font-playwrite text-blue-500 text-center font-bold w-[100%] h-[100px] flex  items-center justify-center text-2xl">
             AutDetect
@@ -62,7 +62,7 @@ export default function Dashboard() {
               </ModalFooter></>)}
            </ModalContent>
       </Modal>
-        <ul className="flex flex-col items-center w-full mt-1">
+        <ul className="flex flex-col items-center w-full mt-1 max-w-1300:text-[0.95rem]">
           {location.pathname == "/app/dashboard"  ? (
             <li
               onClick={() => {
