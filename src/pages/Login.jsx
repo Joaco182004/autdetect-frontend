@@ -39,6 +39,10 @@ function Login() {
     setPsychologist(res.data);
   }
   useEffect(() => {
+    const width = window.innerWidth;
+    if(width < 450){
+      setWidthInput(300)
+    }
     getPsychologist();
   }, []);
   const handleSubmit = (e) => {
@@ -189,9 +193,9 @@ function Login() {
   return (
     <section className="bg-[rgba(134,185,221,0.5)] w-screen h-screen flex justify-center items-center">
       <section className="bg-[rgb(240,243,250)] w-screen h-screen max-w-[1500px] rounded-md max-h-[900px] flex flex-row ">
-        <div className=" w-[50%] h-full relative flex items-center flex-col justify-around">
+        <div className=" w-[50%] h-full relative  items-center flex-col justify-around hidden lg:flex">
           <div className="text-center">
-            <h1 className="font-black font-playwrite text-4xl mb-1">
+            <h1 className="font-black font-playwrite text-4xl mb-1 ">
               ¡Bienvenido a <span className="text-blue-500">AutDetect</span>!
             </h1>
             <p className="font-montserrat mt-4">{msg}</p>
@@ -202,8 +206,17 @@ function Login() {
             src={img_login}
           ></img>
         </div>
-        <div className="w-[50%] h-full flex items-center justify-center">
-          <div className="bg-white w-[420px] h-auto rounded-md p-4 pb-1">
+        <div className="lg:w-[50%] h-full flex flex-col items-center justify-center w-full">
+        <div className="mb-20 lg:hidden max-h-849:mb-10 ">
+        <h1 className="font-black font-playwrite text-4xl max-w-530:text-3xl max-w-430:text-2xl text-center max-h-800:mt-4">
+              ¡Bienvenido a <span className="text-blue-500">AutDetect</span>!
+              
+            </h1>
+            <p className="font-montserrat mt-4 text-center">{msg}</p>
+        </div>
+         
+
+          <div className="bg-white w-[420px] max-w-450:w-[340px] h-auto rounded-md p-4 pb-1 mb-2">
             {!viewLogin && (
               <>
                 <h2 className="font-montserrat font-semibold mb-3 text-3xl">
@@ -327,7 +340,14 @@ function Login() {
                     height={40}
                     onClick={changeView}
                   ></Button>
-                  <a onClick={()=>{navigate("/changepassword")}} className="font-montserrat cursor-pointer mb-2 text-blue-500 underline select-none">¿Te olvidaste tu contraseña?</a>
+                  <a
+                    onClick={() => {
+                      navigate("/changepassword");
+                    }}
+                    className="font-montserrat cursor-pointer mb-2 text-blue-500 underline select-none"
+                  >
+                    ¿Te olvidaste tu contraseña?
+                  </a>
                 </form>
               </>
             )}
