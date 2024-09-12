@@ -19,7 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 export default function ChangePassword() {
   const [email, setEmail] = useState("");
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(2);
   const [codeVerification, setCodeVerification] = useState("");
   const [passwordChange,setPasswordChange] = useState("");
   const [isVisible, setIsVisible] = React.useState(false);
@@ -153,7 +153,7 @@ export default function ChangePassword() {
   }
   return (
     <section className="bg-[rgba(134,185,221,0.5)] w-screen h-screen flex justify-center items-center font-montserrat">
-      <Card className="w-[400px]">
+      <Card className="w-[400px] max-w-430:w-[350px]">
         <CardHeader className="flex justify-around">
           <div className="flex flex-col justify-between">
             <h2 className="text-md font-semibold">
