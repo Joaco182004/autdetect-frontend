@@ -68,6 +68,7 @@ export default function Home() {
   const [page, setPage] = React.useState(1);
   const [agePatients, setAgePatients] = useState([]);
   const [widthContainer,setWidthContainer]= useState(650);
+  const [heightContainer,setHeightContainer]= useState(300);
   const [widthPie,setWidthPie] = useState(0)
   const rowsPerPage = 7;
 
@@ -405,6 +406,17 @@ export default function Home() {
     if(width<1185){
       setWidthContainer(500)
     }
+    if(width < 1080){
+      setWidthContainer(590)
+      setWidthPie(170)
+    }
+    if(width < 950){
+      setWidthContainer(500)
+    }
+    if(width < 870){
+      setWidthContainer(480)
+      setHeightContainer(280)
+    }
     else{
       setWidthContainer(650)
       setWidthPie(190)
@@ -453,7 +465,7 @@ export default function Home() {
       </h1>
       <div className=" w-full h-auto pb-4 cont-section-dash flex gap-4">
         <div>
-          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] h-[480px] ml-[2rem] rounded-md flex flex-col items-center">
+          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] h-[480px] ml-[2rem] rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-blue-500 rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
@@ -474,10 +486,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="ml-4 font-montserrat">
-                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem]">
+                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem] max-w-1080:text-[1rem] max-w-950:text-[0.8rem]">
                     Total de pacientes evaluados
                   </p>
-                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem]">
+                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem]">
                     {questionnaire.length} pacientes
                   </h3>
                 </div>
@@ -494,10 +506,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="ml-4 font-montserrat">
-                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem]">
+                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem] max-w-1080:text-[1rem] max-w-950:text-[0.8rem]">
                     Pacientes totales con TEA
                   </p>
-                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem]">
+                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem]">
                     {countAutism()} pacientes
                   </h3>
                 </div>
@@ -508,7 +520,7 @@ export default function Home() {
                 <BarChart
                   className="mt-4 font-montserrat text-sm "
                   width={widthContainer}
-                  height={300}
+                  height={heightContainer}
                   data={evaluationByMonth}
                   margin={{
                     top: 5,
@@ -535,7 +547,7 @@ export default function Home() {
                 <LineChart
                   className="mt-4 font-montserrat text-sm"
                   width={widthContainer}
-                  height={300}
+                  height={heightContainer}
                   data={evaluationByMonthAutism}
                   margin={{
                     top: 5,
@@ -566,18 +578,18 @@ export default function Home() {
               )}
             </div>)}
           </div>
-          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] h-[480px] ml-[2rem] mt-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] h-[480px] ml-[2rem] mt-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-between items-center">
               <div className="flex justify-center items-center">
                 <div className="bg-[rgb(142,89,255)] rounded w-4 h-8"></div>
-                <h2 className="font-montserrat font-semibold text-lg ml-2">
+                <h2 className="font-montserrat font-semibold text-lg ml-2 max-w-870:text-base">
                   Localidad de los pacientes
                 </h2>
               </div>
               <Switch
                 isSelected={activeMap}
                 onValueChange={setActiveMap}
-                className="font-montserrat font-semibold"
+                className="font-montserrat font-semibold "
                 size="sm"
                 defaultSelected
                 color="secondary"
@@ -650,7 +662,7 @@ export default function Home() {
           </div>
         </div>
         <div>
-          <div className="bg-white w-[340px] max-w-1300:w-[290px] h-[480px]  mr-4 mb-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[340px] max-w-1300:w-[290px] h-[480px] max-w-870:h-[450px] mr-4 mb-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-[rgb(255,188,153)] rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
@@ -697,14 +709,14 @@ export default function Home() {
               })}
             </ul>
           </div>
-          <div className="bg-white w-[340px] h-[480px] max-w-1300:w-[290px]  mr-4 mb-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[340px] max-w-870:h-[450px] h-[480px] max-w-1300:w-[290px]  mr-4 mb-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-[#B1E5FC] rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
                 Métricas importantes
               </h2>
             </div>
-            <div className="w-100% h-[290px] max-w-1300:w-[250px] border-[rgb(204,204,204)] p-4 pb-0 border-solid border-[1px] mt-4 rounded flex  items-center flex-col">
+            <div className="w-100% h-[290px] max-w-1300:w-[250px] border-[rgb(204,204,204)] p-4 pb-0 border-solid border-[1px] mt-4 rounded-2xl flex  items-center flex-col">
               <h5 className="font-montserrat text-sm font-semibold text-center">
                 Distribución de Pacientes por Género
               </h5>
