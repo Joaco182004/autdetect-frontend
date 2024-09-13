@@ -70,7 +70,7 @@ export default function Home() {
   const [widthContainer,setWidthContainer]= useState(650);
   const [heightContainer,setHeightContainer]= useState(300);
   const [widthPie,setWidthPie] = useState(190)
-  const rowsPerPage = 7;
+  const [rowsPerPage,setRowsPerPage] = useState(7);
 
   // Function Definitions
 
@@ -430,6 +430,11 @@ export default function Home() {
       setWidthContainer(500)
       setWidthPie(200)
     }
+    if(width < 550){
+      setWidthContainer(400)
+      setHeightContainer(200)
+      page
+    }
   };
   // Effects
 
@@ -446,7 +451,7 @@ export default function Home() {
     loadEvaluations();
     loadEvaluationsAutism();
     loadPatientsByDistrict();
-    const geojsonUrl =
+    const geojsonUrl =  
       "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
     fetch(geojsonUrl)
       .then((response) => {
@@ -481,12 +486,12 @@ export default function Home() {
 
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
-      <h1 className="tracking-in-expand  font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
+      <h1 className="tracking-in-expand  font-montserrat font-semibold mb-[2rem] ml-[2rem] max-w-550:ml-[1rem] pt-[2rem] text-4xl">
         Dashboard
       </h1>
       <div className=" w-full h-auto pb-4 cont-section-dash flex gap-4 max-w-810:flex-col">
         <div>
-          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] max-w-810:w-[650px] max-w-810:h-[480px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] h-[480px] ml-[2rem] rounded-md flex flex-col items-center">
+          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] max-w-810:w-[650px] max-w-810:h-[480px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-550:h-[400px] h-[480px] ml-[2rem] max-w-550:ml-[1rem] rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-blue-500 rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
@@ -507,10 +512,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="ml-4 font-montserrat">
-                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem] max-w-1080:text-[1rem] max-w-950:text-[0.85rem] max-w-810:text-[1rem] max-w-600:text-[0.85rem]">
+                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.8rem] max-w-1080:text-[1rem] max-w-950:text-[0.85rem] max-w-810:text-[1rem] max-w-600:text-[0.85rem] max-w-550:text-[0.573rem]">
                     Total de pacientes evaluados
                   </p>
-                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem] max-w-810:text-[1rem] max-w-600:text-[0.9rem]">
+                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem] max-w-810:text-[1rem] max-w-600:text-[0.9rem] max-w-550:text-[0.68rem]">
                     {questionnaire.length} pacientes
                   </h3>
                 </div>
@@ -527,10 +532,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="ml-4 font-montserrat">
-                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.85rem] max-w-1080:text-[1rem] max-w-950:text-[0.85rem] max-w-810:text-[1rem] max-w-600:text-[0.85rem]">
+                  <p className="text-[rgb(156,159,162)] font-semibold max-w-1185:text-[0.85rem] max-w-1080:text-[1rem] max-w-950:text-[0.85rem] max-w-810:text-[1rem] max-w-600:text-[0.85rem] max-w-550:text-[0.573rem]">
                     Pacientes totales con TEA
                   </p>
-                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem] max-w-810:text-[1rem] max-w-600:text-[0.9rem]">
+                  <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem] max-w-810:text-[1rem] max-w-600:text-[0.9rem] max-w-550:text-[0.68rem]">
                     {countAutism()} pacientes
                   </h3>
                 </div>
@@ -599,7 +604,7 @@ export default function Home() {
               )}
             </div>)}
           </div>
-          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] h-[480px] max-w-810:h-[480px] max-w-810:w-[650px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] ml-[2rem] mt-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] h-[480px] max-w-810:h-[480px] max-w-810:w-[650px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-550:h-[400px] ml-[2rem] max-w-550:ml-[1rem] mt-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-between items-center">
               <div className="flex justify-center items-center">
                 <div className="bg-[rgb(142,89,255)] rounded w-4 h-8"></div>
@@ -638,7 +643,7 @@ export default function Home() {
               </MapContainer>
             ) : (
               <Table
-                className="mt-4 w-[95%] font-montserrat"
+                className="mt-4 w-[95%]  font-montserrat"
                 aria-label="Example table with client side pagination"
                 bottomContent={
                   <div className="flex w-full justify-center">
@@ -682,25 +687,25 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="hidden max-w-810:flex ml-8 max-w-600:flex-col">
-        <div className="bg-white w-[340px] max-w-1300:w-[290px] h-[480px] max-w-870:h-[450px] max-w-810:w-[317px] max-w-810:h-[480px] max-w-700:w-[292px] max-w-650:w-[268px] max-w-600:w-[500px] mr-4 mb-4 rounded-md flex flex-col items-center ">
+        <div className="hidden max-w-810:flex ml-8 max-w-550:ml-4 max-w-600:flex-col">
+        <div className="bg-white w-[340px] max-w-1300:w-[290px] h-[480px] max-w-870:h-[450px] max-w-810:w-[317px] max-w-810:h-[480px] max-w-700:w-[292px] max-w-650:w-[268px] max-w-600:w-[500px] max-w-550:w-[400px] mr-4 mb-4 rounded-md flex flex-col items-center ">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-[rgb(255,188,153)] rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
                 Pacientes evaluados
               </h2>
             </div>
-            <div className="flex font-montserrat text-sm w-[315px] max-w-650:w-[250px] max-w-1300:w-[265px] max-w-600:w-[470px]  mt-4  text-[rgb(156,159,162)] font-semibold  ">
+            <div className="flex font-montserrat text-sm w-[315px] max-w-650:w-[250px] max-w-1300:w-[265px] max-w-600:w-[470px] max-w-550:w-[370px] mt-4  text-[rgb(156,159,162)] font-semibold  ">
               <p className="w-[75%]">Paciente</p>
               <p>Diagnóstico</p>
             </div>
-            <div className="h-[1px] w-[315px] max-w-1300:w-[265px] max-w-650:w-[250px] max-w-600:w-[470px] bg-[rgb(204,204,204)] line"></div>
+            <div className="h-[1px] w-[315px] max-w-1300:w-[265px] max-w-650:w-[250px] max-w-600:w-[470px] max-w-550:w-[370px] bg-[rgb(204,204,204)] line"></div>
             <ul className="w-full flex flex-col  items-center">
               {patients.map((ele) => {
                 const result = searchQuestionnaire(ele.id);
                 return (
                   <li key={ele.id}>
-                    <div className="w-[315px] max-w-1300:w-[265px] max-w-600:w-[470px] max-w-650:w-[250px] mt-4 flex h-auto p-1 items-center">
+                    <div className="w-[315px] max-w-1300:w-[265px] max-w-600:w-[470px] max-w-650:w-[250px] max-w-550:w-[370px] mt-4 flex h-auto p-1 items-center">
                       <div className="flex w-[75%]">
                         <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
                           {ele.infant_name.length == 1? ele.infant_name.split(" ")[0][0] +
@@ -729,14 +734,14 @@ export default function Home() {
               })}
             </ul>
           </div>
-          <div className="bg-white w-[340px] max-w-870:h-[450px] max-w-600:w-[500px] h-[480px] max-w-1300:w-[290px] max-w-810:w-[317px] max-w-810:h-[480px] max-w-700:w-[292px] max-w-650:w-[268px] mr-4 mb-4 rounded-md flex flex-col items-center">
+          <div className="bg-white w-[340px] max-w-870:h-[450px] max-w-600:w-[500px] h-[480px] max-w-1300:w-[290px] max-w-810:w-[317px] max-w-810:h-[480px] max-w-700:w-[292px] max-w-650:w-[268px] max-w-550:text-[0.68rem] max-w-550:w-[400px] mr-4 mb-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-[#B1E5FC] rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
                 Métricas importantes
               </h2>
             </div>
-            <div className="w-100% h-[290px] max-w-1300:w-[250px] border-[rgb(204,204,204)] max-w-600:w-[470px] p-4 pb-0 border-solid border-[1px] mt-4 rounded-2xl flex  items-center flex-col">
+            <div className="w-100% h-[290px] max-w-1300:w-[250px] border-[rgb(204,204,204)] max-w-600:w-[470px] max-w-550:w-[360px] p-4 pb-0 border-solid border-[1px] mt-4 rounded-2xl flex  items-center flex-col">
               <h5 className="font-montserrat text-sm font-semibold text-center">
                 Distribución de Pacientes por Género
               </h5>
@@ -780,7 +785,7 @@ export default function Home() {
               </div>
             </div>
             <Table
-              className="mt-2 w-[302px] max-w-1300:w-[258px] max-w-600:w-[470px] font-montserrat text-xs"
+              className="mt-2 w-[302px] max-w-1300:w-[258px] max-w-600:w-[470px] max-w-550:w-[360px] font-montserrat text-xs"
               aria-label="Example static collection table"
             >
               <TableHeader>
