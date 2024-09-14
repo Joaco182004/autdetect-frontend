@@ -35,6 +35,7 @@ export default function MCHAT() {
   const [view, setView] = useState(false);
   const [patients, setPatients] = useState([]);
   const [patientChoose, setPatientChoose] =useState(null)
+ 
   async function sendEmailCode(){
     const data ={
       name_father: patientChoose.guardian_name,
@@ -252,11 +253,11 @@ export default function MCHAT() {
 
   const navigate = useNavigate();
   return (
-    <section className="w-full h-full overflow-auto outline-none select-none">
-      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
+    <section className="w-full h-full overflow-auto max-w-395:overflow-x-hidden outline-none select-none">
+      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl max-w-680:text-3xl max-w-570:text-2xl max-w-470:text-xl max-w-425:ml-[1rem]">
         Cuesitonario de comportamiento
       </h1>
-      <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4">
+      <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4 max-w-425:ml-4 max-w-425:w-[90%]">
         <form className="w-[350px]">
           <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
             {!view ? "Registro del paciente" : "Paciente Evaluado"}
@@ -268,7 +269,7 @@ export default function MCHAT() {
             value={infantDni}
             onChange={(e) => setInfantDni(e.target.value)}
             variant="bordered"
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
           />
           <Input
             isReadOnly={view}
@@ -277,7 +278,7 @@ export default function MCHAT() {
             value={infantName}
             onChange={(e) => setInfantName(e.target.value)}
             variant="bordered"
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
           />
 
           <Select
@@ -286,7 +287,7 @@ export default function MCHAT() {
             placeholder="Seleccione el género del paciente"
             selectedKeys={[gender]}
             onChange={(e) => setGender(e.target.value)}
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
           >
             {[
               { key: "M", label: "Masculino" },
@@ -304,7 +305,7 @@ export default function MCHAT() {
           </Select>
           <DateInput
             isReadOnly={view}
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
             variant="bordered"
             label="Fecha de nacimiento del paciente"
             value={birthDate}
@@ -317,7 +318,7 @@ export default function MCHAT() {
             value={guardianDni}
             onChange={(e) => setGuardianDni(e.target.value)}
             variant="bordered"
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
           />
           <Input
             isReadOnly={view}
@@ -326,7 +327,7 @@ export default function MCHAT() {
             value={guardianName}
             onChange={(e) => setGuardianName(e.target.value)}
             variant="bordered"
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
           />
           <Input
             isReadOnly={view}
@@ -335,7 +336,7 @@ export default function MCHAT() {
             value={guardianEmail}
             onChange={(e) => setGuardianEmail(e.target.value)}
             variant="bordered"
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
           />
           <Input
             isReadOnly={view}
@@ -344,10 +345,10 @@ export default function MCHAT() {
             value={contactPhone}
             onChange={(e) => setContactPhone(e.target.value)}
             variant="bordered"
-            className="mb-2 font-montserrat"
+            className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
           />
           <Select
-            className="font-montserrat"
+            className="font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
             variant="bordered"
             label="Distrito"
             placeholder="Seleccione el distrito"
@@ -366,15 +367,19 @@ export default function MCHAT() {
             ))}
           </Select>
         </form>
-        <div className="flex mt-6">
-          <div className="w-6 h-6 bg-blue-500 flex justify-center items-center font-montserrat font-semibold text-white">
+        <div className="flex  w-full mt-6">
+          <div>
+          <div className="w-6 h-6 bg-blue-500 rounded-full flex justify-center items-center font-montserrat font-semibold text-white">
             1
           </div>
+          </div>
+          <div>
           <p className="ml-2 mr-2 font-montserrat text-sm">
             Si usted señala algo al otro lado de la habitación, ¿su hijo/a lo
             mira? (POR EJEMPLO, Si usted señala a un juguete, un peluche o un
             animal, ¿su hijo/a lo mira?)
           </p>
+          </div>
         </div>
         <RadioGroup
           label="Seleccione la respuesta"
@@ -391,22 +396,26 @@ export default function MCHAT() {
             No
           </Radio>
         </RadioGroup>
-        <div className="flex mt-6">
-          <div className="w-6 h-6 bg-blue-500 flex justify-center items-center font-montserrat font-semibold text-white">
+        <div className="flex w-full mt-6">
+          <div>
+          <div className="w-6 h-6 bg-blue-500 rounded-full flex justify-center items-center font-montserrat font-semibold text-white">
             2
           </div>
+          </div>
+          <div>
           <p className="ml-2 mr-2 font-montserrat text-sm">
             Si usted señala algo al otro lado de la habitación, ¿su hijo/a lo
             mira? (POR EJEMPLO, Si usted señala a un juguete, un peluche o un
             animal, ¿su hijo/a lo mira?)
           </p>
+          </div>
         </div>
         <RadioGroup
           label="Seleccione la respuesta"
           orientation="horizontal"
           className="font-montserrat text-sm ml-7 mt-2"
-          value={q2}
-          onValueChange={setQ2}
+          value={q1}
+          onValueChange={setQ1}
           isReadOnly={view}
         >
           <Radio className="text-xs" value={1}>

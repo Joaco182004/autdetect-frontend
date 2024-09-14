@@ -3,7 +3,7 @@ import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { getPsychologistById } from "../api/psychologist.api";
 import { login } from "../api/authorization.api.js";
-import { IdentificationIcon, AtSymbolIcon } from "@heroicons/react/24/solid";
+import { IdentificationIcon, AtSymbolIcon, CreditCardIcon } from "@heroicons/react/24/solid";
 import { Divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import {
@@ -229,12 +229,12 @@ export default function Profile() {
     }
   }
   return (
-    <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-full  outline-none select-none overflow-hidden max-w-820:overflow-y-auto">
+    <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-full max-w-820:h-auto  outline-none select-none overflow-hidden max-w-820:overflow-y-auto">
       <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
         Perfil
       </h1>
       <div className="flex h-full w-full max-w-820:flex-col">
-        <div className="h-[80%] w-[40%] flex flex-col max-w-820:w-[90%] max-w-820:h-[400px]  items-center bg-white ml-8 content-list rounded-md pb-4 max-w-820:py-4">
+        <div className="h-[80%] w-[40%] flex flex-col max-w-820:w-[90%] max-w-820:h-[300px] max-w-500:w-[100%] max-w-500:mx-0 items-center bg-white ml-8 content-list rounded-md pb-4 max-w-820:py-4">
           {psychologist && (
             <div className="flex max-w-820:w-full flex-col max-w-820:flex-row max-w-820:justify-around max-w-820:h-full items-center font-montserrat">
               <div className="flex flex-col justify-center items-center">
@@ -248,34 +248,34 @@ export default function Profile() {
               </p>
               </div>
               <div className="max-w-820:h-full max-w-820:flex max-w-820:flex-col max-w-820:items-center max-w-820:justify-center ">
-              <div className="flex flex-col h-[60px]   rounded-xl my-2 justify-center  items-center w-[320px]">
+              <div className="flex flex-col h-[60px] max-w-600:w-[100%]   rounded-xl my-2 justify-center  items-center w-[320px]">
                 <div className="flex items-center ml-4">
-                  <IdentificationIcon className="w-8 text-blue-600 mr-1"></IdentificationIcon>
-                  <h5 className="font-semibold">N° de Documento:</h5>
+                  <IdentificationIcon className="w-8 max-w-425:w-6 text-blue-600 mr-1"></IdentificationIcon>
+                  <h5 className="font-semibold max-w-425:text-[0.85rem]">N° de Documento:</h5>
                 </div>
-                <p className="ml-4 mt-2">{psychologist.dni}</p>
+                <p className="ml-4 mt-2 max-w-425:text-[0.85rem]">{psychologist.dni}</p>
               </div>
-              <Divider className="my-1" />
-              <div className="flex flex-col h-[60px] rounded-xl my-2 justify-center  items-center w-[320px]">
+              <Divider className="my-1 max-w-600:w-[100%] max-w-425:w-[90%]" />
+              <div className="flex flex-col h-[60px] max-w-600:w-[100%]  rounded-xl my-2 justify-center  items-center w-[320px]">
                 <div className="flex items-center ml-4">
-                  <IdentificationIcon className="w-8 text-blue-600 mr-1"></IdentificationIcon>
-                  <h5 className="font-semibold">N° de Licencia:</h5>
+                  <CreditCardIcon className="w-8 max-w-425:w-6 text-blue-600 mr-1"></CreditCardIcon>
+                  <h5 className="font-semibold max-w-425:text-[0.85rem]">N° de Licencia:</h5>
                 </div>
-                <p className="ml-4 mt-2">{psychologist.tuition_number}</p>
+                <p className="ml-4 mt-2 max-w-425:text-[0.85rem]">{psychologist.tuition_number}</p>
               </div>
-              <Divider className="my-1" />
-              <div className="flex flex-col  h-[60px]  rounded-xl my-2 justify-center  items-center w-[320px]">
+              <Divider className="my-1 max-w-600:w-[100%] max-w-425:w-[90%]" />
+              <div className="flex flex-col  h-[60px] max-w-600:w-[100%]   rounded-xl my-2 justify-center  items-center w-[320px]">
                 <div className="flex items-center ml-4">
-                  <AtSymbolIcon className="w-8 text-blue-600 mr-1"></AtSymbolIcon>
-                  <h5 className="font-semibold">Correo Electrónico:</h5>
+                  <AtSymbolIcon className="w-8 max-w-425:w-6 text-blue-600 mr-1"></AtSymbolIcon>
+                  <h5 className="font-semibold max-w-425:text-[0.85rem]">Correo Electrónico:</h5>
                 </div>
-                <p className="ml-4 mt-2">{psychologist.email}</p>
+                <p className="ml-4 mt-2 max-w-425:text-[0.85rem]">{psychologist.email}</p>
               </div>
               </div>
             </div>
           )}
         </div>
-        <div className="h-[80%] w-[70%] flex flex-col items-center max-w-820:mt-4 max-w-820:w-[90%] max-w-820:mx-8  max-w-820:h-[400px]  bg-white mx-6 content-list rounded-md pb-4">
+        <div className="h-[80%] w-[70%] flex flex-col items-center max-w-820:my-4 max-w-820:w-[90%] max-w-500:w-[100%] max-w-500:mx-0 max-w-820:mx-8  max-w-820:h-[100%]  bg-white mx-6 content-list rounded-md pb-4">
           <div className="w-[97%] font-montserrat">
             <Tabs
               className="mt-4"
@@ -284,7 +284,7 @@ export default function Profile() {
               aria-label="Options"
             >
               <Tab
-                className="font-semibold"
+                className="font-semibold max-w-450:text-[0.8rem] max-w-425:text-xs max-w-395:text-[0.65rem]"
                 key="photos"
                 title="Modificación de Correo"
               >
@@ -307,7 +307,7 @@ export default function Profile() {
                           placeholder="Ingrese su contraseña"
                           endContent={
                             <button
-                              className="focus:outline-none"
+                              className="focus:outline-none "
                               type="button"
                               onClick={toggleVisibility}
                               aria-label="toggle password visibility"
@@ -320,7 +320,7 @@ export default function Profile() {
                             </button>
                           }
                           type={isVisible ? "text" : "password"}
-                          className="my-4 w-96"
+                          className="my-4 w-96 max-w-450:w-72"
                           value={passwordVerification}
                           onChange={(e) =>
                             setPasswordVerification(e.target.value)
@@ -347,7 +347,7 @@ export default function Profile() {
                           realizará el cambio de correo electrónico.
                         </p>
                         <Input
-                          className="my-4 w-96"
+                          className="my-4 w-96 max-w-450:w-72"
                           type="email"
                           label="Correo Electrónico"
                           placeholder="Ingrese el nuevo correo"
@@ -369,7 +369,7 @@ export default function Profile() {
                           verificación que se ha enviado al nuevo correo.
                         </p>
                         <Input
-                          className="my-4 w-96"
+                          className="my-4 w-96 max-w-450:w-72"
                           type="email"
                           label="Código de Verificación"
                           placeholder="Ingrese el código de 6 dígitos"
@@ -388,7 +388,7 @@ export default function Profile() {
                 </Card>
               </Tab>
               <Tab
-                className="font-semibold"
+                className="font-semibold max-w-450:text-[0.8rem] max-w-425:text-xs max-w-395:text-[0.65rem]"
                 key="music"
                 title="Modificación de Contraseña"
               >
@@ -422,7 +422,7 @@ export default function Profile() {
                             </button>
                           }
                           type={isVisible ? "text" : "password"}
-                          className="my-4 w-96"
+                          className="my-4 w-96 max-w-450:w-72"
                           value={passwordChange1}
                           onChange={(e) => setPasswordChange1(e.target.value)}
                         />
@@ -464,7 +464,7 @@ export default function Profile() {
                             </button>
                           }
                           type={isVisible ? "text" : "password"}
-                          className="my-4 w-96"
+                          className="my-4 w-96 max-w-450:w-72"
                           value={passwordChange2}
                           onChange={(e) => setPasswordChange2(e.target.value)}
                         />
