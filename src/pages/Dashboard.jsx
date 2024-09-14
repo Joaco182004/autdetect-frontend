@@ -229,7 +229,7 @@ export default function Dashboard() {
           <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            placement="top-center"
+            placement="center"
             className="font-montserrat z-[9999]"
           >
             <ModalContent>

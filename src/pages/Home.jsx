@@ -721,7 +721,7 @@ export default function Home() {
                     <div className="w-[315px] max-w-1300:w-[265px] max-w-600:w-[470px] max-w-650:w-[250px] max-w-550:w-[370px] max-w-425:w-[300px] mt-4 flex h-auto p-1 items-center">
                       <div className="flex w-[75%]">
                         <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
-                          {ele.infant_name.length == 1? ele.infant_name.split(" ")[0][0] +
+                          {ele.infant_name.split(" ").length>1? ele.infant_name.split(" ")[0][0] +
                             ele.infant_name.split(" ")[1][0]: ele.infant_name[0]}
                         </div>
                         <div className="ml-2 font-montserrat text-sm">
@@ -855,7 +855,7 @@ export default function Home() {
                     <div className="w-[315px] max-w-1300:w-[265px] mt-4 flex h-auto p-1 items-center">
                       <div className="flex w-[75%]">
                         <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
-                          {ele.infant_name.length == 1? ele.infant_name.split(" ")[0][0] +
+                        {ele.infant_name.split(" ").length>1? ele.infant_name.split(" ")[0][0] +
                             ele.infant_name.split(" ")[1][0]: ele.infant_name[0]}
                         </div>
                         <div className="ml-2 font-montserrat text-sm">

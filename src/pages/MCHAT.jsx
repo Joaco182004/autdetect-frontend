@@ -428,7 +428,7 @@ export default function MCHAT() {
         <Modal 
         isOpen={isOpen} 
         onOpenChange={onOpenChange}
-        placement="top-center"
+        placement="center"
         className="font-montserrat z-50"
       >
         <ModalContent>

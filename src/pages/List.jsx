@@ -233,7 +233,7 @@ export default function List() {
           <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            placement="top-center"
+            placement="center"
             className="font-montserrat w-[400px] max-h-[550px] overflow-auto"
           >
             <ModalContent>
