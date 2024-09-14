@@ -24,9 +24,11 @@ export default {
         'max-w-600': { 'raw': '(max-width: 600px)' },
         'max-w-550': { 'raw': '(max-width: 550px)' },
         'max-w-530': { 'raw': '(max-width: 530px)' },
+        'max-w-500': { 'raw': '(max-width: 500px)' },
         'max-w-450': { 'raw': '(max-width: 450px)' },
         'max-w-430': { 'raw': '(max-width: 430px)' }, 
         'max-w-425': { 'raw': '(max-width: 425px)' }, 
+        'max-w-395': { 'raw': '(max-width: 395px)' }, 
         'max-h-849': { 'raw': '(max-height: 849px)' },
         'max-h-800': { 'raw': '(max-width: 800px)' },// Definir un nuevo breakpoint personalizado
       },

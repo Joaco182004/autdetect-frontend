@@ -214,10 +214,10 @@ export default function List() {
 
   return (
     <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-[full] overflow-x-hidden outline-none select-none ">
-      <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
+      <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl max-w-425:text-3xl max-w-425:ml-4">
         Lista de pacientes
       </h1>
-      <div className="h-[auto]  flex flex-col items-center mb-4  bg-white mx-8 content-list rounded-md pb-4">
+      <div className="h-[auto]  flex flex-col items-center mb-4  bg-white mx-8 max-w-650:mx-4 max-w-650:w-[95%] max-w-450:w-[100%] max-w-450:mx-0 max-w-450:rounded-none content-list rounded-md pb-4">
         <div className="w-[100%] flex items-center justify-between bg-red p-2 rounded-md my-4">
           <Input
             isClearable
@@ -227,7 +227,7 @@ export default function List() {
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             onClear={() => setFilter("")}
-            className="w-[250px] outline-none ml-4 font-montserrat"
+            className="w-[250px] outline-none ml-4  max-w-425:ml-2 font-montserrat"
           />
           
           <Modal
@@ -361,7 +361,7 @@ export default function List() {
           className="width-content rounded-2xl border-1 font-montserrat"
           aria-label="Tabla de Pacientes"
           bottomContent={
-            <div className=" flex w-full justify-center">
+            <div className="flex w-full justify-center">
               <Pagination
                 isCompact
                 showControls

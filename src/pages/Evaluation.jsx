@@ -117,10 +117,10 @@ export default function Evaluation() {
 
   return (
     <section className="tracking-in-expand2 w-full h-full overflow-auto outline-none select-none">
-      <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
+      <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl max-w-450:text-3xl max-w-450:ml-4">
         Lista de evaluaciones
       </h1>
-      <div className="h-[auto] flex flex-col items-center bg-white mx-8 content-list rounded-md pb-4">
+      <div className="h-[auto] flex flex-col items-center bg-white mx-8 content-list rounded-md pb-4 max-w-650:mx-4 max-w-650:w-[95%] max-w-450:w-[100%] max-w-450:mx-0 max-w-450:rounded-none">
         <div className="w-[100%] flex items-center justify-between bg-red p-2 rounded-md my-4">
           <Input
             isClearable
@@ -130,13 +130,13 @@ export default function Evaluation() {
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             onClear={() => setFilter("")}
-            className="w-[250px] outline-none ml-4 font-montserrat"
+            className="w-[250px] max-w-500:w-[200px] max-w-395:text-xs outline-none ml-4 font-montserrat"
           />
           <Button
             onClick={() => {
               navigate("/app/evaluaciones/mchat");
             }}
-            className="mr-4 h-[40px] w-[150px] font-montserrat font-medium"
+            className="mr-4 h-[40px] w-[150px] max-w-425:w-[130px] max-w-395:w-[100px] max-w-395:h-[50px] max-w-395:text-wrap  max-w-425:text-xs  font-montserrat font-medium"
             color="primary"
             variant="solid"
           >
