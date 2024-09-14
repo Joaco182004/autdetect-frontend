@@ -18,6 +18,7 @@ export default {
         'max-w-1080': { 'raw': '(max-width: 1080px)' },
         'max-w-950': { 'raw': '(max-width: 950px)' },
         'max-w-870': { 'raw': '(max-width: 870px)' },
+        'max-w-820': { 'raw': '(max-width: 820px)' },
         'max-w-810': { 'raw': '(max-width: 810px)' },
         'max-w-780': { 'raw': '(max-width: 780px)' },
         'max-w-650': { 'raw': '(max-width: 650px)' },

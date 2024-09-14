@@ -229,14 +229,15 @@ export default function Profile() {
     }
   }
   return (
-    <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-full  outline-none select-none overflow-hidden">
+    <section className="tracking-in-expand2 bg-[#f4f4f4]  w-full h-full  outline-none select-none overflow-hidden max-w-820:overflow-y-auto">
       <h1 className="tracking-in-expand font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl">
         Perfil
       </h1>
-      <div className="flex h-full w-full">
-        <div className="h-[80%] w-[40%] flex flex-col  items-center bg-white ml-8 content-list rounded-md pb-4">
+      <div className="flex h-full w-full max-w-820:flex-col">
+        <div className="h-[80%] w-[40%] flex flex-col max-w-820:w-[90%] max-w-820:h-[400px]  items-center bg-white ml-8 content-list rounded-md pb-4 max-w-820:py-4">
           {psychologist && (
-            <div className="flex flex-col items-center font-montserrat">
+            <div className="flex max-w-820:w-full flex-col max-w-820:flex-row max-w-820:justify-around max-w-820:h-full items-center font-montserrat">
+              <div className="flex flex-col justify-center items-center">
               <div className="w-36 h-36 mt-4 rounded-full bg-red-500"></div>
               <p className="mt-2 text-xl font-montserrat font-semibold mb-2">
                 {psychologist.full_name}
@@ -245,7 +246,9 @@ export default function Profile() {
               <p className="text-xs mt-2 mb-4 text-blue-500 cursor-pointer">
                 Cambiar Foto de Perfil
               </p>
-              <div className="flex flex-col h-[60px]  rounded-xl my-2 justify-center  items-center w-[320px]">
+              </div>
+              <div className="max-w-820:h-full max-w-820:flex max-w-820:flex-col max-w-820:items-center max-w-820:justify-center ">
+              <div className="flex flex-col h-[60px]   rounded-xl my-2 justify-center  items-center w-[320px]">
                 <div className="flex items-center ml-4">
                   <IdentificationIcon className="w-8 text-blue-600 mr-1"></IdentificationIcon>
                   <h5 className="font-semibold">N° de Documento:</h5>
@@ -268,10 +271,11 @@ export default function Profile() {
                 </div>
                 <p className="ml-4 mt-2">{psychologist.email}</p>
               </div>
+              </div>
             </div>
           )}
         </div>
-        <div className="h-[80%] w-[70%] flex flex-col items-center  bg-white mx-6 content-list rounded-md pb-4">
+        <div className="h-[80%] w-[70%] flex flex-col items-center max-w-820:mt-4 max-w-820:w-[90%] max-w-820:mx-8  max-w-820:h-[400px]  bg-white mx-6 content-list rounded-md pb-4">
           <div className="w-[97%] font-montserrat">
             <Tabs
               className="mt-4"
