@@ -3,7 +3,7 @@ import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { getPsychologistById } from "../api/psychologist.api";
 import { login } from "../api/authorization.api.js";
-import { IdentificationIcon, AtSymbolIcon, CreditCardIcon } from "@heroicons/react/24/solid";
+import { IdentificationIcon, AtSymbolIcon, CreditCardIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import {
@@ -238,7 +238,9 @@ export default function Profile() {
           {psychologist && (
             <div className="flex max-w-820:w-full flex-col max-w-820:flex-row max-w-820:justify-around max-w-820:h-full items-center font-montserrat">
               <div className="flex flex-col justify-center items-center">
-              <div className="w-36 h-36 mt-4 rounded-full bg-red-500"></div>
+              <div className="w-36 h-36 mt-4 rounded-full">
+                <UserCircleIcon className="w-full h-fulll text-blue-500 rounded-full"></UserCircleIcon>
+              </div>
               <p className="mt-2 text-xl font-montserrat font-semibold mb-2">
                 {psychologist.full_name}
               </p>
