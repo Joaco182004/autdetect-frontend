@@ -190,9 +190,16 @@ export default function ChangePassword() {
               <Button
                 onClick={validateEmails}
                 color="primary"
-                className="font-semibold"
+                className="font-semibold max-w-425:text-xs"
               >
                 Enviar código de Verificación
+              </Button>
+              <Button
+                onClick={()=>{navigate("/")}}
+                color="default"
+                className="font-semibold ml-2 w-32"
+              >
+                Cancelar
               </Button>
             </CardFooter>
           </>
@@ -216,9 +223,16 @@ export default function ChangePassword() {
               <Button
                 onClick={validateCodeForm}
                 color="primary"
-                className="font-semibold"
+                className="font-semibold max-w-425:text-xs"
               >
                 Validar código de Verificación
+              </Button>
+              <Button
+                onClick={()=>{navigate("/")}}
+                color="default"
+                className="font-semibold ml-2 w-32"
+              >
+                Cancelar
               </Button>
             </CardFooter>
           </>
@@ -259,6 +273,13 @@ export default function ChangePassword() {
                 className="font-semibold"
               >
                 Modificar Contraseña
+              </Button>
+              <Button
+                onClick={()=>{navigate("/")}}
+                color="default"
+                className="font-semibold ml-2"
+              >
+                Cancelar
               </Button>
             </CardFooter>
           </>
