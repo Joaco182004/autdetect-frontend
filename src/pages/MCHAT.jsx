@@ -2,6 +2,8 @@ import { React, useEffect, useState } from "react";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { savePatient } from "../api/infantPatient.api";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
+
 import {
   saveQuestionnaire,
   getQuestionnaireById,
@@ -56,7 +58,8 @@ export default function MCHAT() {
   const [patients, setPatients] = useState([]);
   const [patientChoose, setPatientChoose] = useState(null);
   const [resultView,setResultView] = useState(false);
-
+  const [result,setResult] = useState([]);
+  const navigate = useNavigate()
   async function sendEmailCode() {
     const data = {
       name_father: patientChoose.guardian_name,
@@ -121,6 +124,7 @@ export default function MCHAT() {
     };
     const predict = await predictModelDiagnosis(answers)
     setResultView(true)
+    setResult(predict.data)
   }
   useEffect(() => {
     getPatients();
@@ -286,9 +290,9 @@ export default function MCHAT() {
     { key: "Villa El Salvador", label: "Villa El Salvador" },
     { key: "Villa María del Triunfo", label: "Villa María del Triunfo" },
   ];
-
-  const navigate = useNavigate();
+  
   return (
+    
     <section className="w-full h-full overflow-auto max-w-395:overflow-x-hidden outline-none select-none">
       {!resultView ?(
         <>
@@ -848,7 +852,89 @@ export default function MCHAT() {
         </div>
       </div>
         </>
-      ):<h1>Hola</h1>}
+      ):<>
+      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl max-w-680:text-3xl max-w-570:text-2xl max-w-470:text-xl max-w-425:ml-[1rem]">
+      Cuesitonario de comportamiento
+    </h1>
+    <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4 max-w-425:ml-4 max-w-425:w-[90%]">
+    <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
+            Resultado de la Evaluación
+          </h2>
+          <Table aria-label="Example static collection table" className="font-montserrat">
+      <TableHeader className="font-semibold">
+        <TableColumn>DNI</TableColumn>
+        <TableColumn>Nombre</TableColumn>
+        <TableColumn>Fecha de Nacimiento</TableColumn>
+        <TableColumn>Fecha de Evaluación</TableColumn>
+        <TableColumn>Resultado</TableColumn>
+        <TableColumn>Probabilidad</TableColumn>
+      </TableHeader>
+      <TableBody className="font-medium">
+        <TableRow key="1">
+          <TableCell>{infantDni}</TableCell>
+          <TableCell>{infantName}</TableCell>
+          <TableCell>hoy</TableCell>
+          <TableCell>hoy</TableCell>
+          <TableCell>{result?result.prediccion: 0}
+          </TableCell>
+          <TableCell>{result?result.probabilidad: 0}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+    <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          placement="center"
+          className="font-montserrat z-50"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Enviar Reporte
+                </ModalHeader>
+                <ModalBody>
+                  <p>
+                    ¿Desea enviar el reporte por correo al padre de familia?
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="flat" onPress={onClose}>
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      sendEmailCode();
+                      onClose();
+                    }}
+                    color="primary"
+                  >
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      <div className="mt-4">
+      <Button
+                className="w-[150px] font-montserrat font-medium"
+                color="primary"
+                onClick={onOpen}
+              >
+                Enviar Reporte
+              </Button>
+              <Button
+                className="ml-4 w-[150px] font-montserrat font-medium"
+                color="default"
+                onClick={() => {
+                  navigate("/app/evaluaciones/");
+                }}
+              >
+                Cerrar
+              </Button>
+      </div>
+      </div></>}
       <ToastContainer />
     </section>
   );
