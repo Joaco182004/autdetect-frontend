@@ -38,11 +38,18 @@ function Login() {
     const res = await getAllPsychologist();
     setPsychologist(res.data);
   }
-  useEffect(() => {
+  function handleResize(){
     const width = window.innerWidth;
     if(width < 450){
       setWidthInput(300)
     }
+  }
+  useEffect(() => {
+    handleResize();
+
+    // Añadir event listener para el cambio de tamaño
+    window.addEventListener('resize', handleResize);
+    
     getPsychologist();
   }, []);
   const handleSubmit = (e) => {

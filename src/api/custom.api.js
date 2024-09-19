@@ -95,3 +95,12 @@ export const sendEmailReport = (content) => {
 
     return axios.post('http://localhost:8000/reporte/',content,config);
 }
+export const predictModelDiagnosis = (content)=>{
+    const token = localStorage.getItem('token');
+    const config = {
+        headers: {
+            'Authorization': `Token ${token}`,
+                    }
+    };
+    return axios.post('http://localhost:8000/model/',content,config);
+}

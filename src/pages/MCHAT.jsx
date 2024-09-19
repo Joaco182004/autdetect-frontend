@@ -17,6 +17,7 @@ import {
   Link,
 } from "@nextui-org/react";
 import { getPatientById, getAllPatients } from "../api/infantPatient.api";
+import {predictModelDiagnosis} from "../api/custom.api";
 import {
   Input,
   DateInput,
@@ -54,6 +55,7 @@ export default function MCHAT() {
   const [view, setView] = useState(false);
   const [patients, setPatients] = useState([]);
   const [patientChoose, setPatientChoose] = useState(null);
+  const [resultView,setResultView] = useState(false);
 
   async function sendEmailCode() {
     const data = {
@@ -113,10 +115,12 @@ export default function MCHAT() {
       pregunta_8: q8,
       pregunta_9: q9,
       pregunta_10_Cociente_Espectro_Autista: q10,
-      Sexo: 1,
+      Sexo: gender == 'M'? 1:0,
       Ictericia: q11,
       Familiar_con_TEA: q12,
     };
+    const predict = await predictModelDiagnosis(answers)
+    setResultView(true)
   }
   useEffect(() => {
     getPatients();
@@ -286,7 +290,9 @@ export default function MCHAT() {
   const navigate = useNavigate();
   return (
     <section className="w-full h-full overflow-auto max-w-395:overflow-x-hidden outline-none select-none">
-      <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl max-w-680:text-3xl max-w-570:text-2xl max-w-470:text-xl max-w-425:ml-[1rem]">
+      {!resultView ?(
+        <>
+        <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl max-w-680:text-3xl max-w-570:text-2xl max-w-470:text-xl max-w-425:ml-[1rem]">
         Cuesitonario de comportamiento
       </h1>
       <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4 max-w-425:ml-4 max-w-425:w-[90%]">
@@ -805,7 +811,7 @@ export default function MCHAT() {
               <Button
                 className="w-[150px] font-montserrat font-medium"
                 color="primary"
-                onClick={registerEvaluation}
+                onClick={predictionModel}
               >
                 Predecir
               </Button>
@@ -841,6 +847,8 @@ export default function MCHAT() {
           )}
         </div>
       </div>
+        </>
+      ):<h1>Hola</h1>}
       <ToastContainer />
     </section>
   );
