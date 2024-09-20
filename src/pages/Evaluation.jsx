@@ -40,7 +40,10 @@ export default function Evaluation() {
     console.log(res.data.psychology);
     return res.data.psychology == localStorage.getItem("idPsychology");
   }
-
+  const truncarDecimales = (num, decimales) => {
+    const factor = Math.pow(10, decimales);
+    return Math.floor(num * factor) / factor;
+  };
   async function loadQuestionnaires() {
     const questionnaireFilter = [];
     const res = await getAllQuestionnaire();
@@ -85,7 +88,7 @@ export default function Evaluation() {
   }, []);
 
   const transformValue = (value) => {
-    return value === true ? "Autista" : "Neurotípico";
+    return value === true ? "Positivo" : "Negativo";
   };
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -181,7 +184,7 @@ export default function Evaluation() {
                   <TableCell>
                     {columnKey == "result"
                       ? transformValue(getKeyValue(item, columnKey))
-                      : getKeyValue(item, columnKey)}
+                      : columnKey == "probability"?truncarDecimales(getKeyValue(item, columnKey), 2):getKeyValue(item, columnKey)}
                   </TableCell>
                 )}
               </TableRow>
