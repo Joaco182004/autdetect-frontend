@@ -351,6 +351,7 @@ export default function MCHAT() {
               <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
                 {!view ? "Registro del paciente" : "Paciente Evaluado"}
               </h2>
+              {!view && (<p className="font-montserrat text-sm w-full">Debe completar todos los campos para el registro y evaluación del paciente. Si el paciente ya se encuentra registrado en el sistema, puede seleccionarlo en el primer campo. De lo contrario, deberá completar todos los campos requeridos para registrar al nuevo paciente.</p>)}
               <Select
               variant="bordered"
         label="Selecciona un paciente"
