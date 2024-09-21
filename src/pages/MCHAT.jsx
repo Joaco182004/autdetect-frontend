@@ -289,7 +289,7 @@ export default function MCHAT() {
           setQ11(questionnaireFind.ictericia);
           setQ12(questionnaireFind.familiar_con_tea);
           try {
-            const userFind = await getPatient(questionnaireFind.id);
+            const userFind = await getPatient(questionnaireFind.patient);
             setInfantDni(userFind.infant_dni);
             setInfantName(userFind.infant_name);
             const date = parseDate(userFind.birth_date);
@@ -953,7 +953,7 @@ export default function MCHAT() {
                             ? questionnaireView.result === true
                               ? "Positivo"
                               : "Negativo"
-                            : 0
+                            : "Negativo"
                           : 0}
                       </TableCell>
                       <TableCell>
@@ -1047,7 +1047,7 @@ export default function MCHAT() {
                         ? result.prediccion === 1
                           ? "Positivo"
                           : "Negativo"
-                        : 0
+                        : "Negativo"
                       : 0}
                   </TableCell>
                   <TableCell>
