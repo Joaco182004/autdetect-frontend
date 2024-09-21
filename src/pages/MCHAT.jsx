@@ -48,6 +48,7 @@ export default function MCHAT() {
   const [guardianName, setGuardianName] = useState("");
   const [guardianEmail, setGuardianEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
+  const [selectPatients, setSelectPatients] = useState("");
   const [district, setDistrict] = useState("");
   const [q1, setQ1] = useState(1);
   const [q2, setQ2] = useState(1);
@@ -66,8 +67,8 @@ export default function MCHAT() {
   const [patientChoose, setPatientChoose] = useState(null);
   const [resultView, setResultView] = useState(false);
   const [result, setResult] = useState([]);
-  const [idTest,setIdTest] =useState(0)
-  const [questionnaireView, setquestionnaireView] = useState([])
+  const [idTest, setIdTest] = useState(0);
+  const [questionnaireView, setquestionnaireView] = useState([]);
   const navigate = useNavigate();
   const currentDate = new Date();
   const formattedDate = `${String(currentDate.getDate()).padStart(
@@ -78,9 +79,9 @@ export default function MCHAT() {
     "0"
   )}-${currentDate.getFullYear()}`;
   async function sendEmailCode() {
-    console.log("Hola")
+    console.log("Hola");
     const data = {
-      id_test: view? localStorage.getItem("questionnaires"): idTest,
+      id_test: view ? localStorage.getItem("questionnaires") : idTest,
     };
     try {
       await sendEmailReport(data);
@@ -141,10 +142,27 @@ export default function MCHAT() {
     };
 
     try {
-      const patientResponse = await savePatient(user);
-      console.log("Patient saved successfully", patientResponse.data);
-      const patientId = patientResponse.data.id;
+      let patientId = "";
+      let msg = "";
+      const existingPatient = patients.find(
+        (paciente) => paciente.infant_dni === infantDni
+      );
 
+      if (!existingPatient) {
+        try {
+          const patientResponse = await savePatient(user);
+          console.log("Patient saved successfully", patientResponse.data);
+          patientId = patientResponse.data.id;
+          msg =
+            "Se registro exitosamente la evaluación y el paciente evaluado.";
+        } catch (error) {
+          console.error("Error saving patient", error);
+        }
+      } else {
+        patientId = existingPatient.id;
+        msg =
+          "Se registro exitosamente la evaluación. El paciente ya ha se encuentra registado.";
+      }
       const today = new Date();
       const formattedDate = today.toISOString().slice(0, 10);
       const questionnaire = {
@@ -165,23 +183,47 @@ export default function MCHAT() {
         probability: prediction.probabilidad,
         date_evaluation: formattedDate,
       };
+
       const questionnaireResponse = await saveQuestionnaire(questionnaire);
-      toast.success(
-        "Se registro exitosamente la evaluación y el paciente evaluado.",
-        {
-          position: "bottom-center",
-          style: {
-            width: 470,
-            fontSize: "0.85rem",
-            fontFamily: "Montserrat",
-          },
-        }
-      );
-      setIdTest(questionnaireResponse.data.id)
+      toast.success(msg, {
+        position: "bottom-center",
+        style: {
+          width: 470,
+          fontSize: "0.85rem",
+          fontFamily: "Montserrat",
+        },
+      });
+      setIdTest(questionnaireResponse.data.id);
     } catch (error) {
       console.error("There was an error!", error);
     }
   };
+  async function changePatient(id) {
+    const userFind = await getPatient(id);
+    setInfantDni(userFind.infant_dni);
+    setInfantName(userFind.infant_name);
+    const date = parseDate(userFind.birth_date);
+    setBirthDate(date);
+    setGender(userFind.gender);
+    setGuardianDni(userFind.guardian_dni);
+    setGuardianName(userFind.guardian_name);
+    setGuardianEmail(userFind.guardian_email);
+    setContactPhone(userFind.contact_phone);
+    setDistrict(userFind.district);
+  }
+  function cleanFields() {
+    setSelectPatients([]);
+    setInfantDni();
+    setInfantName();
+    setBirthDate(); // Asegúrate de que esto es lo que quieres
+    setGender();
+    setGuardianDni();
+    setGuardianName();
+    setGuardianEmail();
+    setContactPhone();
+    setDistrict();
+    setPatientChoose();
+  }
   async function predictionModel() {
     if (
       !infantDni ||
@@ -221,7 +263,7 @@ export default function MCHAT() {
       const predict = await predictModelDiagnosis(answers);
       setResultView(true);
       setResult(predict.data);
-      registerEvaluation(predict.data)
+      registerEvaluation(predict.data);
     }
   }
   useEffect(() => {
@@ -233,9 +275,7 @@ export default function MCHAT() {
           const questionnaireFind = await getQuestionnaire(
             localStorage.getItem("questionnaires")
           );
-          setquestionnaireView(questionnaireFind)
-          console.log(questionnaireFind);
-
+          setquestionnaireView(questionnaireFind);
           setQ1(questionnaireFind.pregunta_1);
           setQ2(questionnaireFind.pregunta_2);
           setQ3(questionnaireFind.pregunta_3);
@@ -250,7 +290,6 @@ export default function MCHAT() {
           setQ12(questionnaireFind.familiar_con_tea);
           try {
             const userFind = await getPatient(questionnaireFind.id);
-            console.log(userFind);
             setInfantDni(userFind.infant_dni);
             setInfantName(userFind.infant_name);
             const date = parseDate(userFind.birth_date);
@@ -274,10 +313,7 @@ export default function MCHAT() {
     };
     fetchData();
   }, []);
-  const transformValue = (value) => {
-    return value == 1 ? true : false;
-  };
-  
+
   const distritosLimaMetropolitana = [
     { key: "Ancón", label: "Ancón" },
     { key: "Ate", label: "Ate" },
@@ -323,21 +359,7 @@ export default function MCHAT() {
     { key: "Villa El Salvador", label: "Villa El Salvador" },
     { key: "Villa María del Triunfo", label: "Villa María del Triunfo" },
   ];
-  const animals = [
-    {key: "cat", label: "Cat"},
-    {key: "dog", label: "Dog"},
-    {key: "elephant", label: "Elephant"},
-    {key: "lion", label: "Lion"},
-    {key: "tiger", label: "Tiger"},
-    {key: "giraffe", label: "Giraffe"},
-    {key: "dolphin", label: "Dolphin"},
-    {key: "penguin", label: "Penguin"},
-    {key: "zebra", label: "Zebra"},
-    {key: "shark", label: "Shark"},
-    {key: "whale", label: "Whale"},
-    {key: "otter", label: "Otter"},
-    {key: "crocodile", label: "Crocodile"}
-  ];
+
   return (
     <section className="w-full h-full overflow-auto max-w-395:overflow-x-hidden outline-none select-none">
       {!resultView ? (
@@ -346,24 +368,48 @@ export default function MCHAT() {
             Cuesitonario de comportamiento
           </h1>
           <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4 max-w-425:ml-4 max-w-425:w-[90%]">
+            <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
+              {!view ? "Registro del paciente" : "Paciente Evaluado"}
+            </h2>
+            {!view && (
+              <p className="font-montserrat text-sm w-full mb-4 text-justify pr-4">
+                Debe completar todos los campos para el registro y evaluación
+                del paciente. Si el paciente ya se encuentra registrado en el
+                sistema, puede seleccionarlo en el primer campo. De lo
+                contrario, deberá completar todos los campos requeridos para
+                registrar al nuevo paciente.
+              </p>
+            )}
+
             <form className="w-[350px]">
-            
-              <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
-                {!view ? "Registro del paciente" : "Paciente Evaluado"}
-              </h2>
-              {!view && (<p className="font-montserrat text-sm w-full">Debe completar todos los campos para el registro y evaluación del paciente. Si el paciente ya se encuentra registrado en el sistema, puede seleccionarlo en el primer campo. De lo contrario, deberá completar todos los campos requeridos para registrar al nuevo paciente.</p>)}
-              <Select
-              variant="bordered"
-        label="Selecciona un paciente"
-        placeholder="Select an animal"
-        className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
-      >
-        {animals.map((animal) => (
-          <SelectItem key={animal.key}>
-            {animal.label}
-          </SelectItem>
-        ))}
-      </Select>
+              {!view && (
+                <>
+                  <Select
+                    variant="bordered"
+                    label="Paciente Registrado"
+                    placeholder="Selecciona un paciente"
+                    className="mb-2 font-montserrat max-w-470:w-[90%] max-w-395:w-[85%]"
+                    onChange={(e) => {
+                      changePatient(e.target.value);
+                      setSelectPatients(e.target.value);
+                    }}
+                    selectedKeys={[selectPatients]}
+                  >
+                    {patients.map((patient) => (
+                      <SelectItem className="font-montserrat" key={patient.id}>
+                        {patient.infant_dni + " - " + patient.infant_name}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  <Button
+                    className="font-montserrat mb-2 font-semibold"
+                    color="primary"
+                    onClick={cleanFields}
+                  >
+                    Limpiar
+                  </Button>
+                </>
+              )}
               <Input
                 isReadOnly={view}
                 label="DNI del paciente"
@@ -870,47 +916,56 @@ export default function MCHAT() {
                 )}
               </ModalContent>
             </Modal>
-            {view && (<><h2 className="mb-4 mt-4 font-montserrat font-semibold text-base bg-blue-500 w-fit p-2 rounded-full text-white">
-              Resultados de la Evaluación
-            </h2>
-            <Table
-              aria-label="Example static collection table"
-              className="font-montserrat w-[75%]"
-            >
-              <TableHeader className="font-semibold">
-                <TableColumn>DNI</TableColumn>
-                <TableColumn>Nombre</TableColumn>
-                <TableColumn>Fecha de Nacimiento</TableColumn>
-                <TableColumn>Fecha de Evaluación</TableColumn>
-                <TableColumn>Resultado</TableColumn>
-                <TableColumn>Probabilidad</TableColumn>
-              </TableHeader>
-              <TableBody className="font-medium">
-                <TableRow key="1">
-                  <TableCell>{infantDni}</TableCell>
-                  <TableCell>{infantName}</TableCell>
-                  <TableCell>{birthDate?`${birthDate["year"]}-${String(
-                    birthDate["month"]
-                  ).padStart(2, "0")}-${String(birthDate["day"]).padStart(
-                    2,
-                    "0"
-                  )}`:0}</TableCell>
-                  <TableCell>{formattedDate}</TableCell>
-                  <TableCell>
-                    {questionnaireView
-                      ? questionnaireView.result
-                        ? questionnaireView.result === true
-                          ? "Positivo"
-                          : "Negativo"
-                        : 0
-                      : 0}
-                  </TableCell>
-                  <TableCell>
-                    {questionnaireView.probability ? truncarDecimales(questionnaireView.probability, 2) : 0}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table></>)}
+            {view && (
+              <>
+                <h2 className="mb-4 mt-4 font-montserrat font-semibold text-base bg-blue-500 w-fit p-2 rounded-full text-white">
+                  Resultados de la Evaluación
+                </h2>
+                <Table
+                  aria-label="Example static collection table"
+                  className="font-montserrat w-[75%]"
+                >
+                  <TableHeader className="font-semibold">
+                    <TableColumn>DNI</TableColumn>
+                    <TableColumn>Nombre</TableColumn>
+                    <TableColumn>Fecha de Nacimiento</TableColumn>
+                    <TableColumn>Fecha de Evaluación</TableColumn>
+                    <TableColumn>Resultado</TableColumn>
+                    <TableColumn>Probabilidad</TableColumn>
+                  </TableHeader>
+                  <TableBody className="font-medium">
+                    <TableRow key="1">
+                      <TableCell>{infantDni}</TableCell>
+                      <TableCell>{infantName}</TableCell>
+                      <TableCell>
+                        {birthDate
+                          ? `${birthDate["year"]}-${String(
+                              birthDate["month"]
+                            ).padStart(2, "0")}-${String(
+                              birthDate["day"]
+                            ).padStart(2, "0")}`
+                          : 0}
+                      </TableCell>
+                      <TableCell>{formattedDate}</TableCell>
+                      <TableCell>
+                        {questionnaireView
+                          ? questionnaireView.result
+                            ? questionnaireView.result === true
+                              ? "Positivo"
+                              : "Negativo"
+                            : 0
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {questionnaireView.probability
+                          ? truncarDecimales(questionnaireView.probability, 2)
+                          : 0}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </>
+            )}
             <div className="mt-8 flex">
               {!view ? (
                 <>
@@ -951,7 +1006,6 @@ export default function MCHAT() {
                   </Button>
                 </>
               )}
-              
             </div>
           </div>
         </>

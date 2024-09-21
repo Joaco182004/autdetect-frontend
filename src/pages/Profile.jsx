@@ -241,12 +241,8 @@ export default function Profile() {
               <div className="w-36 h-36 mt-4 rounded-full">
                 <UserCircleIcon className="w-full h-fulll text-blue-500 rounded-full"></UserCircleIcon>
               </div>
-              <p className="mt-2 text-xl font-montserrat font-semibold mb-2">
+              <p className="mt-2 text-xl font-montserrat font-semibold mb-4">
                 {psychologist.full_name}
-              </p>
-
-              <p className="text-xs mt-2 mb-4 text-blue-500 cursor-pointer">
-                Cambiar Foto de Perfil
               </p>
               </div>
               <div className="max-w-820:h-full max-w-820:flex max-w-820:flex-col max-w-820:items-center max-w-820:justify-center ">
