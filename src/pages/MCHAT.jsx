@@ -708,7 +708,7 @@ export default function MCHAT() {
                 <div>
                   <p className="ml-2 mr-2 font-montserrat text-sm">
                     Si tú o alguien más en la familia está visiblemente triste o
-                    molesto, ¿tu hijo muestra signos de querer consolarlo?{" "}
+                    molesto, ¿tu hijo(a) muestra signos de querer consolarlo?{" "}
                   </p>
                 </div>
               </div>
@@ -737,7 +737,7 @@ export default function MCHAT() {
                 </div>
                 <div>
                   <p className="ml-2 mr-2 font-montserrat text-sm">
-                    ¿Tu hijo dijo sus primeras palabras (como "mamá" o "papá")
+                    ¿Tu hijo(a) dijo sus primeras palabras (como "mamá" o "papá")
                     alrededor del primer año de vida?{" "}
                   </p>
                 </div>
@@ -797,7 +797,7 @@ export default function MCHAT() {
                 </div>
                 <div>
                   <p className="ml-2 mr-2 font-montserrat text-sm">
-                    ¿Ha notado que su hijo se queda mirando un objeto o al vacío
+                    ¿Ha notado que su hijo(a) se queda mirando un objeto o al vacío
                     durante un tiempo prolongado, sin parecer darse cuenta de lo
                     que ocurre a su alrededor?{" "}
                   </p>
@@ -828,7 +828,7 @@ export default function MCHAT() {
                 </div>
                 <div>
                   <p className="ml-2 mr-2 font-montserrat text-sm">
-                    ¿Tu hijo ha presentado alguna vez ictericia, es decir, un
+                    ¿Tu hijo(a) ha presentado alguna vez ictericia, es decir, un
                     tono amarillento en la piel o en los ojos, especialmente
                     poco después de nacer?{" "}
                   </p>
@@ -958,7 +958,7 @@ export default function MCHAT() {
                       </TableCell>
                       <TableCell>
                         {questionnaireView.probability
-                          ? truncarDecimales(questionnaireView.probability, 2)
+                          ? truncarDecimales(questionnaireView.probability * 100, 2).toString() + "%"
                           : 0}
                       </TableCell>
                     </TableRow>
@@ -1051,7 +1051,7 @@ export default function MCHAT() {
                       : 0}
                   </TableCell>
                   <TableCell>
-                    {result ? truncarDecimales(result.probabilidad, 2) : 0}
+                    {result ? truncarDecimales(result.probabilidad * 100, 2).toString() + "%" : 0}
                   </TableCell>
                 </TableRow>
               </TableBody>

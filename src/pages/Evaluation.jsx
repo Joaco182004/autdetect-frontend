@@ -184,7 +184,7 @@ export default function Evaluation() {
                   <TableCell>
                     {columnKey == "result"
                       ? transformValue(getKeyValue(item, columnKey))
-                      : columnKey == "probability"?truncarDecimales(getKeyValue(item, columnKey), 2):getKeyValue(item, columnKey)}
+                      : columnKey == "probability"?truncarDecimales(getKeyValue(item, columnKey) *100, 2).toString() + "%":getKeyValue(item, columnKey)}
                   </TableCell>
                 )}
               </TableRow>

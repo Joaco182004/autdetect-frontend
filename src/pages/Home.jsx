@@ -311,6 +311,10 @@ export default function Home() {
 
     setEvaluationByMonthAutism(dataByMonth);
   }
+  const truncarDecimales = (num, decimales) => {
+    const factor = Math.pow(10, decimales);
+    return Math.floor(num * factor) / factor;
+  };
   const toggleClass = (state) => {
     if (isActive !== state) {
       setIsActive(state);
@@ -737,7 +741,7 @@ export default function Home() {
                             ) : (
                               <p className="font-semibold text-[#82ca9d]">NT</p>
                             )}
-                            <p>Prob: {result.probability}</p>
+                            <p>Prob: {truncarDecimales(result.probability * 100, 2).toString() + "%"}</p>
                           </>
                         )}
                       </div>
