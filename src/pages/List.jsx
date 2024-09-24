@@ -219,6 +219,7 @@ export default function List() {
       </h1>
       <div className="h-[auto]  flex flex-col items-center mb-4  bg-white mx-8 max-w-650:mx-4 max-w-650:w-[95%] max-w-450:w-[100%] max-w-450:mx-0 max-w-450:rounded-none content-list rounded-md pb-4">
         <div className="w-[100%] flex items-center justify-between bg-red p-2 rounded-md my-4">
+          <div className="flex justify-between items-center w-full">
           <Input
             isClearable
             type="text"
@@ -229,6 +230,8 @@ export default function List() {
             onClear={() => setFilter("")}
             className="w-[250px] outline-none ml-4  max-w-425:ml-2 font-montserrat"
           />
+          <Button className="font-montserrat" color="primary">Descargar</Button>
+          </div>
           
           <Modal
             isOpen={isOpen}
