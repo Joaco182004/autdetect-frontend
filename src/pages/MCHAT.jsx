@@ -923,7 +923,7 @@ export default function MCHAT() {
                 </h2>
                 <Table
                   aria-label="Example static collection table"
-                  className="font-montserrat w-[75%]"
+                  className="font-montserrat w-[75%] max-w-1080:w-full max-w-1080:mr-4"
                 >
                   <TableHeader className="font-semibold">
                     <TableColumn>DNI</TableColumn>

@@ -28,6 +28,7 @@ import {
   getPatientById,
   savePatientById,
 } from "../api/infantPatient.api";
+import {downloadPatients} from "../api/custom.api"
 import { es } from "date-fns/locale";
 import "../pages/style.css";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
@@ -133,7 +134,14 @@ export default function List() {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const rowsPerPage = 4;
-
+  async function downloadPatientsReport(){
+    try{
+      await downloadPatients()
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
   const registerPatient = () => {
     const user = {
       infant_dni: infantDni,
@@ -228,9 +236,9 @@ export default function List() {
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             onClear={() => setFilter("")}
-            className="w-[250px] outline-none ml-4  max-w-425:ml-2 font-montserrat"
+            className="w-[250px] outline-none ml-4  max-w-425:ml-2 font-montserrat max-w-500:w-[200px] max-w-395:text-xs"
           />
-          <Button className="font-montserrat" color="primary">Descargar</Button>
+          <Button onClick={downloadPatientsReport} className="mr-4 h-[40px] w-[150px] max-w-425:w-[130px] max-w-395:w-[100px] max-w-395:h-[40px] max-w-395:text-wrap  max-w-425:text-xs  font-montserrat font-medium" color="primary">Descargar</Button>
           </div>
           
           <Modal

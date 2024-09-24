@@ -15,6 +15,8 @@ import { Button } from "@nextui-org/react";
 import { getAllQuestionnaire } from "../api/questionnaire.api";
 import { getPatientById } from "../api/infantPatient.api";
 import { EyeIcon } from "@heroicons/react/24/solid";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/react";
+import { downloadEvaluations } from "../api/custom.api";
 
 export default function Evaluation() {
   const [questionnaires, setQuestionnaires] = useState([]);
@@ -44,6 +46,14 @@ export default function Evaluation() {
     const factor = Math.pow(10, decimales);
     return Math.floor(num * factor) / factor;
   };
+  async function downloadEvaluationsReport(){
+    try{
+      await downloadEvaluations()
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
   async function loadQuestionnaires() {
     const questionnaireFilter = [];
     const res = await getAllQuestionnaire();
@@ -135,16 +145,22 @@ export default function Evaluation() {
             onClear={() => setFilter("")}
             className="w-[250px] max-w-500:w-[200px] max-w-395:text-xs outline-none ml-4 font-montserrat"
           />
-          <Button
-            onClick={() => {
+          <Dropdown className="font-montserrat text-xs">
+      <DropdownTrigger>
+        <Button 
+          className="mr-4 h-[40px] w-[100px]  font-montserrat font-medium"
+          color="primary"
+        >
+          Opciones
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Static Actions">
+        <DropdownItem onClick={() => {
               navigate("/app/evaluaciones/mchat");
-            }}
-            className="mr-4 h-[40px] w-[150px] max-w-425:w-[130px] max-w-395:w-[100px] max-w-395:h-[50px] max-w-395:text-wrap  max-w-425:text-xs  font-montserrat font-medium"
-            color="primary"
-            variant="solid"
-          >
-            Realizar Evaluación
-          </Button>
+            }} key="new">Realizar Evaluación</DropdownItem>
+        <DropdownItem onClick={downloadEvaluationsReport} key="copy">Descargar</DropdownItem>
+      </DropdownMenu>
+    </Dropdown> 
         </div>
         <Table
           className="w-[95%] rounded-2xl border-1 font-montserrat"
