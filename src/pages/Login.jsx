@@ -6,10 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { register, login } from "../api/authorization.api.js";
 import { getAllPsychologist } from "../api/psychologist.api.js";
 import { ToastContainer, toast } from "react-toastify";
+import {EyeFilledIcon} from '../assets/EyeFilledIcon.jsx'
+import {EyeSlashFilledIcon} from '../assets/EyeSlashFilledIcon.jsx'
 import "react-toastify/dist/ReactToastify.css";
 function Login() {
   let navigate = useNavigate();
   const [name, setName] = useState("");
+  const [visiblePassword,setVisiblePassword] = useState(false);
   const [dni, setDni] = useState("");
   const [numeroColegiatura, setNumeroColegiatura] = useState("");
   const [email, setEmail] = useState("");
@@ -22,6 +25,7 @@ function Login() {
   const [errorLogin, setErrorLogin] = useState(false);
   const [textErrorLogin, setTextErrorLogin] = useState("");
   const [psychologist, setPsychologist] = useState([]);
+  const [typeInputPassword,setTypeInputPassword] = useState("password");
   const [msg, setMsg] = useState(
     "Inicie sesión para iniciar los diagnósticos de pacientes."
   );
@@ -53,12 +57,10 @@ function Login() {
     getPsychologist();
   }, []);
   const handleSubmit = (e) => {
-    console.log("Hola");
     e.preventDefault();
     if (viewLogin) {
       validateLogin();
     } else {
-      console.log("Hola");
       const validationErrors = validate();
       if (Object.keys(validationErrors).length === 0) {
         saveUser();
@@ -68,7 +70,6 @@ function Login() {
         setPassword("");
         setName("");
       } else {
-        console.log(validationErrors);
         setErrors(validationErrors);
       }
     }
@@ -106,7 +107,6 @@ function Login() {
         setViewLogin(true);
       })
       .catch((error) => {
-        console.log("Error2");
         toast.error(
           "Hubo un error en el registro. Por favor, vuelva intentarlo",
           {
@@ -153,7 +153,6 @@ function Login() {
           navigate("/app/dashboard");
         })
         .catch((error) => {
-          console.log("Hola");
           toast.error("El correo o contraseña no son correctos.", {
             position: "bottom-center",
             style: {
@@ -313,18 +312,23 @@ function Login() {
                     className="mb-8"
                     style={{ width: `${widthInput}px`, height: `${40}px` }}
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between relative">
                       <label className="uppercase block font-montserrat text-[rgb(175,185,200)] text-xs font-text mb-1">
                         Contraseña
                       </label>
                     </div>
+                    <div className="relative w-auto h-auto">
                     <input
-                      type="password"
+                      type={typeInputPassword}
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       onKeyDown={handleKeyDown}
                       className="font-montserrat w-full p-2.5 border bg-[rgb(240,243,250)] rounded-lg outline-0 text-gray-700"
+                      
                     />
+                    {!visiblePassword && (<button type="button" onClick={()=>{setVisiblePassword(true);setTypeInputPassword("text")}}><EyeFilledIcon  className="right-3 top-3 absolute text-2xl text-default-400 "></EyeFilledIcon></button>)}
+                    {visiblePassword && (<button type="button" onClick={()=>{setVisiblePassword(false);setTypeInputPassword("password")}}><EyeSlashFilledIcon className="right-3 top-3 absolute text-2xl text-default-400"></EyeSlashFilledIcon></button>)}
+                    </div>
                   </div>
 
                   <p
