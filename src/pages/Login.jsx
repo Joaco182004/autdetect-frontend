@@ -327,7 +327,7 @@ function Login() {
                       
                     />
                     {!visiblePassword && (<button type="button" onClick={()=>{setVisiblePassword(true);setTypeInputPassword("text")}}><EyeFilledIcon  className="right-3 top-3 absolute text-2xl text-default-400 "></EyeFilledIcon></button>)}
-                    {visiblePassword && (<button type="button" onClick={()=>{setVisiblePassword(false);setTypeInputPassword("passwor")}}><EyeSlashFilledIcon className="right-3 top-3 absolute text-2xl text-default-400"></EyeSlashFilledIcon></button>)}
+                    {visiblePassword && (<button type="button" onClick={()=>{setVisiblePassword(false);setTypeInputPassword("password")}}><EyeSlashFilledIcon className="right-3 top-3 absolute text-2xl text-default-400"></EyeSlashFilledIcon></button>)}
                     </div>
                   </div>
 
