@@ -175,3 +175,32 @@ export const downloadEvaluations = () => {
     console.error("Error al descargar el archivo:", error);
   });
 };
+export const downloadPersonalEvaluation = (content,name) => {
+  const token = localStorage.getItem("token");
+  const config = {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    responseType: "blob",
+  };
+  return axios.post("http://localhost:8000/export-evaluation/", content,config).then((response) => {
+
+    // Crear un blob a partir de la respuesta del servidor
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+
+    // Crear un enlace temporal para descargar el archivo
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download","AutDetect_Evaluación_"+name+".pdf"); // Puedes cambiar el nombre del archivo
+
+    // Añadir el enlace temporal al DOM y simular el clic para descargar
+    document.body.appendChild(link);
+    link.click();
+
+    // Eliminar el enlace temporal del DOM
+    link.remove();
+  })
+  .catch((error) => {
+    console.error("Error al descargar el archivo:", error);
+  });
+};

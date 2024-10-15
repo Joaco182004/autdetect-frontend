@@ -26,7 +26,7 @@ import {
   Link,
 } from "@nextui-org/react";
 import { getPatientById, getAllPatients } from "../api/infantPatient.api";
-import { predictModelDiagnosis } from "../api/custom.api";
+import { predictModelDiagnosis,downloadPersonalEvaluation } from "../api/custom.api";
 import {
   Input,
   DateInput,
@@ -79,7 +79,6 @@ export default function MCHAT() {
     "0"
   )}-${currentDate.getFullYear()}`;
   async function sendEmailCode() {
-    console.log("Hola");
     const data = {
       id_test: view ? localStorage.getItem("questionnaires") : idTest,
     };
@@ -151,7 +150,6 @@ export default function MCHAT() {
       if (!existingPatient) {
         try {
           const patientResponse = await savePatient(user);
-          console.log("Patient saved successfully", patientResponse.data);
           patientId = patientResponse.data.id;
           msg =
             "Se registro exitosamente la evaluación y el paciente evaluado.";
@@ -313,7 +311,28 @@ export default function MCHAT() {
     };
     fetchData();
   }, []);
-
+  async function downloadReport (){
+    const data = {
+      id_test: view ? localStorage.getItem("questionnaires") : idTest,
+    };
+    try {
+      console.log(data)
+      await downloadPersonalEvaluation(data,infantName);
+    } catch (e) {
+      console.log(e)
+      toast.error(
+        "Hubo un error al descargar la evaluación. Por favor, vuelva intentarlo.",
+        {
+          position: "bottom-center",
+          style: {
+            width: 470,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        }
+      );
+    }
+  }
   const distritosLimaMetropolitana = [
     { key: "Ancón", label: "Ancón" },
     { key: "Ate", label: "Ate" },
@@ -994,6 +1013,13 @@ export default function MCHAT() {
                     onClick={onOpen}
                   >
                     Enviar Reporte
+                  </Button>
+                  <Button
+                    className="ml-4 w-[150px] font-montserrat font-medium"
+                    color="primary"
+                    onClick={downloadReport}
+                  >
+                    Descargar Reporte
                   </Button>
                   <Button
                     className="ml-4 w-[150px] font-montserrat font-medium"
