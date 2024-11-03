@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { API_BASE_URL } from "../config";
 export const getQuestionnaireOrderByMonth = (id) => {
   const token = localStorage.getItem("token");
   const config = {
@@ -7,10 +7,7 @@ export const getQuestionnaireOrderByMonth = (id) => {
       Authorization: `Token ${token}`,
     },
   };
-  return axios.get(
-    `http://localhost:8000/autdetect/api/v1/patients_by_month/`,
-    config
-  );
+  return axios.get(`${API_BASE_URL}/autdetect/api/v1/patients_by_month/`, config);
 };
 export const getQuestionnaireOrderByMonthAutism = (id) => {
   const token = localStorage.getItem("token");
@@ -19,10 +16,7 @@ export const getQuestionnaireOrderByMonthAutism = (id) => {
       Authorization: `Token ${token}`,
     },
   };
-  return axios.get(
-    `http://localhost:8000/autdetect/api/v1/patients_by_month_autism/`,
-    config
-  );
+  return axios.get(`${API_BASE_URL}/autdetect/api/v1/patients_by_month_autism/`, config);
 };
 export const getPatientsByGender = () => {
   const token = localStorage.getItem("token");
@@ -33,10 +27,7 @@ export const getPatientsByGender = () => {
     },
   };
 
-  return axios.get(
-    "http://localhost:8000/autdetect/api/v1/patients_by_gender/",
-    config
-  );
+  return axios.get(`${API_BASE_URL}/autdetect/api/v1/patients_by_gender/`, config);
 };
 export const sendEmailChange = (change) => {
   const token = localStorage.getItem("token");
@@ -47,7 +38,7 @@ export const sendEmailChange = (change) => {
     },
   };
 
-  return axios.post("http://localhost:8000/changeemail/", change, config);
+  return axios.post(`${API_BASE_URL}/changeemail/`, change, config);
 };
 export const changeUsername = (change) => {
   const token = localStorage.getItem("token");
@@ -58,7 +49,7 @@ export const changeUsername = (change) => {
     },
   };
 
-  return axios.post("http://localhost:8000/changeusername/", change, config);
+  return axios.post(`${API_BASE_URL}/changeusername/`, change, config);
 };
 export const changePassword = (change) => {
   const token = localStorage.getItem("token");
@@ -69,7 +60,7 @@ export const changePassword = (change) => {
     },
   };
 
-  return axios.post("http://localhost:8000/changepassword/", change, config);
+  return axios.post(`${API_BASE_URL}/changepassword/`, change, config);
 };
 export const changePasswordEmail = (email) => {
   const token = localStorage.getItem("token");
@@ -80,11 +71,7 @@ export const changePasswordEmail = (email) => {
     },
   };
 
-  return axios.post(
-    "http://localhost:8000/changepasswordemail/",
-    email,
-    config
-  );
+  return axios.post(`${API_BASE_URL}/changepasswordemail/`, email, config);
 };
 export const validateCode = (code) => {
   const token = localStorage.getItem("token");
@@ -95,7 +82,7 @@ export const validateCode = (code) => {
     },
   };
 
-  return axios.post("http://localhost:8000/validatecode/", code, config);
+  return axios.post(`${API_BASE_URL}/validatecode/`, code, config);
 };
 export const sendEmailReport = (content) => {
   const token = localStorage.getItem("token");
@@ -106,7 +93,7 @@ export const sendEmailReport = (content) => {
     },
   };
 
-  return axios.post("http://localhost:8000/reporte/", content, config);
+  return axios.post(`${API_BASE_URL}/reporte/`, content, config);
 };
 export const predictModelDiagnosis = (content) => {
   const token = localStorage.getItem("token");
@@ -115,7 +102,7 @@ export const predictModelDiagnosis = (content) => {
       Authorization: `Token ${token}`,
     },
   };
-  return axios.post("http://localhost:8000/model/", content, config);
+  return axios.post(`${API_BASE_URL}/model/`, content, config);
 };
 export const downloadPatients = () => {
   const token = localStorage.getItem("token");
@@ -126,21 +113,14 @@ export const downloadPatients = () => {
     responseType: "blob",
   };
   return axios
-    .get("http://localhost:8000/export-infant-patients/", config)
+    .get(`${API_BASE_URL}/export-infant-patients/`, config)
     .then((response) => {
-      // Crear un blob a partir de la respuesta del servidor
       const url = window.URL.createObjectURL(new Blob([response.data]));
-
-      // Crear un enlace temporal para descargar el archivo
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "reporte_pacientes.xlsx"); // Puedes cambiar el nombre del archivo
-
-      // Añadir el enlace temporal al DOM y simular el clic para descargar
+      link.setAttribute("download", "reporte_pacientes.xlsx");
       document.body.appendChild(link);
       link.click();
-
-      // Eliminar el enlace temporal del DOM
       link.remove();
     })
     .catch((error) => {
@@ -155,25 +135,20 @@ export const downloadEvaluations = () => {
     },
     responseType: "blob",
   };
-  return axios.get("http://localhost:8000/export-questionnaires/", config).then((response) => {
-    // Crear un blob a partir de la respuesta del servidor
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-
-    // Crear un enlace temporal para descargar el archivo
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "reporte_evaluaciones.xlsx"); // Puedes cambiar el nombre del archivo
-
-    // Añadir el enlace temporal al DOM y simular el clic para descargar
-    document.body.appendChild(link);
-    link.click();
-
-    // Eliminar el enlace temporal del DOM
-    link.remove();
-  })
-  .catch((error) => {
-    console.error("Error al descargar el archivo:", error);
-  });
+  return axios
+    .get(`${API_BASE_URL}/export-questionnaires/`, config)
+    .then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "reporte_evaluaciones.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    })
+    .catch((error) => {
+      console.error("Error al descargar el archivo:", error);
+    });
 };
 export const downloadPersonalEvaluation = (content,name) => {
   const token = localStorage.getItem("token");
@@ -183,24 +158,18 @@ export const downloadPersonalEvaluation = (content,name) => {
     },
     responseType: "blob",
   };
-  return axios.post("http://localhost:8000/export-evaluation/", content,config).then((response) => {
-
-    // Crear un blob a partir de la respuesta del servidor
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-
-    // Crear un enlace temporal para descargar el archivo
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download","AutDetect_Evaluación_"+name+".pdf"); // Puedes cambiar el nombre del archivo
-
-    // Añadir el enlace temporal al DOM y simular el clic para descargar
-    document.body.appendChild(link);
-    link.click();
-
-    // Eliminar el enlace temporal del DOM
-    link.remove();
-  })
-  .catch((error) => {
-    console.error("Error al descargar el archivo:", error);
-  });
+  return axios
+    .post(`${API_BASE_URL}/export-evaluation/`, content, config)
+    .then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `AutDetect_Evaluación_${name}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    })
+    .catch((error) => {
+      console.error("Error al descargar el archivo:", error);
+    });
 };

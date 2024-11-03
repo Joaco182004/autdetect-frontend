@@ -1,19 +1,18 @@
-import axios from "axios"
+import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 export const getAllPsychologist = () => {
-    
     const token = localStorage.getItem('token');
 
-    // Configurar los encabezados de la solicitud
     const config = {
         headers: {
             'Authorization': `Token ${token}`
         }
     };
 
-    // Hacer la solicitud GET con el encabezado de autorización
-    return axios.get('http://localhost:8000/autdetect/api/v1/psychologist/', config);
-}
+    return axios.get(`${API_BASE_URL}/autdetect/api/v1/psychologist/`, config);
+};
+
 export const getPsychologistById = () => {
     const token = localStorage.getItem('token');
     const id = localStorage.getItem('idPsychology');
@@ -22,5 +21,5 @@ export const getPsychologistById = () => {
             'Authorization': `Token ${token}`,
         }
     };
-    return axios.get(`http://localhost:8000/autdetect/api/v1/psychologist/${id}/`, config);
-}
+    return axios.get(`${API_BASE_URL}/autdetect/api/v1/psychologist/${id}/`, config);
+};

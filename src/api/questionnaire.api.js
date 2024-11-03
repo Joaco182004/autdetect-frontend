@@ -1,7 +1,7 @@
-import axios from "axios"
+import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 export const getAllQuestionnaire = () => {
-    
     const token = localStorage.getItem('token');
 
     const config = {
@@ -10,18 +10,19 @@ export const getAllQuestionnaire = () => {
         }
     };
 
-    return axios.get('http://localhost:8000/autdetect/api/v1/questionnaire/', config);
-}
+    return axios.get(`${API_BASE_URL}/autdetect/api/v1/questionnaire/`, config);
+};
+
 export const saveQuestionnaire = (questionnaire) => {
     const token = localStorage.getItem('token');
     const config = {
         headers: {
             'Authorization': `Token ${token}`,
-            
         }
     };
-    return axios.post('http://localhost:8000/autdetect/api/v1/questionnaire/',questionnaire, config);
-}
+    return axios.post(`${API_BASE_URL}/autdetect/api/v1/questionnaire/`, questionnaire, config);
+};
+
 export const getQuestionnaireById = (id) => {
     const token = localStorage.getItem('token');
     const config = {
@@ -29,5 +30,5 @@ export const getQuestionnaireById = (id) => {
             'Authorization': `Token ${token}`,
         }
     };
-    return axios.get(`http://localhost:8000/autdetect/api/v1/questionnaire/${id}/`, config);
-}
+    return axios.get(`${API_BASE_URL}/autdetect/api/v1/questionnaire/${id}/`, config);
+};

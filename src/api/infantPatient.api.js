@@ -1,16 +1,15 @@
-import axios from "axios"
+import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 export const getAllPatients = () => {    
     const token = localStorage.getItem('token');
-
     const config = {
         headers: {
             'Authorization': `Token ${token}`
         }
     };
-
-    return axios.get('http://localhost:8000/autdetect/api/v1/infantpatient/', config);
-}
+    return axios.get(`${API_BASE_URL}/autdetect/api/v1/infantpatient/`, config);
+};
 
 export const getPatientById = (id) => {
     const token = localStorage.getItem('token');
@@ -19,25 +18,25 @@ export const getPatientById = (id) => {
             'Authorization': `Token ${token}`,
         }
     };
-    return axios.get(`http://localhost:8000/autdetect/api/v1/infantpatient/${id}/`, config);
-}
+    return axios.get(`${API_BASE_URL}/autdetect/api/v1/infantpatient/${id}/`, config);
+};
 
 export const savePatient = (patient) => {
     const token = localStorage.getItem('token');
     const config = {
         headers: {
             'Authorization': `Token ${token}`,
-            
         }
     };
-    return axios.post('http://localhost:8000/autdetect/api/v1/infantpatient/',patient, config);
-}
-export const savePatientById = (id,patient) => {
+    return axios.post(`${API_BASE_URL}/autdetect/api/v1/infantpatient/`, patient, config);
+};
+
+export const savePatientById = (id, patient) => {
     const token = localStorage.getItem('token');
     const config = {
         headers: {
             'Authorization': `Token ${token}`,
-                    }
+        }
     };
-    return axios.put(`http://localhost:8000/autdetect/api/v1/infantpatient/${id}/`,patient, config);
-}
+    return axios.put(`${API_BASE_URL}/autdetect/api/v1/infantpatient/${id}/`, patient, config);
+};
