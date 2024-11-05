@@ -14,10 +14,11 @@ const ActivateAccount = () => {
   const [msg,setMsg] = useState("")
   const navigate = useNavigate();
   useEffect(() => {
+    const localhost = "http://localhost:8000"
     if (activation_key && !hasActivated) {
       const activateAccount = async () => {
         try {
-          await axios.get(`http://localhost:8000/activate/${activation_key}`);
+          await axios.get(`${localhost}/activate/${activation_key}`);
           setMessage("Cuenta activada con éxito. Puedes iniciar sesión.");
           setHasActivated(true);
           setImage(imgHappy)
