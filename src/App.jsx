@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Profile from './pages/Profile';
 import ActivateAccount from './pages/ActivateAccount';
 import ChangePassword from './pages/ChangePassword';
+import Error404 from './pages/Error404';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -34,6 +35,7 @@ function App() {
         </Route>
         </Route>
         <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
   )

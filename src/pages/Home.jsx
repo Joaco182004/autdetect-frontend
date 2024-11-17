@@ -737,9 +737,9 @@ export default function Home() {
                         {result && (
                           <>
                             {result.result ? (
-                              <p className="font-semibold text-blue-500">TEA</p>
+                              <p className="font-semibold text-blue-500">Positivo</p>
                             ) : (
-                              <p className="font-semibold text-[#82ca9d]">NT</p>
+                              <p className="font-semibold text-[#82ca9d]">Negativo</p>
                             )}
                             <p>Prob: {truncarDecimales(result.probability * 100, 2).toString() + "%"}</p>
                           </>
@@ -871,11 +871,11 @@ export default function Home() {
                         {result && (
                           <>
                             {result.result ? (
-                              <p className="font-semibold text-blue-500">TEA</p>
+                              <p className="font-semibold text-blue-500">Positivo</p>
                             ) : (
-                              <p className="font-semibold text-[#82ca9d]">NT</p>
+                              <p className="font-semibold text-[#82ca9d]">Negativo</p>
                             )}
-                            <p>Prob: {result.probability}</p>
+                            <p>Prob: {truncarDecimales(result.probability * 100, 2).toString() + "%"}</p>
                           </>
                         )}
                       </div>
