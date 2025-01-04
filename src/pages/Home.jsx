@@ -621,7 +621,7 @@ export default function Home() {
               )}
             </div>)}
           </div>
-          <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] h-[480px] max-w-810:h-[480px] max-w-810:w-[650px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-425:w-[90%] max-w-550:h-[400px] ml-[2rem] max-w-550:ml-[1rem] mt-4 rounded-md flex flex-col items-center">
+          <div className="bg-white relative -z-[-1] w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] h-[480px] max-w-810:h-[480px] max-w-810:w-[650px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-425:w-[90%] max-w-550:h-[400px] ml-[2rem] max-w-550:ml-[1rem] mt-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-between items-center">
               <div className="flex justify-center items-center">
                 <div className="bg-[rgb(142,89,255)] rounded w-4 h-8"></div>
