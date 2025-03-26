@@ -115,8 +115,11 @@ export default function MCHAT() {
     return user.data;
   }
   async function getPatients() {
-    const users = await getAllPatients();
-    setPatients(users.data);
+    const res = await getAllPatients();
+    const dataPatientFilter = res.data.filter(
+      (e) => e.psychology == localStorage.getItem("idPsychology")
+    );
+    setPatients(dataPatientFilter);
   }
   async function getQuestionnaire(id) {
     const questionnaire = await getQuestionnaireById(id);
