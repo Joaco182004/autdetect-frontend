@@ -1,19 +1,25 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config";
-export const getQuestionnaireOrderByMonth = (id) => {
+export const getQuestionnaireOrderByMonth = (year) => {
   const token = localStorage.getItem("token");
   const config = {
     headers: {
       Authorization: `Token ${token}`,
     },
+    params: {
+      year: year,
+    },
   };
   return axios.get(`${API_BASE_URL}/autdetect/api/v1/patients_by_month/`, config);
 };
-export const getQuestionnaireOrderByMonthAutism = (id) => {
+export const getQuestionnaireOrderByMonthAutism = (year) => {
   const token = localStorage.getItem("token");
   const config = {
     headers: {
       Authorization: `Token ${token}`,
+    },
+    params: {
+      year: year,
     },
   };
   return axios.get(`${API_BASE_URL}/autdetect/api/v1/patients_by_month_autism/`, config);
@@ -29,6 +35,17 @@ export const getPatientsByGender = () => {
 
   return axios.get(`${API_BASE_URL}/autdetect/api/v1/patients_by_gender/`, config);
 };
+export const getYearsEvaluation = () => {
+  const token = localStorage.getItem("token");
+
+  const config = {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  return axios.get(`${API_BASE_URL}/evaluation-years/`, config);
+}
 export const sendEmailChange = (change) => {
   const token = localStorage.getItem("token");
 
