@@ -37,6 +37,7 @@ import {
   getQuestionnaireOrderByMonth,
   getQuestionnaireOrderByMonthAutism,
   getPatientsByGender,
+  getYearsEvaluation,
 } from "../api/custom.api.js";
 import { getAllPatients, getPatientById } from "../api/infantPatient.api.js";
 import {
@@ -50,6 +51,8 @@ import {
   getKeyValue,
 } from "@nextui-org/react";
 import { Switch } from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import { setYear } from "date-fns";
 export default function Home() {
   // State Initializations
   const [patients, setPatients] = useState([]);
@@ -63,19 +66,20 @@ export default function Home() {
   const [patientsByDistrict, setPatientsByDistrict] = useState([]);
   const [activeMap, setActiveMap] = useState(true);
   const [districtTable, setDistrictTable] = useState([]);
+  const [yearsEvaluationsVar, setYearsEvaluationsVar] = useState([]);
+  const [yearSelection, setYearSelection] = useState("");
   const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042"];
   const RADIAN = Math.PI / 180;
   const [page, setPage] = React.useState(1);
   const [agePatients, setAgePatients] = useState([]);
-  const [widthContainer,setWidthContainer]= useState(650);
-  const [heightContainer,setHeightContainer]= useState(300);
-  const [widthPie,setWidthPie] = useState(190)
-  const [rowsPerPage,setRowsPerPage] = useState(7);
-  const [text1,setText1] = useState("Total de pacientes evaluados")
-  const [text2,setText2] = useState("Pacientes totales con TEA")
-  const [left,setLeft] = useState(0)
+  const [widthContainer, setWidthContainer] = useState(650);
+  const [heightContainer, setHeightContainer] = useState(300);
+  const [widthPie, setWidthPie] = useState(190);
+  const [rowsPerPage, setRowsPerPage] = useState(7);
+  const [text1, setText1] = useState("Total de pacientes evaluados");
+  const [text2, setText2] = useState("Pacientes totales con TEA");
+  const [left, setLeft] = useState(0);
   // Function Definitions
-
   const distritosLimaMetropolitana = [
     { key: "Ancón", coordenadas: { lat: -11.776, lng: -77.157 } },
     { key: "Ate", coordenadas: { lat: -12.027, lng: -76.89 } },
@@ -274,7 +278,7 @@ export default function Home() {
   }, [page, districtTable]);
 
   async function loadEvaluations() {
-    const res = await getQuestionnaireOrderByMonth();
+    const res = await getQuestionnaireOrderByMonth(yearSelection);
     const dataFilter = res.data.filter(
       (e) => e.patient__psychology == localStorage.getItem("idPsychology")
     );
@@ -291,14 +295,14 @@ export default function Home() {
     setEvaluationByMonth(dataByMonth);
   }
   async function loadEvaluationsAutism() {
-    const res = await getQuestionnaireOrderByMonthAutism();
+    const res = await getQuestionnaireOrderByMonthAutism(yearSelection);
     const dataFilter = res.data.filter(
       (e) => e.patient__psychology == localStorage.getItem("idPsychology")
     );
     dataFilter.map((e) => {
       e.month = transformMonth(e.month);
     });
-    
+
     const dataByMonth = [];
 
     dataFilter.map((e) => {
@@ -310,6 +314,11 @@ export default function Home() {
     });
 
     setEvaluationByMonthAutism(dataByMonth);
+  }
+  async function getYearsEvaluationsSelect() {
+    const res = await getYearsEvaluation();
+    setYearSelection(res.data.years[0]);
+    setYearsEvaluationsVar(res.data.years);
   }
   const truncarDecimales = (num, decimales) => {
     const factor = Math.pow(10, decimales);
@@ -420,55 +429,61 @@ export default function Home() {
       setWidthContainer(480);
       setHeightContainer(280);
     }
-    if (width < 810){
-      setWidthContainer(650)
-      setHeightContainer(300)
+    if (width < 810) {
+      setWidthContainer(650);
+      setHeightContainer(300);
     }
-    if(width < 700){
-      setWidthContainer(600)
-      setHeightContainer(300)
+    if (width < 700) {
+      setWidthContainer(600);
+      setHeightContainer(300);
     }
-    if(width < 650){
-      setWidthContainer(550)
-      setHeightContainer(300)
+    if (width < 650) {
+      setWidthContainer(550);
+      setHeightContainer(300);
     }
-    if(width < 600){
-      setWidthContainer(500)
-      setWidthPie(200)
+    if (width < 600) {
+      setWidthContainer(500);
+      setWidthPie(200);
     }
-    if(width < 550){
-      setWidthContainer(400)
-      setHeightContainer(200)
-      setRowsPerPage(5)
+    if (width < 550) {
+      setWidthContainer(400);
+      setHeightContainer(200);
+      setRowsPerPage(5);
     }
-    if(width < 425){
-      setWidthContainer(330)
-      setHeightContainer(220)
-      setWidthPie(180)
-      setText1("Pacientes Evaluados")
-      setText2("Pacientes Totales con TEA")
+    if (width < 425) {
+      setWidthContainer(330);
+      setHeightContainer(220);
+      setWidthPie(180);
+      setText1("Pacientes Evaluados");
+      setText2("Pacientes Totales con TEA");
     }
-    if(width < 400){
-      
-      setText2("Pacientes con TEA")
+    if (width < 400) {
+      setText2("Pacientes con TEA");
     }
   };
   // Effects
 
   useEffect(() => {
-    handleResize();
 
+    loadEvaluations();
+    loadEvaluationsAutism();
+  }, [yearSelection]);
+
+
+  useEffect(() => {
+    handleResize();
+    getYearsEvaluationsSelect();
     // Añadir event listener para el cambio de tamaño
-    window.addEventListener('resize', handleResize);
-    
+    window.addEventListener("resize", handleResize);
+    getYearsEvaluationsSelect();
     loadPatientsByAge();
     loadQuestionnaires();
     loadPatientsByGender();
     loadPatients();
-    loadEvaluations();
     loadEvaluationsAutism();
     loadPatientsByDistrict();
-    const geojsonUrl =  
+    
+    const geojsonUrl =
       "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
     fetch(geojsonUrl)
       .then((response) => {
@@ -481,9 +496,9 @@ export default function Home() {
       .catch((error) =>
         console.error("Error loading the geojson data: ", error)
       );
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const countAutism = () => {
@@ -503,17 +518,42 @@ export default function Home() {
 
   return (
     <section className="w-full h-full overflow-auto outline-none select-none">
-      <h1 className="tracking-in-expand  font-montserrat font-semibold mb-[2rem] ml-[2rem] max-w-550:ml-[1rem] pt-[2rem] text-4xl">
+      <h1 className="tracking-in-expand  font-montserrat font-semibold mb-[2rem] ml-[2rem] max-w-550:ml-[1rem] pt-[2rem] text-4xl ">
         Dashboard
       </h1>
       <div className=" w-full h-auto pb-4 cont-section-dash flex gap-4 max-w-810:flex-col">
         <div>
           <div className="bg-white w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] max-w-810:w-[650px] max-w-810:h-[480px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-550:h-[400px] max-w-425:w-[90%] h-[480px] ml-[2rem] max-w-550:ml-[1rem] rounded-md flex flex-col items-center">
-            <div className="flex w-[95%] mt-3 justify-start items-center">
-              <div className="bg-blue-500 rounded w-4 h-8"></div>
-              <h2 className="font-montserrat font-semibold text-lg ml-2">
+            <div className="flex w-[95%] mt-3 justify-between font-montserrat">
+              {" "}
+              <div className="flex justify-center items-center">
+                <div className="bg-blue-500 rounded w-4 h-8"></div>
+                <h2 className="font-montserrat font-semibold text-lg ml-2 max-w-425:text-sm">
                 Vista General
-              </h2>
+                </h2>
+              </div>
+              <div className="flex items-center">
+                <p className="font-montserrat mr-2 text-sm max-w-570:">Selecciona el periodo:</p>
+                <Dropdown>
+      <DropdownTrigger>
+        <Button className="capitalize" variant="bordered">
+          {yearSelection}
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu
+        disallowEmptySelection
+        aria-label="Single selection example"
+        selectionMode="single"
+        variant="flat"
+      >
+        {yearsEvaluationsVar.map((year) => (
+        <DropdownItem onClick={()=>{setYearSelection(year)}}className="font-montserrat" key={year} textValue={year.toString()}>
+          {year}
+        </DropdownItem>
+      ))}
+      </DropdownMenu>
+    </Dropdown>
+              </div>
             </div>
             <div className="w-[95%] flex bg-[rgb(244,244,244)] p-2 gap-4 mt-3 rounded-md relative">
               <div className={classes}></div>
@@ -558,68 +598,71 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            {evaluationByMonth.length > 0 && (<div>
-              {isChart ? (
-                <BarChart
-                  className="mt-4 font-montserrat text-sm "
-                  width={widthContainer}
-                  height={heightContainer}
-                  data={evaluationByMonth}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: left,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
 
-                  <Bar
-                    dataKey="Cantidad_de_Diagnósticos"
-                    fill="#0084F6"
-                    activeBar={
-                      <Rectangle fill="rgb(120,155,234)" stroke="blue" />
-                    }
-                  />
-                </BarChart>
-              ) : (
-                <LineChart
-                  className="mt-4 font-montserrat text-sm"
-                  width={widthContainer}
-                  height={heightContainer}
-                  data={evaluationByMonthAutism}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: left,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis tickCount={4} />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="paciente_con_TEA"
-                    stroke="#8884d8"
-                    strokeWidth={2}
-                    activeDot={{ r: 8 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="paciente_con_DT"
-                    stroke="#82ca9d"
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              )}
-            </div>)}
+            {evaluationByMonth.length > 0 && (
+              <div>
+                {isChart ? (
+                  <BarChart
+                    className="mt-4 font-montserrat text-sm "
+                    width={widthContainer}
+                    height={heightContainer}
+                    data={evaluationByMonth}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: left,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+
+                    <Bar
+                      dataKey="Cantidad_de_Diagnósticos"
+                      fill="#0084F6"
+                      activeBar={
+                        <Rectangle fill="rgb(120,155,234)" stroke="blue" />
+                      }
+                    />
+                  </BarChart>
+                ) : (
+                  <LineChart
+                    className="mt-4 font-montserrat text-sm"
+                    width={widthContainer}
+                    height={heightContainer}
+                    data={evaluationByMonthAutism}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: left,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis tickCount={4} />
+                    <Tooltip />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="paciente_con_TEA"
+                      stroke="#8884d8"
+                      strokeWidth={2}
+                      activeDot={{ r: 8 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="paciente_con_DT"
+                      stroke="#82ca9d"
+                      strokeWidth={2}
+                    />
+                  </LineChart>
+                )}
+              </div>
+            )}
           </div>
           <div className="bg-white relative -z-[-1] w-[650px] max-w-1300:w-[600px] max-w-1185:w-[500px] max-w-1080:w-[590px] max-w-950:w-[500px] max-w-870:w-[450px] max-w-870:h-[450px] h-[480px] max-w-810:h-[480px] max-w-810:w-[650px] max-w-700:w-[600px] max-w-650:w-[550px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-425:w-[90%] max-w-550:h-[400px] ml-[2rem] max-w-550:ml-[1rem] mt-4 rounded-md flex flex-col items-center">
             <div className="flex w-[95%] mt-3 justify-between items-center">
@@ -705,7 +748,7 @@ export default function Home() {
           </div>
         </div>
         <div className="hidden max-w-810:flex ml-8 max-w-550:ml-4 max-w-600:flex-col">
-        <div className="bg-white w-[340px] max-w-1300:w-[290px] h-[480px] max-w-870:h-[450px] max-w-810:w-[317px] max-w-810:h-[480px] max-w-700:w-[292px] max-w-650:w-[268px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-425:w-[90%] mr-4 mb-4 rounded-md flex flex-col items-center ">
+          <div className="bg-white w-[340px] max-w-1300:w-[290px] h-[480px] max-w-870:h-[450px] max-w-810:w-[317px] max-w-810:h-[480px] max-w-700:w-[292px] max-w-650:w-[268px] max-w-600:w-[500px] max-w-550:w-[400px] max-w-425:w-[90%] mr-4 mb-4 rounded-md flex flex-col items-center ">
             <div className="flex w-[95%] mt-3 justify-start items-center">
               <div className="bg-[rgb(255,188,153)] rounded w-4 h-8"></div>
               <h2 className="font-montserrat font-semibold text-lg ml-2">
@@ -725,8 +768,10 @@ export default function Home() {
                     <div className="w-[315px] max-w-1300:w-[265px] max-w-600:w-[470px] max-w-650:w-[250px] max-w-550:w-[370px] max-w-425:w-[300px] mt-4 flex h-auto p-1 items-center">
                       <div className="flex w-[75%]">
                         <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
-                          {ele.infant_name.split(" ").length>1? ele.infant_name.split(" ")[0][0] +
-                            ele.infant_name.split(" ")[1][0]: ele.infant_name[0]}
+                          {ele.infant_name.split(" ").length > 1
+                            ? ele.infant_name.split(" ")[0][0] +
+                              ele.infant_name.split(" ")[1][0]
+                            : ele.infant_name[0]}
                         </div>
                         <div className="ml-2 font-montserrat text-sm">
                           <p className="font-medium">{ele.infant_name}</p>
@@ -737,11 +782,21 @@ export default function Home() {
                         {result && (
                           <>
                             {result.result ? (
-                              <p className="font-semibold text-blue-500">Positivo</p>
+                              <p className="font-semibold text-blue-500">
+                                Positivo
+                              </p>
                             ) : (
-                              <p className="font-semibold text-[#82ca9d]">Negativo</p>
+                              <p className="font-semibold text-[#82ca9d]">
+                                Negativo
+                              </p>
                             )}
-                            <p>Prob: {truncarDecimales(result.probability * 100, 2).toString() + "%"}</p>
+                            <p>
+                              Prob:{" "}
+                              {truncarDecimales(
+                                result.probability * 100,
+                                2
+                              ).toString() + "%"}
+                            </p>
                           </>
                         )}
                       </div>
@@ -820,18 +875,41 @@ export default function Home() {
                 <TableRow key="1">
                   <TableCell className="text-center">
                     {" "}
-                    {(
-                      agePatients.reduce((acc, num) => acc + num, 0) /
-                      agePatients.length > 0 ? agePatients.reduce((acc, num) => acc + num, 0) /
-                      agePatients.length:0
+                    {(agePatients.reduce((acc, num) => acc + num, 0) /
+                      agePatients.length >
+                    0
+                      ? agePatients.reduce((acc, num) => acc + num, 0) /
+                        agePatients.length
+                      : 0
                     ).toFixed(2)}{" "}
-                    <span className="max-w-600:hidden inline max-w-425:inline">M</span> <span className="hidden max-w-600:inline max-w-425:hidden">Meses</span>
+                    <span className="max-w-600:hidden inline max-w-425:inline">
+                      M
+                    </span>{" "}
+                    <span className="hidden max-w-600:inline max-w-425:hidden">
+                      Meses
+                    </span>
                   </TableCell>
                   <TableCell className="text-center">
-                    {isFinite(Math.max(...agePatients))? Math.max(...agePatients):0} <span className="max-w-600:hidden inline max-w-425:inline">M</span> <span className="hidden max-w-600:inline max-w-425:hidden">Meses</span>
+                    {isFinite(Math.max(...agePatients))
+                      ? Math.max(...agePatients)
+                      : 0}{" "}
+                    <span className="max-w-600:hidden inline max-w-425:inline">
+                      M
+                    </span>{" "}
+                    <span className="hidden max-w-600:inline max-w-425:hidden">
+                      Meses
+                    </span>
                   </TableCell>
                   <TableCell className="text-center">
-                    {isFinite(Math.min(...agePatients))? Math.min(...agePatients):0} <span className="max-w-600:hidden inline max-w-425:inline">M</span> <span className="hidden max-w-600:inline max-w-425:hidden">Meses</span>
+                    {isFinite(Math.min(...agePatients))
+                      ? Math.min(...agePatients)
+                      : 0}{" "}
+                    <span className="max-w-600:hidden inline max-w-425:inline">
+                      M
+                    </span>{" "}
+                    <span className="hidden max-w-600:inline max-w-425:hidden">
+                      Meses
+                    </span>
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -859,8 +937,10 @@ export default function Home() {
                     <div className="w-[315px] max-w-1300:w-[265px] mt-4 flex h-auto p-1 items-center">
                       <div className="flex w-[75%]">
                         <div className="w-12 h-12 p-1 rounded-md bg-red-400 flex items-center justify-center font-bold text-lg font-montserrat">
-                        {ele.infant_name.split(" ").length>1? ele.infant_name.split(" ")[0][0] +
-                            ele.infant_name.split(" ")[1][0]: ele.infant_name[0]}
+                          {ele.infant_name.split(" ").length > 1
+                            ? ele.infant_name.split(" ")[0][0] +
+                              ele.infant_name.split(" ")[1][0]
+                            : ele.infant_name[0]}
                         </div>
                         <div className="ml-2 font-montserrat text-sm">
                           <p className="font-medium">{ele.infant_name}</p>
@@ -871,11 +951,21 @@ export default function Home() {
                         {result && (
                           <>
                             {result.result ? (
-                              <p className="font-semibold text-blue-500">Positivo</p>
+                              <p className="font-semibold text-blue-500">
+                                Positivo
+                              </p>
                             ) : (
-                              <p className="font-semibold text-[#82ca9d]">Negativo</p>
+                              <p className="font-semibold text-[#82ca9d]">
+                                Negativo
+                              </p>
                             )}
-                            <p>Prob: {truncarDecimales(result.probability * 100, 2).toString() + "%"}</p>
+                            <p>
+                              Prob:{" "}
+                              {truncarDecimales(
+                                result.probability * 100,
+                                2
+                              ).toString() + "%"}
+                            </p>
                           </>
                         )}
                       </div>
@@ -954,18 +1044,26 @@ export default function Home() {
                 <TableRow key="1">
                   <TableCell className="text-center">
                     {" "}
-                    {(
-                      agePatients.reduce((acc, num) => acc + num, 0) /
-                      agePatients.length > 0 ? agePatients.reduce((acc, num) => acc + num, 0) /
-                      agePatients.length:0
+                    {(agePatients.reduce((acc, num) => acc + num, 0) /
+                      agePatients.length >
+                    0
+                      ? agePatients.reduce((acc, num) => acc + num, 0) /
+                        agePatients.length
+                      : 0
                     ).toFixed(2)}{" "}
                     M
                   </TableCell>
                   <TableCell className="text-center">
-                    {isFinite(Math.max(...agePatients))? Math.max(...agePatients):0} M
+                    {isFinite(Math.max(...agePatients))
+                      ? Math.max(...agePatients)
+                      : 0}{" "}
+                    M
                   </TableCell>
                   <TableCell className="text-center">
-                    {isFinite(Math.min(...agePatients))? Math.min(...agePatients):0} M
+                    {isFinite(Math.min(...agePatients))
+                      ? Math.min(...agePatients)
+                      : 0}{" "}
+                    M
                   </TableCell>
                 </TableRow>
               </TableBody>
