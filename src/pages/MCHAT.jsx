@@ -996,7 +996,7 @@ export default function MCHAT() {
                     color="primary"
                     onClick={predictionModel}
                   >
-                    Predecir
+                    Evaluar
                   </Button>
                   <Button
                     onClick={() => {
