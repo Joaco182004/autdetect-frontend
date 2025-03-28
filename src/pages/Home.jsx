@@ -291,7 +291,6 @@ export default function Home() {
     dataFilter.map((e) => {
       dataByMonth.push({ name: e.month, Cantidad_de_Diagnósticos: e.total });
     });
-
     setEvaluationByMonth(dataByMonth);
   }
   async function loadEvaluationsAutism() {
@@ -482,7 +481,6 @@ export default function Home() {
     loadPatients();
     loadEvaluationsAutism();
     loadPatientsByDistrict();
-    
     const geojsonUrl =
       "https://raw.githubusercontent.com/joseluisq/peru-geojson-datasets/master/lima_callao_distritos.geojson";
     fetch(geojsonUrl)
@@ -500,16 +498,6 @@ export default function Home() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const countAutism = () => {
-    var contAutism = 0;
-    questionnaire.map((e) => {
-      if (e.result == true) {
-        contAutism += 1;
-      }
-    });
-    return contAutism;
-  };
 
   const heatmapData = {
     max: -1,
@@ -573,7 +561,7 @@ export default function Home() {
                     {text1}
                   </p>
                   <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem] max-w-810:text-[1rem] max-w-600:text-[0.9rem] max-w-550:text-[0.75rem]">
-                    {questionnaire.length} pacientes
+                    {evaluationByMonth.reduce((acc, curr) => acc + curr.Cantidad_de_Diagnósticos, 0)} pacientes
                   </h3>
                 </div>
               </div>
@@ -593,7 +581,7 @@ export default function Home() {
                     {text2}
                   </p>
                   <h3 className="mt-1 font-medium max-w-1185:text-[0.9rem] max-w-1080:text-[1rem] max-w-950:text-[0.9rem] max-w-810:text-[1rem] max-w-600:text-[0.9rem] max-w-550:text-[0.68rem]">
-                    {countAutism()} pacientes
+                  {evaluationByMonthAutism.reduce((acc, curr) => acc + curr.paciente_con_TEA, 0)} pacientes
                   </h3>
                 </div>
               </div>
