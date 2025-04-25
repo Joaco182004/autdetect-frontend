@@ -48,9 +48,12 @@ function Login() {
       setWidthInput(300)
     }
   }
+  const limpiarSesion = () => {
+    localStorage.clear();
+  };
   useEffect(() => {
     handleResize();
-
+    limpiarSesion();
     // Añadir event listener para el cambio de tamaño
     window.addEventListener('resize', handleResize);
     
