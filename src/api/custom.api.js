@@ -123,6 +123,7 @@ export const predictModelDiagnosis = (content) => {
 };
 export const downloadPatients = () => {
   const token = localStorage.getItem("token");
+  const id = localStorage.getItem('idPsychology');
   const config = {
     headers: {
       Authorization: `Token ${token}`,
@@ -130,7 +131,7 @@ export const downloadPatients = () => {
     responseType: "blob",
   };
   return axios
-    .get(`${API_BASE_URL}/export-infant-patients/`, config)
+    .get(`${API_BASE_URL}/export-infant-patients/${id}/`, config)
     .then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -146,6 +147,7 @@ export const downloadPatients = () => {
 };
 export const downloadEvaluations = () => {
   const token = localStorage.getItem("token");
+  const id = localStorage.getItem('idPsychology')
   const config = {
     headers: {
       Authorization: `Token ${token}`,
@@ -153,7 +155,7 @@ export const downloadEvaluations = () => {
     responseType: "blob",
   };
   return axios
-    .get(`${API_BASE_URL}/export-questionnaires/`, config)
+    .get(`${API_BASE_URL}/export-questionnaires/${id}/`, config)
     .then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
