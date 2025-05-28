@@ -387,7 +387,7 @@ export default function MCHAT() {
       {!resultView ? (
         <>
           <h1 className="font-montserrat font-semibold mb-[2rem] ml-[2rem] pt-[2rem] text-4xl max-w-680:text-3xl max-w-570:text-2xl max-w-470:text-xl max-w-425:ml-[1rem]">
-            Cuesitonario de comportamiento
+            Cuestionario de comportamiento
           </h1>
           <div className=" flex-col ml-8 bg-white flex p-2 rounded-md my-4 mchat-content pl-4 max-w-425:ml-4 max-w-425:w-[90%]">
             <h2 className="mb-4 mt-2 font-montserrat font-semibold text-xl">
