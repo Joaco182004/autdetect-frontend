@@ -28,18 +28,21 @@ import {
   getPatientById,
   savePatientById,
 } from "../api/infantPatient.api";
-import {downloadPatients} from "../api/custom.api"
+import { downloadPatients } from "../api/custom.api";
 import { es } from "date-fns/locale";
 import "../pages/style.css";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { parseDate } from "@internationalized/date";
+import { ToastContainer, toast } from "react-toastify";
+import { set } from "date-fns/set";
 export default function List() {
   const [isEditable, setIsEditable] = useState(false);
   const [textform, setTextForm] = useState("");
   const [id, setId] = useState("");
+  const [errorsIdentifier, setErrorsIdentifier] = useState("");
   async function loadPatients() {
     const res = await getAllPatients();
-    const data_final = []
+    const data_final = [];
     res.data.map((e) => {
       e.edit = (
         <div
@@ -53,12 +56,12 @@ export default function List() {
       );
     });
 
-    res.data.map((e)=>{
-      if(e.psychology == localStorage.getItem('idPsychology')){
-        console.log(e)
-        data_final.push(e)
+    res.data.map((e) => {
+      if (e.psychology == localStorage.getItem("idPsychology")) {
+        console.log(e);
+        data_final.push(e);
       }
-    })
+    });
     setPatients(data_final);
   }
   async function getPatient(e) {
@@ -68,14 +71,13 @@ export default function List() {
     console.log(res.data);
     openEdit(res.data);
   }
-  
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [patients, setPatients] = useState([]);
   useEffect(() => {
     loadPatients();
   }, []);
 
-  
   const [infantDni, setInfantDni] = useState("");
   const [infantName, setInfantName] = useState("");
   const [birthDate, setBirthDate] = useState(null);
@@ -134,15 +136,64 @@ export default function List() {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const rowsPerPage = 4;
-  async function downloadPatientsReport(){
-    try{
-      await downloadPatients()
-    }
-    catch(e){
-      console.log(e)
+  async function downloadPatientsReport() {
+    try {
+      await downloadPatients();
+    } catch (e) {
+      console.log(e);
     }
   }
+  const validateFields = () => {
+    setErrorsIdentifier("");
+    const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+    const dniRegex = /^\d{8}$/;
+    const phoneRegex = /^\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    let errors = [];
+
+    if (!nameRegex.test(infantName)) {
+      errors.push("- El nombre del niño(a) no debe contener números.");
+    }
+
+    if (!dniRegex.test(infantDni)) {
+      errors.push(
+        "- El DNI del niño(a) debe tener exactamente 8 dígitos numéricos."
+      );
+    }
+
+    if (!nameRegex.test(guardianName)) {
+      errors.push("- El nombre del apoderado no debe contener números.");
+    }
+
+    if (!dniRegex.test(guardianDni)) {
+      errors.push(
+        "- El DNI del apoderado debe tener exactamente 8 dígitos numéricos."
+      );
+    }
+
+    if (!emailRegex.test(guardianEmail)) {
+      errors.push("- El correo electrónico del apoderado no es válido.");
+    }
+
+    if (!phoneRegex.test(contactPhone)) {
+      errors.push(
+        "- El número de contacto debe tener exactamente 9 dígitos numéricos."
+      );
+    }
+
+    if (errors.length > 0) {
+      console.log("Errores de validación:", errors);
+      // Mostrar los errores en el estad
+      setErrorsIdentifier(errors.join("\n"));
+      return false;
+    }
+
+    return true;
+  };
+
   const registerPatient = () => {
+    if (!validateFields()) return;
     const user = {
       infant_dni: infantDni,
       infant_name: infantName,
@@ -154,7 +205,7 @@ export default function List() {
       guardian_email: guardianEmail,
       contact_phone: contactPhone,
       district: district,
-      psychology: localStorage.getItem('idPsychology'),
+      psychology: localStorage.getItem("idPsychology"),
     };
     console.log(user);
     if (!isEditable) {
@@ -181,6 +232,7 @@ export default function List() {
     }
   };
   const openEdit = (data) => {
+    setErrorsIdentifier("");
     // Establecer los datos
     setTextForm("Editar paciente");
     setInfantDni(data.infant_dni);
@@ -228,19 +280,25 @@ export default function List() {
       <div className="h-[auto]  flex flex-col items-center mb-4  bg-white mx-8 max-w-650:mx-4 max-w-650:w-[95%] max-w-450:w-[100%] max-w-450:mx-0 max-w-450:rounded-none content-list rounded-md pb-4">
         <div className="w-[100%] flex items-center justify-between bg-red p-2 rounded-md my-4">
           <div className="flex justify-between items-center w-full">
-          <Input
-            isClearable
-            type="text"
-            label="Filtro"
-            placeholder="Ingresa lo que buscas"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            onClear={() => setFilter("")}
-            className="w-[250px] outline-none ml-4  max-w-425:ml-2 font-montserrat max-w-500:w-[200px] max-w-395:text-xs"
-          />
-          <Button onClick={downloadPatientsReport} className="mr-4 h-[40px] w-[150px] max-w-425:w-[130px] max-w-395:w-[100px] max-w-395:h-[40px] max-w-395:text-wrap  max-w-425:text-xs  font-montserrat font-medium" color="primary">Descargar</Button>
+            <Input
+              isClearable
+              type="text"
+              label="Filtro"
+              placeholder="Ingresa lo que buscas"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              onClear={() => setFilter("")}
+              className="w-[250px] outline-none ml-4  max-w-425:ml-2 font-montserrat max-w-500:w-[200px] max-w-395:text-xs"
+            />
+            <Button
+              onClick={downloadPatientsReport}
+              className="mr-4 h-[40px] w-[150px] max-w-425:w-[130px] max-w-395:w-[100px] max-w-395:h-[40px] max-w-395:text-wrap  max-w-425:text-xs  font-montserrat font-medium"
+              color="primary"
+            >
+              Descargar
+            </Button>
           </div>
-          
+
           <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
@@ -350,6 +408,15 @@ export default function List() {
                         ))}
                       </Select>
                     </form>
+                    {errorsIdentifier && (
+                      <div className="bg-red-100 text-red-800 p-4 rounded mb-4 text-xs">
+                        <ul>
+                          {errorsIdentifier.split("\n").map((error, idx) => (
+                            <li key={idx}>{error}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </ModalBody>
                   <ModalFooter>
                     <Button color="danger" variant="flat" onPress={onClose}>

@@ -180,6 +180,8 @@ function Login() {
     }
     if (!numeroColegiatura) {
       errors.numeroColegiatura = "El campo es obligatorio";
+    }else if (numeroColegiatura.length != 5) {
+      errors.numeroColegiatura = "El campo debe tener 5 dígitos";
     }
     if (!email) {
       errors.email = "El campo es obligatorio";

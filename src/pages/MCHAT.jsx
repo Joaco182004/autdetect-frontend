@@ -50,6 +50,7 @@ export default function MCHAT() {
   const [contactPhone, setContactPhone] = useState("");
   const [selectPatients, setSelectPatients] = useState("");
   const [district, setDistrict] = useState("");
+  const [errorsIdentifier, setErrorsIdentifier] = useState("");
   const [q1, setQ1] = useState(1);
   const [q2, setQ2] = useState(1);
   const [q3, setQ3] = useState(1);
@@ -125,7 +126,60 @@ export default function MCHAT() {
     const questionnaire = await getQuestionnaireById(id);
     return questionnaire.data;
   }
+  const validateFields = () => {
+    setErrorsIdentifier("");
+    const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+    const dniRegex = /^\d{8}$/;
+    const phoneRegex = /^\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    let errors = [];
+
+    if (!infantName || !nameRegex.test(infantName)) {
+      errors.push("- El nombre del niño(a) es obligatorio y no debe contener números.");
+    }
+
+    if (!infantDni || !dniRegex.test(infantDni)) {
+      errors.push("- El DNI del niño(a) es obligatorio y debe tener exactamente 8 dígitos numéricos.");
+    }
+
+    if (!guardianName || !nameRegex.test(guardianName)) {
+      errors.push("- El nombre del apoderado es obligatorio y no debe contener números.");
+    }
+
+    if (!guardianDni || !dniRegex.test(guardianDni)) {
+      errors.push("- El DNI del apoderado es obligatorio y debe tener exactamente 8 dígitos numéricos.");
+    }
+
+    if (!guardianEmail || !emailRegex.test(guardianEmail)) {
+      errors.push("- El correo electrónico del apoderado es obligatorio y debe ser válido.");
+    }
+
+    if (!contactPhone || !phoneRegex.test(contactPhone)) {
+      errors.push("- El número de contacto es obligatorio y debe tener exactamente 9 dígitos numéricos.");
+    }
+
+    if (!birthDate) {
+      errors.push("- La fecha de nacimiento del paciente es obligatoria.");
+    }
+
+    if (!gender) {
+      errors.push("- El género del paciente es obligatorio.");
+    }
+
+    if (!district) {
+      errors.push("- El distrito es obligatorio.");
+    }
+
+    if (errors.length > 0) {
+      console.log("Errores de validación:", errors);
+      // Mostrar los errores en el estad
+      setErrorsIdentifier(errors.join("\n"));
+      return false;
+    }
+
+    return true;
+  };
   const registerEvaluation = async (prediction) => {
     const user = {
       infant_dni: infantDni,
@@ -226,6 +280,7 @@ export default function MCHAT() {
     setPatientChoose();
   }
   async function predictionModel() {
+    if (!validateFields()) return;
     if (
       !infantDni ||
       !infantName ||
@@ -901,6 +956,15 @@ export default function MCHAT() {
                   No
                 </Radio>
               </RadioGroup>
+              {errorsIdentifier && (
+                      <div className="bg-red-100 text-red-800 p-4 rounded mt-4 text-xs font-montserrat">
+                        <ul>
+                          {errorsIdentifier.split("\n").map((error, idx) => (
+                            <li key={idx}>{error}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
             </div>
 
             <Modal

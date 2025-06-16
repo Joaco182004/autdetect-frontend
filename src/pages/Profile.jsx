@@ -23,6 +23,7 @@ export default function Profile() {
   const [passwordVerification, setPasswordVerification] = useState("");
   const [passwordChange1, setPasswordChange1] = useState("");
   const [passwordChange2, setPasswordChange2] = useState("");
+  const [passwordChange3, setPasswordChange3] = useState("");
   const [nextValidation, setNextValidation] = useState(0);
   const [nextPassword, setNextPassword] = useState(0);
   const [codeVerification, setCodeVerification] = useState("");
@@ -188,7 +189,8 @@ export default function Profile() {
       });
     } else {
       if (validarContraseña(passwordChange2)) {
-        const userLogin = {
+        if(passwordChange2 == passwordChange3){
+          const userLogin = {
           email: psychologist.email,
           password: passwordChange2,
         };
@@ -217,6 +219,16 @@ export default function Profile() {
           });
         }
       } else {
+        toast.error("La contraseñas no coinciden.", {
+          position: "bottom-center",
+          style: {
+            width: 370,
+            fontSize: "0.85rem",
+            fontFamily: "Montserrat",
+          },
+        });
+        }
+      }else {
         toast.error("La contraseña no cumple con los requisitos.", {
           position: "bottom-center",
           style: {
@@ -225,7 +237,7 @@ export default function Profile() {
             fontFamily: "Montserrat",
           },
         });
-      }
+        }
     }
   }
   return (
@@ -442,10 +454,10 @@ export default function Profile() {
                           Su cuenta ha sido verificada. Por favor, ingrese una
                           nueva contraseña que contenga al menos una mayúscula,
                           un carácter especial, un número y tenga una longitud
-                          mínima de 8 caracteres.{" "}
+                          mínima de 8 caracteres e ingresela nuevamente para verificar si es correcta.{" "}
                         </p>
                         <Input
-                          label="Contraseña"
+                          label="Contraseña Nueva"
                           placeholder="Ingrese su nueva contraseña"
                           endContent={
                             <button
@@ -465,6 +477,28 @@ export default function Profile() {
                           className="my-4 w-96 max-w-450:w-72"
                           value={passwordChange2}
                           onChange={(e) => setPasswordChange2(e.target.value)}
+                        />
+                        <Input
+                          label="Verificación de Contraseña"
+                          placeholder="Repita su nueva contraseña"
+                          endContent={
+                            <button
+                              className="focus:outline-none"
+                              type="button"
+                              onClick={toggleVisibility}
+                              aria-label="toggle password visibility"
+                            >
+                              {isVisible ? (
+                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              ) : (
+                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                              )}
+                            </button>
+                          }
+                          type={isVisible ? "text" : "password"}
+                          className="my-4 w-96 max-w-450:w-72"
+                          value={passwordChange3}
+                          onChange={(e) => setPasswordChange3(e.target.value)}
                         />
                         <Button color="primary" onClick={changePassword}>
                           Modificar contraseña
