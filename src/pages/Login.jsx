@@ -110,8 +110,9 @@ function Login() {
         setViewLogin(true);
       })
       .catch((error) => {
+        
         toast.error(
-          "Hubo un error en el registro. Por favor, vuelva intentarlo",
+            error.response.data.errors.join(", "),
           {
             position: "bottom-center",
             style: {
