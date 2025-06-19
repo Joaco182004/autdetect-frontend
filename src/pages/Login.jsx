@@ -112,7 +112,7 @@ function Login() {
       .catch((error) => {
         
         toast.error(
-            error.response.data.errors.join(", "),
+            error.response.data.errors.join(", ") + ".",
           {
             position: "bottom-center",
             style: {
