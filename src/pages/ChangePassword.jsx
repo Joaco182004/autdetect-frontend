@@ -140,7 +140,7 @@ export default function ChangePassword() {
         }
       }
       else{
-        toast.error("La contraseña no cumple con los requisitos.", {
+        toast.error("La contraseña no cumple con los requisitos de seguridad.", {
           position: "bottom-center",
           style: {
             width: 370,

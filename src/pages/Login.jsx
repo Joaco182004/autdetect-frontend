@@ -112,7 +112,7 @@ function Login() {
       .catch((error) => {
         
         toast.error(
-            error.response.data.errors.join(", ") + ".",
+            error.response.data.errors.join(" - ") + ".",
           {
             position: "bottom-center",
             style: {
@@ -126,7 +126,7 @@ function Login() {
   };
   const validateLogin = () => {
     if (loginEmail == "" || loginPassword == "") {
-      toast.error("Los campos de correo y contraseña estan vacíos.", {
+      toast.error("Los campos de correo electrónico o contraseña están vacíos.", {
         position: "bottom-center",
         style: {
           width: 410,
