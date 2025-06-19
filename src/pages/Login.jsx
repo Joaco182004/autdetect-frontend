@@ -157,7 +157,7 @@ function Login() {
           navigate("/app/dashboard");
         })
         .catch((error) => {
-          toast.error("El correo o contraseña no son correctos.", {
+          toast.error(error.response.data.error, {
             position: "bottom-center",
             style: {
               width: 350,
@@ -173,6 +173,8 @@ function Login() {
 
     if (!name) {
       errors.name = "El campo es obligatorio";
+    } else if (/\d/.test(name)) {
+      errors.name = "El nombre no debe contener números";
     }
     if (!dni) {
       errors.dni = "El campo es obligatorio";
