@@ -87,11 +87,12 @@ export default function Profile() {
     }
   }
   async function validateEmail() {
-    if (!emailChange) {
-      toast.error("Debe completar el campo de correo.", {
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailChange) || !emailChange) {
+      toast.error("El formato del correo electrónico no es válido.", {
         position: "bottom-center",
         style: {
-          width: 330,
+          width: 370,
           fontSize: "0.85rem",
           fontFamily: "Montserrat",
         },
@@ -117,7 +118,7 @@ export default function Profile() {
         );
         setNextValidation(2);
       } catch (e) {
-        toast.error("Ha ocurrido un error. Vuelva intentarlo.", {
+        toast.error("El correo ya se encuentra registrado en el sistema.", {
           position: "bottom-center",
           style: {
             width: 320,
@@ -219,7 +220,7 @@ export default function Profile() {
           });
         }
       } else {
-        toast.error("La contraseñas no coinciden.", {
+        toast.error("Las contraseñas no coinciden.", {
           position: "bottom-center",
           style: {
             width: 370,
