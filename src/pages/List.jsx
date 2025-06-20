@@ -144,13 +144,46 @@ export default function List() {
     }
   }
   const validateFields = () => {
+    let errors = [];
     setErrorsIdentifier("");
+    if(infantDni == "" || infantDni == null){
+      errors.push("- Debe completar el campo de DNI del paciente.");
+    }
+    if(infantName == "" || infantName == null){
+      errors.push("- Debe completar el campo de nombre del paciente.");
+    }
+    if(birthDate == null){
+      errors.push("- Debe completar el campo de fecha de nacimiento del paciente.");
+    }
+    if(gender == "" || gender == null){
+      errors.push("- Debe completar el campo de género del paciente.");
+    }
+    if(guardianDni == "" || guardianDni == null){
+      errors.push("- Debe completar el campo de DNI del tutor.");
+    }
+    if(guardianName == "" || guardianName == null){
+      errors.push("- Debe completar el campo de nombre del tutor.");
+    }
+    if(guardianEmail == "" || guardianEmail == null){
+      errors.push("- Debe completar el campo de correo electrónico del tutor.");
+    }
+    if(contactPhone == "" || contactPhone == null){
+      errors.push("- Debe completar el campo de número de contacto.");
+    }
+    if(district == "" || district == null){
+      errors.push("- Debe completar el campo de distrito.");
+    }
+    if (errors.length > 0) {
+      console.log("Errores de validación:", errors);
+      // Mostrar los errores en el estad
+      setErrorsIdentifier(errors.join("\n"));
+      return false;
+    }
+
     const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
     const dniRegex = /^\d{8}$/;
     const phoneRegex = /^\d{9}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    let errors = [];
 
     if (!nameRegex.test(infantName)) {
       errors.push("- El nombre del niño(a) no debe contener números.");
@@ -191,7 +224,6 @@ export default function List() {
 
     return true;
   };
-
   const registerPatient = () => {
     if (!validateFields()) return;
     const user = {
@@ -207,11 +239,9 @@ export default function List() {
       district: district,
       psychology: localStorage.getItem("idPsychology"),
     };
-    console.log(user);
     if (!isEditable) {
       savePatient(user)
         .then((response) => {
-          console.log("Patient saved successfully", response.data);
           onOpenChange(false); // Cerrar el modal después de registrar el paciente
           loadPatients();
         })
@@ -222,7 +252,6 @@ export default function List() {
       console.log(id);
       savePatientById(id, user)
         .then((response) => {
-          console.log("Patient saved successfully", response.data);
           onOpenChange(false); // Cerrar el modal después de registrar el paciente
           loadPatients();
         })
