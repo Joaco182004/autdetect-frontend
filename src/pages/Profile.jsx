@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { getPsychologistById } from "../api/psychologist.api";
@@ -89,7 +89,7 @@ export default function Profile() {
   async function validateEmail() {
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailChange) || !emailChange) {
-      toast.error("El formato del correo electrónico no es válido.", {
+      toast.error("Asegúrate de ingresar un correo con el formato correcto, por ejemplo: nombre@dominio.com, y que el correo exista.", {
         position: "bottom-center",
         style: {
           width: 370,
@@ -220,7 +220,7 @@ export default function Profile() {
           });
         }
       } else {
-        toast.error("Las contraseñas no coinciden.", {
+        toast.error("La contraseña nueva y de validación no coinciden.", {
           position: "bottom-center",
           style: {
             width: 370,
@@ -230,7 +230,7 @@ export default function Profile() {
         });
         }
       }else {
-        toast.error("La contraseña no cumple con los requisitos.", {
+        toast.error("La contraseña no cumple con los requisitos (La contraseña sea alfanumérica, contenga al menos una letra mayúscula, un carácter especial y tenga una longitud mínima de 8 caracteres).", {
           position: "bottom-center",
           style: {
             width: 370,
