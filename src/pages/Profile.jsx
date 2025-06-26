@@ -502,7 +502,7 @@ export default function Profile() {
                           onChange={(e) => setPasswordChange3(e.target.value)}
                         />
                         <Button color="primary" onClick={changePassword}>
-                          Modificar contraseña
+                          Modificar Contraseña
                         </Button>
                       </form>
                     )}
